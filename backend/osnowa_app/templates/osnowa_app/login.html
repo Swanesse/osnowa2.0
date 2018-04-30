@@ -1,0 +1,36 @@
+{% extends 'osnowa_app/base.html' %}
+
+{% block content %}
+
+    <div class ="detail-center" >
+        <div class="detail-side-box">
+
+            <div class="naglowek-boczny">
+                <h1 class="naglowek-boczny-tekst">
+                    Logowanie
+                </h1>
+            </div>
+
+            <div class="point-line-all">
+            </div>
+
+            <div class="point-text">
+                                                {#blok ten chroni przed atakiem CSRF#}
+	            <form method="POST" action="/login/user/" >{% csrf_token %}
+                    <!--{% comment %} {%trans "Username"%} {% endcomment %}- usunęłam trans ze wszystkiego trans tell Django: “This text should be translated into the end user’s language, if a translation for this text is available in that language.”-->
+                    <label for="id_username" class="">Nazwa użytkownika: </label> {{ form.username }}
+                    <label for="id_password" >Hasło: </label> {{ form.password }}
+
+                    <div class="point-line">
+                    </div>
+                                                                        {#Przycisk zatwierdzający formularz?#}
+                    <input type="submit" value="Zaloguj" class="TellMe">
+
+                    <input type="hidden" name="next" value="{{ next }}" />
+	            </form>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}

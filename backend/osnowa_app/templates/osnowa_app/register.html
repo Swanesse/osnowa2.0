@@ -1,0 +1,31 @@
+{% extends "osnowa_app/base.html"%}
+
+{% block content %}
+    <div class ="detail-right">
+        <div class="detail-side-box">
+
+             <div class="naglowek-boczny">
+                <h1 class="naglowek-boczny-tekst">
+                    Rejestracja
+                </h1>
+            </div>
+
+             <div class="point-line-all">
+            </div>
+
+            <div class="point-text">
+                <fieldset >
+                    <legend> Wszystkie pola oprócz numeru telefonu należy wypełnić </legend>
+                    <form method="post" action=".">{% csrf_token %}
+                        {{ form.as_p }}
+                        <input type="submit" class="TellMe" value="Rejestracja">
+                        <input type="reset" value="Wartości początkowe">
+                    </form>
+                </fieldset>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}
+
