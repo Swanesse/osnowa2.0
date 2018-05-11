@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.utils import timezone
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .serializers import PointSerializer
 from .models import Point
 from django.shortcuts import render, get_object_or_404
 from .forms import PointForm
@@ -69,7 +72,22 @@ def point_detail(request, pk):
                                                              # przesłanie zmiennej do szablonu 'nazwa zmiennej' :
     return render(request, 'osnowa_app/point_detail.html', {'point': point})
 
-# Zrobić tak żeby drugi przycisk też działał
+@api_view(['get'])
+def points(request):
+    pk = 15
+    #wyciąga z bazy danych info o punkcie. Pobiera 1 obiekt a jeśli nie to zwraca błąd 404. (Z jakiej tabeli pobieramy, klucz podstawoowy - primary key)
+    point = get_object_or_404(Point, pk=pk)
+
+    # print ("Tutaj znajduje sie" + str(request.POST["uszkodzony"]) + "A tu jest koniec")
+
+    # przesłanie zmiennej do szablonu 'nazwa zmiennej' :
+    #wywołamy punkt serializer
+    #tak serializuję wiele modeli
+    # pointSerializer = PointSerializer(point, many=True)
+
+    pointSerializer = PointSerializer(point)
+
+    return Response(pointSerializer.data)
 
 def point_new(request):
     if not request.user.is_authenticated():

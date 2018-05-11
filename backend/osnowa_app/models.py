@@ -27,6 +27,7 @@ class Point(models.Model):
     find_date = models.DateTimeField(blank=True, null=True)
     odnaleziony = models.IntegerField(default=0)
     uszkodzony = models.IntegerField(default=0)
+    # cokolwiek = models.CharField(max_length=13)
 
     def publish(self):
         self.find_date = timezone.now()
