@@ -1,0 +1,35 @@
+@import "../../../sass/variables.scss";
+
+.map {
+  height: auto;
+  width: 100%;
+  display: block;
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin-top: 50px;
+}
+
+.leaflet-control-zoom-in {
+  border-radius: 0;
+  background-color: black;
+}
+
+a.leaflet-control-zoom-out {
+  border-radius: 0;
+}
+
+div.leaflet-control-zoom leaflet-bar leaflet-control {
+  border-radius: 0;
+}
+
+.leaflet-touch .leaflet-bar a:first-child {
+  border-radius: 0;
+  background-color: black;
+}
+
+a:first-child {
+  border-radius: 0;
+}

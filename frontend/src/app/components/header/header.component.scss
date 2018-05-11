@@ -1,0 +1,86 @@
+@import "../../../sass/variables.scss";
+
+header {
+  background-color: #f3f3f3;
+  padding: 0;
+  top: 0;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .4);
+  width: 100%;
+}
+
+nav {
+  text-align: right;
+  width: 100%;
+  height: 48px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin: 0 auto 0 auto;
+}
+
+.container-logo {
+  height: 50px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  float: left;
+
+  .href-logo {
+    font-size: 20px;
+    font-weight: bold;
+    font-style: normal;
+    padding-left: 0;
+    color: #008100;
+    text-decoration: none;
+    vertical-align: -12px;
+
+    .image-logo {
+      float: left;
+      height: 40px;
+
+    }
+  }
+}
+
+.container-info-contact {
+  float: left;
+  height: inherit;
+  margin: 0;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 30px;
+
+  .href-info-contact {
+    color: #888;
+    font-size: 14px;
+    font-weight: normal;
+    border-radius: 0;
+    padding: 0;
+
+    &:hover {
+      background-color: $primary-color;
+
+    }
+  }
+}
+
+li {
+  display: inline-block;
+}
+
+.container-button {
+  float: left;
+  margin-top: 5px;
+  margin-left: 10px;
+
+  .main-button {
+    color: #4d4d4d;
+    border-radius: 0;
+    background-color: $primary-color;
+
+    &:hover {
+      background-color: $primary-color-darker;
+
+    }
+  }
+}
+
+
