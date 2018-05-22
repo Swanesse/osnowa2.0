@@ -1,4 +1,6 @@
 import {Component, OnInit} from '@angular/core';
+import {PointDetailsComponent} from "../point-details/point-details.component";
+import {MatDialog, MAT_DIALOG_DATA} from '@angular/material';
 
 @Component({
   selector: 'app-header',
@@ -7,7 +9,7 @@ import {Component, OnInit} from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor() {
+  constructor(public dialog: MatDialog) {
   }
 
   ngOnInit() {

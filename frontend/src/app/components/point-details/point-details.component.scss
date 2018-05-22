@@ -1,0 +1,87 @@
+@import "../../../sass/variables.scss";
+
+
+.header-side-container {
+  position: absolute;
+  z-index: 400;
+  width: 400px;
+  right: 10px;
+  top: 60px;
+  bottom: 10px;
+  display: block;
+  background-color: #c9f9b6;
+}
+
+.main-header {
+  padding: 25px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  text-align: center;
+
+  h1 {
+    font-size: 20px;
+    height: 20px;
+    line-height: 20px;
+    font-family: QuicksandBook, Helvetica, Arial, sans-serif;
+    color: #333333;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  button {
+    position: absolute;
+    z-index: 400;
+    right: 0;
+    top: 0;
+    //bottom: 60px;
+
+  }
+}
+
+.bottom-line {
+  color: #474747;
+  padding: 10px 0;
+  line-height: 20px;
+  text-align: left;
+  box-shadow: 0 -5px 7px -7px #474747;
+  margin: 0 0px -20px 0px;
+}
+
+.detail-side-container {
+  position: absolute;
+  background-color: #f3f3f3;
+  z-index: 400;
+  width: 400px;
+  right: 10px;
+  top: 120px;
+  bottom: 10px;
+  display: block;
+  overflow: auto;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .4);
+  border-radius: 0;
+  padding: 20px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.main-button {
+  color: #4d4d4d;
+  border-radius: 0;
+  width: 360px;
+  background-color: $primary-color;
+
+  &:hover {
+    background-color: $primary-color-darker;
+
+  }
+}
+
+.radio-group-container{
+  margin-bottom: 5px;
+}
+
+.radio-button-container{
+  margin-bottom: 10px;
+}

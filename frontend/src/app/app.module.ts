@@ -4,33 +4,54 @@ import {LeafletModule} from '@asymmetrik/ngx-leaflet';
 
 
 import {AppComponent} from './app.component';
-// import {PointDetailsComponent} from './components/point-details/point-details.component';
-// import {AppRoutingModule} from "./app.routing.module";
-// import {HomeComponent} from './components/home/home.component';
+import {PointDetailsComponent} from './components/point-details/point-details.component';
+import {AppRoutingModule} from "./app.routing.module";
+import {HomeComponent} from './components/home/home.component';
 import {MapComponent} from './components/map/map.component';
 import {HeaderComponent} from './components/header/header.component';
-import {MatButtonModule, MatCheckboxModule, MatInputModule, MatIconModule, MatFormFieldModule} from '@angular/material';
+import {
+  MatButtonModule,
+  MatCheckboxModule,
+  MatInputModule,
+  MatIconModule,
+  MatFormFieldModule,
+  MatDialogModule,
+  MatSelectModule, MatRadioModule
+} from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule} from "@angular/forms";
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    // PointDetailsComponent,
-    // HomeComponent,
+    PointDetailsComponent,
+    HomeComponent,
     MapComponent,
-    HeaderComponent
+    HeaderComponent,
+
   ],
   imports: [
     BrowserModule,
-    // AppRoutingModule,
+    AppRoutingModule,
     LeafletModule.forRoot(),
     MatButtonModule,
     MatCheckboxModule,
     MatInputModule,
     MatIconModule,
     BrowserAnimationsModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatAutocompleteModule,
+    MatDialogModule,
+    MatSelectModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatRadioModule,
+    NgxMatSelectSearchModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

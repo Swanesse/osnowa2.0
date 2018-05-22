@@ -294,7 +294,7 @@
 	margin-top: 60px;
 }
 
-.detail-side-box {
+.detail-side-container {
 	background-color: #f3f3f3;
 	height: 100%;
 	/*Robi pasek przewijania jak div się nie mieści na strnie*/
@@ -353,12 +353,12 @@ label {
 		left:2%;
 		right:2%;
 	}
-	.detail-side-box {
+	.detail-side-container {
 		width:100%;
 	}
 }
 
-.naglowek-boczny{
+.main-header{
 	padding: 25px;
 	padding-top: 20px;
 	padding-bottom: 20px;
@@ -379,7 +379,7 @@ label {
 	margin: 0;
 }
 
-.point-line-all {
+.bottom-line {
 	color: #474747;
 	padding: 10px 0;
 	line-height: 20px;
