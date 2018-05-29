@@ -23,6 +23,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {ReactiveFormsModule} from "@angular/forms";
 import {FormsModule} from "@angular/forms";
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { TextMaskModule } from 'angular2-text-mask';
 
 
 
@@ -50,6 +51,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     MatSelectModule,
     ReactiveFormsModule,
     FormsModule,
+    TextMaskModule,
     MatRadioModule,
     NgxMatSelectSearchModule,
   ],

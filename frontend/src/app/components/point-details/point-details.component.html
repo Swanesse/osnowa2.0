@@ -13,36 +13,58 @@
 <div class="detail-side-container">
   <form [formGroup]="pointForm" (ngSubmit)="onSubmit()">
 
+
+    <!--Pierwsze wpisanie współrzędnych-->
     <ng-template #noCoordinate>
-      <mat-form-field class="full-width" hintLabel="(X, Y, np.50.43322, 12.34455)">
-        <input type="text" pattern="[0-9 . , - ]*" name="wsp2000" id="wsp2000" placeholder="Współrzędne WGS84 lub 2000" matInput [(ngModel)]="point.wsp2000"
-               formControlName="wsp2000" (blur)="inputCoordinate()" required>
-        <mat-hint align="end">
-          <a href="">Wybierz z mapy</a>
-          <a href=""> <i class="material-icons">location_searching</i>
-          </a>
-        </mat-hint>
+      <a>Współrzędne w układzie WGS84 lub 2000</a>
+      <mat-form-field class="short-width" hintLabel="(np. 50.068436 lub 5548589.65)">
+        <input [textMask]="{mask: mask, guide: false}" type="text" name="X" id="X"
+               placeholder="X" matInput [(ngModel)]="point.X"
+               formControlName="X" (blur)="inputCoordinateX()" (click)="outputCoordinateX()" required>
+      </mat-form-field>
+      <mat-form-field class="short-width right" hintLabel="(np. 19.921046 lub 7422760.20)">
+        <input [textMask]="{mask: mask, guide: false}" type="text" name="Y" id="Y"
+               placeholder="Y" matInput [(ngModel)]="point.Y"
+               formControlName="Y" (blur)="inputCoordinateY()" (click)="outputCoordinateY()" required>
       </mat-form-field>
     </ng-template>
 
-    <ng-container *ngIf="coordinateExist && pointForm.get('wsp2000').valid; else noCoordinate">
-      <mat-form-field class="full-width" hintLabel="(X, Y, np.50.43322, 12.34455)">
-        <input type="text" placeholder="Współrzędne 2000" matInput [(ngModel)]="point.wsp2000"
-               formControlName="wsp2000" >
+    <!--Ponowne wybranie współrzędnych-->
+    <ng-container
+      *ngIf="coordinateExistX && coordinateExistY && pointForm.get('X').valid && pointForm.get('Y').valid; else noCoordinate">
+      <a>Współrzędne w układzie WGS84:</a>
+      <mat-form-field class="short-width" hintLabel="(np. 50.068436)">
+        <input [textMask]="{mask: mask, guide: false}" type="text" name="X_WGS84" id="X_WGS84"
+               placeholder="X" matInput [ngModel]="point.X_WGS84 | number : '1.4-10'" (ngModelChange)="point.X_WGS84=$event"
+               formControlName="X_WGS84" required>
+      </mat-form-field>
+      <mat-form-field class="short-width right" hintLabel="(np. 19.921046)">
+        <input [textMask]="{mask: mask, guide: false}" type="text" name="X_WGS84" id="Y_WGS84"
+               placeholder="Y" matInput [ngModel]="point.Y_WGS84 | number : '1.4-10'" (ngModelChange)="point.Y_WGS84=$event"
+               formControlName="Y_WGS84" required>
+
       </mat-form-field>
 
-      <mat-form-field class="full-width" hintLabel="(X, Y, np.50.43322, 12.34455)">
-        <input type="text" placeholder="Współrzędne WGS84 " matInput [(ngModel)]="point.wspWGS84"
-               formControlName="wspWGS84">
-        <mat-hint align="end">
-          <a href="">Wybierz z mapy</a>
-          <a href=""> <i class="material-icons">location_searching</i>
-          </a>
-        </mat-hint>
+      <label>Współrzędne w układzie 2000:</label>
+      <mat-form-field class="short-width" hintLabel="(np. 5548589.65)">
+        <input [textMask]="{mask: mask, guide: false}" type="text" name="X_2000" id="X_2000"
+               placeholder="X" matInput [ngModel]="point.X_2000 | number : '1.4-10'" (ngModelChange)="point.X_2000=$event"
+               formControlName="X_2000" required>
+      </mat-form-field>
+      <mat-form-field class="short-width right" hintLabel="(np. 7422760.20)">
+        <input [textMask]="{mask: mask, guide: false}" type="text" name="X_2000" id="Y_2000"
+               placeholder="Y" matInput [ngModel]="point.Y_2000 | number : '1.4-10'" (ngModelChange)="point.Y_2000=$event"
+               formControlName="Y_2000" required>
+
       </mat-form-field>
     </ng-container>
 
-
+    <!--Wybór lokalizacji-->
+    <mat-hint style="float: right" align="end">
+      <a href="">Wybierz z mapy</a>
+      <a href=""> <i class="material-icons">location_searching</i>
+      </a>
+    </mat-hint>
 
 
     <div class="radio-group-container">
@@ -86,8 +108,8 @@
     </mat-form-field>
 
     <mat-form-field class="full-width">
-      <input type="text" placeholder="Współrzędne (lokalne)" matInput [(ngModel)]="point.wspLokalne"
-             formControlName="wspLokalne">
+      <input type="text" placeholder="Współrzędne (lokalne)" matInput [(ngModel)]="point.X_local"
+             formControlName="X_local">
     </mat-form-field>
 
     <mat-form-field class="full-width">
@@ -98,6 +120,20 @@
     <mat-form-field class="full-width">
       <input type="text" placeholder="H (KRONSZTADT 86)" matInput [(ngModel)]="point.HKronsztadt"
              formControlName="HKronsztadt">
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <input type="text" placeholder="Stabilizacja" matInput [(ngModel)]="point.stabilizacja"
+             formControlName="stabilizacja">
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <input type="text" placeholder="Typ znaku" matInput [(ngModel)]="point.typZnaku" formControlName="typZnaku">
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <input type="text" placeholder="Punkt znaleziono" matInput [(ngModel)]="point.znaleziono"
+             formControlName="znaleziono">
     </mat-form-field>
 
     <mat-form-field class="full-width">
