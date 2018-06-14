@@ -7,8 +7,6 @@ export class PointDetails {
   gmina?: string;
   X?: number;
   Y?: number;
-  X_2000?: number;
-  Y_2000?: number;
   X_WGS84?: number;
   Y_WGS84?: number;
   X_local?: number;

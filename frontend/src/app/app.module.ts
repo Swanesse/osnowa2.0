@@ -24,7 +24,10 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {FormsModule} from "@angular/forms";
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { TextMaskModule } from 'angular2-text-mask';
-
+import proj4 from "proj4";
+// import * as proj4 from "proj4";
+// import * as proj4 from 'proj4';
+// import {proj4} from 'proj4';
 
 
 @NgModule({
@@ -34,7 +37,6 @@ import { TextMaskModule } from 'angular2-text-mask';
     HomeComponent,
     MapComponent,
     HeaderComponent,
-
   ],
   imports: [
     BrowserModule,
