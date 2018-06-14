@@ -59,9 +59,17 @@ export class PointDetailsComponent implements OnInit {
     })
   }
 
+  ifXisBlur() {
+    this.coordinateExistX = true;
+  }
+
+  ifYisBlur() {
+    this.coordinateExistY = true;
+
+  }
+
   transformCoordinates() {
 
-    this.coordinateExistX = true;
     if (this.pointForm.get('X').valid && this.pointForm.get('Y').valid) {
       if (this.pointForm.value.X) {
         if (this.pointForm.value.Y) {
@@ -229,7 +237,7 @@ export class PointDetailsComponent implements OnInit {
                 else if (this.pointForm.value.X > 180) {
                   console.log('Współrzędna X jest niepoprawna');
                 }
-                else{
+                else {
                   console.log('Wpisane współrzędne nie są w układze 2000 1');
                 }
               }
