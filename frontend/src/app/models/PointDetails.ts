@@ -5,8 +5,6 @@ export class PointDetails {
   woj?: string;
   powiat?: string;
   gmina?: string;
-  X?: number;
-  Y?: number;
   X_WGS84?: number;
   Y_WGS84?: number;
   X_local?: number;

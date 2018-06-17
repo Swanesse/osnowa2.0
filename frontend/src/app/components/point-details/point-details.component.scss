@@ -1,6 +1,5 @@
 @import "../../../sass/variables.scss";
 
-
 .header-side-container {
   position: absolute;
   z-index: 400;
@@ -78,18 +77,47 @@
   }
 }
 
-.radio-group-container{
+.radio-group-container {
   margin-bottom: 5px;
+
 }
 
-.radio-button-container{
+#typOsnowy {
+  margin-top: 25px;
+  margin-bottom: 7px;
+}
+
+.radio-button-container {
   margin-bottom: 10px;
 }
 
-.short-width{
+.short-width {
   width: 165px;
 }
 
-.right{
+.right {
   float: right;
+}
+
+.more{
+  position: relative;
+  left:165px;
+}
+
+.form_element {
+  margin-bottom: 5px;
+  label {
+    display: inherit;
+    margin-bottom: 5px;
+  }
+}
+
+.localization {
+  float: right;
+  div {
+    float: left;
+    text-align: center;
+    margin: 5px;
+    margin-right: 15px;
+  }
 }
