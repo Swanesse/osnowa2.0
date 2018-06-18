@@ -10,6 +10,7 @@ import proj4 from "proj4";
 })
 export class PointDetailsComponent implements OnInit {
 
+  location = false;
   X;
   Y;
   X_2000;
@@ -19,6 +20,7 @@ export class PointDetailsComponent implements OnInit {
   validY: string = '13';
   isXBlur: boolean = false;
   isYBlur: boolean = false;
+  pointForm: FormGroup;
   public mask = [/[- 0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/];
 
   constructor() {
@@ -34,13 +36,13 @@ export class PointDetailsComponent implements OnInit {
 
     this.pointForm = new FormGroup({
       X: new FormControl(null, [Validators.required, this.ValidatorX]),
-      Y: new FormControl(null, [Validators.required, control => this.ValidatorX(control)]),
+      Y: new FormControl(null, [Validators.required, this.ValidatorY]),
 
-      X_WGS84: new FormControl(null, Validators.required),
-      Y_WGS84: new FormControl(null, Validators.required),
+      X_WGS84: new FormControl(null, [Validators.required, this.ValidatorXWGS84]),
+      Y_WGS84: new FormControl(null, [Validators.required, this.ValidatorYWGS84]),
 
-      X_2000: new FormControl(null),
-      Y_2000: new FormControl(null),
+      X_2000: new FormControl(null, this.ValidatorX2000),
+      Y_2000: new FormControl(null, this.ValidatorY2000),
 
       X_local: new FormControl(null),
       Y_local: new FormControl(null),
@@ -56,7 +58,7 @@ export class PointDetailsComponent implements OnInit {
       stabilizacja: new FormControl(null),
       typZnaku: new FormControl(null),
       znaleziono: new FormControl(null),
-    })
+    });
   }
 
   ifXisBlur() {
@@ -69,37 +71,30 @@ export class PointDetailsComponent implements OnInit {
   }
 
   transformCoordinates() {
-    console.log('Wchodzi do funkcji');
-
-    this.validX = '13';
-    this.validY = '13';
-
     let X = this.pointForm.value.X;
     let Y = this.pointForm.value.Y;
 
     if (this.pointForm.get('X').valid && this.pointForm.get('Y').valid) {
-      console.log('Jest valid');
-      if (X) {
-        if (Y) {
+      if (Y) {
+        if (X) {
 
-          if (Y >= -90) {
-            if (X >= -180) {
-              if (X >= 14.1400) {
-                console.log('>=14.14');
-                if (X <= 16.5000) {
+          if (X >= -90) {
+            if (Y >= -180) {
+              if (Y >= 14.1400) {
+                if (Y <= 16.5000) {
 
                   //2000 zone 5
-                  if (Y >= 50.25 && Y <= 54.5) {
+                  if (X >= 50.25 && X <= 54.5) {
                     this.validX = '1';
                     this.validY = '1';
-                    let coordinate2000 = proj4('EPSG:2176', [Number(X), Number(Y)]);
-                    this.X_2000 = coordinate2000[0];
-                    this.Y_2000 = coordinate2000[1];
+                    let coordinate2000 = proj4('EPSG:2176', [Number(Y), Number(X)]);
+                    this.X_2000 = coordinate2000[1];
+                    this.Y_2000 = coordinate2000[0];
                     this.point.X_WGS84 = X;
                     this.point.Y_WGS84 = Y;
                   }
                   else {
-                    if (Y > 180) {
+                    if (X > 90) {
                       this.validY = '0';
                       console.log('Współrzędna Y jest niepoprawna');
                     }
@@ -113,20 +108,20 @@ export class PointDetailsComponent implements OnInit {
                     }
                   }
                 }
-                else if (X <= 19.5000) {
+                else if (Y <= 19.5000) {
 
                   //2000 zone 6
-                  if (Y >= 49.3300 && Y <= 54.8300) {
+                  if (X >= 49.3300 && X <= 54.8300) {
                     this.validX = '1';
                     this.validY = '1';
-                    let coordinate2000 = proj4('EPSG:2177', [Number(X), Number(Y)]);
-                    this.X_2000 = coordinate2000[0];
-                    this.Y_2000 = coordinate2000[1];
+                    let coordinate2000 = proj4('EPSG:2177', [Number(Y), Number(X)]);
+                    this.X_2000 = coordinate2000[1];
+                    this.Y_2000 = coordinate2000[0];
                     this.point.X_WGS84 = X;
                     this.point.Y_WGS84 = Y;
                   }
                   else {
-                    if (Y > 180) {
+                    if (X > 90) {
                       this.validY = '0';
                       console.log('Współrzędna Y jest niepoprawna');
                     }
@@ -140,22 +135,22 @@ export class PointDetailsComponent implements OnInit {
                     }
                   }
                 }
-                else if (X <= 22.5000) {
+                else if (Y <= 22.5000) {
 
                   //2000 zone 7
-                  if (Y >= 49.0900 && Y <= 54.5000) {
+                  if (X >= 49.0900 && X <= 54.5000) {
                     this.validX = '1';
                     this.validY = '1';
-                    let coordinate2000 = proj4('EPSG:2178', [Number(X), Number(Y)]);
-                    this.X_2000 = coordinate2000[0];
-                    this.Y_2000 = coordinate2000[1];
+                    let coordinate2000 = proj4('EPSG:2178', [Number(Y), Number(X)]);
+                    this.X_2000 = coordinate2000[1];
+                    this.Y_2000 = coordinate2000[0];
                     this.point.X_WGS84 = X;
                     this.point.Y_WGS84 = Y;
                   }
                   else {
-                    if (Y > 180) {
+                    if (X > 90) {
                       this.validY = '0';
-                      console.log('Współrzędna Y jest niepoprawna');
+                      console.log('Współrzędna X jest niepoprawna');
                     }
                     else {
                       this.validX = '1';
@@ -168,18 +163,20 @@ export class PointDetailsComponent implements OnInit {
 
                 }
 
-                else if (X <= 24.1600) {
+                else if (Y <= 24.1600) {
 
                   //2000 zone 8
-                  if (Y >= 49.0300 && Y <= 54.4500) {
-                    let coordinate2000 = proj4('EPSG:2179', [Number(X), Number(Y)]);
-                    this.X_2000 = coordinate2000[0];
-                    this.Y_2000 = coordinate2000[1];
+                  if (X >= 49.0300 && X <= 54.4500) {
+                    this.validX = '1';
+                    this.validY = '1';
+                    let coordinate2000 = proj4('EPSG:2179', [Number(Y), Number(X)]);
+                    this.X_2000 = coordinate2000[1];
+                    this.Y_2000 = coordinate2000[0];
                     this.point.X_WGS84 = X;
                     this.point.Y_WGS84 = Y;
                   }
                   else {
-                    if (Y > 180) {
+                    if (X > 90) {
                       this.validY = '0';
                       console.log('Współrzędna Y jest niepoprawna');
                     }
@@ -193,33 +190,36 @@ export class PointDetailsComponent implements OnInit {
                     }
                   }
                 }
-                else if (X >= 5438667.1168) {
-                  console.log('X >= 5438667.1168');
-                  if (X <= 5606974.4722) {
+                else if (Y >= 5438667.1168) {
+                  if (Y <= 5606974.4722) {
 
                     //2000 zone 5
-                    if (Y >= 5568580.0317 && Y <= 6042141.2701) {
-                      let coordinateWGS84 = proj4('EPSG:2176', 'EPSG:4326', [Number(X), Number(Y)]);
+                    if (X >= 5568580.0317 && X <= 6042141.2701) {
+                      this.validX = '1';
+                      this.validY = '1';
+                      let coordinateWGS84 = proj4('EPSG:2176', 'EPSG:4326', [Number(Y), Number(X)]);
                       this.X_2000 = X;
                       this.Y_2000 = Y;
-                      this.point.X_WGS84 = coordinateWGS84[0];
-                      this.point.Y_WGS84 = coordinateWGS84[1];
+                      this.point.X_WGS84 = coordinateWGS84[1];
+                      this.point.Y_WGS84 = coordinateWGS84[0];
                     }
                     else {
                       this.validY = '0';
                       console.log('Współrzędna Y jest niepoprawna');
                     }
                   }
-                  else if (X >= 6390979.5111) {
-                    if (X <= 6609020.4889) {
+                  else if (Y >= 6390979.5111) {
+                    if (Y <= 6609020.4889) {
 
                       //2000 zone 6
-                      if (Y >= 5466989.5093 && Y <= 6078869.0066) {
-                        let coordinateWGS84 = proj4('EPSG:2177', 'EPSG:4326', [Number(X), Number(Y)]);
+                      if (X >= 5466989.5093 && X <= 6078869.0066) {
+                        this.validX = '1';
+                        this.validY = '1';
+                        let coordinateWGS84 = proj4('EPSG:2177', 'EPSG:4326', [Number(Y), Number(X)]);
                         this.X_2000 = X;
                         this.Y_2000 = Y;
-                        this.point.X_WGS84 = coordinateWGS84[0];
-                        this.point.Y_WGS84 = coordinateWGS84[1];
+                        this.point.X_WGS84 = coordinateWGS84[1];
+                        this.point.Y_WGS84 = coordinateWGS84[0];
                       }
                       else {
                         this.validY = '0';
@@ -227,16 +227,18 @@ export class PointDetailsComponent implements OnInit {
                       }
 
                     }
-                    else if (X >= 7390450.4069) {
-                      if (X <= 7609549.5931) {
+                    else if (Y >= 7390450.4069) {
+                      if (Y <= 7609549.5931) {
 
                         //2000 zone 7
-                        if (Y >= 5440301.5811 && Y <= 6042141.2701) {
-                          let coordinateWGS84 = proj4('EPSG:2178', 'EPSG:4326', [Number(X), Number(Y)]);
+                        if (X >= 5440301.5811 && X <= 6042141.2701) {
+                          this.validX = '1';
+                          this.validY = '1';
+                          let coordinateWGS84 = proj4('EPSG:2178', 'EPSG:4326', [Number(Y), Number(X)]);
                           this.X_2000 = X;
                           this.Y_2000 = Y;
-                          this.point.X_WGS84 = coordinateWGS84[0];
-                          this.point.Y_WGS84 = coordinateWGS84[1];
+                          this.point.X_WGS84 = coordinateWGS84[1];
+                          this.point.Y_WGS84 = coordinateWGS84[0];
                         }
                         else {
                           this.validY = '0';
@@ -244,16 +246,18 @@ export class PointDetailsComponent implements OnInit {
                         }
 
                       }
-                      else if (X >= 8390318.4332) {
-                        if (X <= 8511699.5509) {
+                      else if (Y >= 8390318.4332) {
+                        if (Y <= 8511699.5509) {
 
                           //2000 zone 8
-                          if (Y >= 5432557.9291 && Y <= 6036576.6253) {
-                            let coordinateWGS84 = proj4('EPSG:2179', 'EPSG:4326', [Number(X), Number(Y)]);
+                          if (X >= 5432557.9291 && X <= 6036576.6253) {
+                            this.validX = '1';
+                            this.validY = '1';
+                            let coordinateWGS84 = proj4('EPSG:2179', 'EPSG:4326', [Number(Y), Number(X)]);
                             this.X_2000 = X;
                             this.Y_2000 = Y;
-                            this.point.X_WGS84 = coordinateWGS84[0];
-                            this.point.Y_WGS84 = coordinateWGS84[1];
+                            this.point.X_WGS84 = coordinateWGS84[1];
+                            this.point.Y_WGS84 = coordinateWGS84[0];
                           }
                           else {
                             this.validY = '0';
@@ -314,6 +318,330 @@ export class PointDetailsComponent implements OnInit {
     }
   }
 
+  transformCoordinatesWGS84() {
+    let X = this.pointForm.value.X_WGS84;
+    let Y = this.pointForm.value.Y_WGS84;
+    console.log('wszedł');
+    console.log('this.pointForm.get(\'X_WGS84\').valid', this.pointForm.get('X_WGS84').valid);
+    console.log('X', X);
+    if (this.pointForm.get('X').valid && this.pointForm.get('Y').valid) {
+
+      if (Y) {
+        if (X) {
+
+          if (X >= -90) {
+            if (Y >= -180) {
+              if (Y >= 14.1400) {
+                if (Y <= 16.5000) {
+
+                  //2000 zone 5
+                  if (X >= 50.25 && X <= 54.5) {
+                    let coordinate2000 = proj4('EPSG:2176', [Number(Y), Number(X)]);
+                    this.X_2000 = coordinate2000[1];
+                    this.Y_2000 = coordinate2000[0];
+                    this.point.X_WGS84 = X;
+                    this.point.Y_WGS84 = Y;
+                  }
+                  else {
+                    this.point.X_WGS84 = X;
+                    this.point.Y_WGS84 = Y;
+                    this.X_2000 = null;
+                    this.Y_2000 = null;
+                    console.log('Wpisane współrzędne nie są w układzie 2000');
+                  }
+                }
+                else if (Y <= 19.5000) {
+
+                  //2000 zone 6
+                  if (X >= 49.3300 && X <= 54.8300) {
+                    let coordinate2000 = proj4('EPSG:2177', [Number(Y), Number(X)]);
+                    this.X_2000 = coordinate2000[1];
+                    this.Y_2000 = coordinate2000[0];
+                    this.point.X_WGS84 = X;
+                    this.point.Y_WGS84 = Y;
+                  }
+                  else {
+                    this.point.X_WGS84 = X;
+                    this.point.Y_WGS84 = Y;
+                    this.X_2000 = null;
+                    this.Y_2000 = null;
+                    console.log('Wpisane współrzędne nie są w ukłądzie 2000 4');
+                  }
+                }
+                else if (Y <= 22.5000) {
+
+                  //2000 zone 7
+                  if (X >= 49.0900 && X <= 54.5000) {
+                    let coordinate2000 = proj4('EPSG:2178', [Number(Y), Number(X)]);
+                    this.X_2000 = coordinate2000[1];
+                    this.Y_2000 = coordinate2000[0];
+                    this.point.X_WGS84 = X;
+                    this.point.Y_WGS84 = Y;
+                  }
+                  else {
+                    this.point.X_WGS84 = X;
+                    this.point.Y_WGS84 = Y;
+                    this.X_2000 = null;
+                    this.Y_2000 = null;
+                    console.log('Wpisane współrzędne nie są w układzie 2000 3');
+                  }
+                }
+                else if (Y <= 24.1600) {
+
+                  //2000 zone 8
+                  if (X >= 49.0300 && X <= 54.4500) {
+                    let coordinate2000 = proj4('EPSG:2179', [Number(Y), Number(X)]);
+                    this.X_2000 = coordinate2000[1];
+                    this.Y_2000 = coordinate2000[0];
+                    this.point.X_WGS84 = X;
+                    this.point.Y_WGS84 = Y;
+                  }
+                  else {
+                    this.point.X_WGS84 = X;
+                    this.point.Y_WGS84 = Y;
+                    this.X_2000 = null;
+                    this.Y_2000 = null;
+                    console.log('Wpisane współrzędne nie są w ukłądzie 2000 3');
+                  }
+                }
+                else {
+                  this.point.X_WGS84 = X;
+                  this.point.Y_WGS84 = Y;
+                  this.X_2000 = null;
+                  this.Y_2000 = null;
+                  console.log('Wpisane współrzędne nie są w układze 2000 1');
+                }
+              }
+              else {
+                this.point.X_WGS84 = X;
+                this.point.Y_WGS84 = Y;
+                this.X_2000 = null;
+                this.Y_2000 = null;
+                console.log('Wpisane współrzędne nie są w układzie 2000 2');
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  transformCoordinatesWGS84Location(x, y) {
+    let X = x;
+    let Y = y;
+    if (Y) {
+      if (X) {
+
+        if (X >= -90) {
+          if (Y >= -180) {
+            if (Y >= 14.1400) {
+              if (Y <= 16.5000) {
+
+                //2000 zone 5
+                if (X >= 50.25 && X <= 54.5) {
+                  let coordinate2000 = proj4('EPSG:2176', [Number(Y), Number(X)]);
+                  this.X_2000 = coordinate2000[1];
+                  this.Y_2000 = coordinate2000[0];
+                  this.point.X_WGS84 = X;
+                  this.point.Y_WGS84 = Y;
+                }
+                else {
+                  this.point.X_WGS84 = X;
+                  this.point.Y_WGS84 = Y;
+                  this.X_2000 = null;
+                  this.Y_2000 = null;
+                  console.log('Wpisane współrzędne nie są w układzie 2000');
+                }
+              }
+              else if (Y <= 19.5000) {
+
+                //2000 zone 6
+                if (X >= 49.3300 && X <= 54.8300) {
+                  let coordinate2000 = proj4('EPSG:2177', [Number(Y), Number(X)]);
+                  this.X_2000 = coordinate2000[1];
+                  this.Y_2000 = coordinate2000[0];
+                  this.point.X_WGS84 = X;
+                  this.point.Y_WGS84 = Y;
+                }
+                else {
+                  this.point.X_WGS84 = X;
+                  this.point.Y_WGS84 = Y;
+                  this.X_2000 = null;
+                  this.Y_2000 = null;
+                  console.log('Wpisane współrzędne nie są w ukłądzie 2000 4');
+                }
+              }
+              else if (Y <= 22.5000) {
+
+                //2000 zone 7
+                if (X >= 49.0900 && X <= 54.5000) {
+                  let coordinate2000 = proj4('EPSG:2178', [Number(Y), Number(X)]);
+                  this.X_2000 = coordinate2000[1];
+                  this.Y_2000 = coordinate2000[0];
+                  this.point.X_WGS84 = X;
+                  this.point.Y_WGS84 = Y;
+                }
+                else {
+                  this.point.X_WGS84 = X;
+                  this.point.Y_WGS84 = Y;
+                  this.X_2000 = null;
+                  this.Y_2000 = null;
+                  console.log('Wpisane współrzędne nie są w układzie 2000 3');
+                }
+              }
+              else if (Y <= 24.1600) {
+
+                //2000 zone 8
+                if (X >= 49.0300 && X <= 54.4500) {
+                  let coordinate2000 = proj4('EPSG:2179', [Number(Y), Number(X)]);
+                  this.X_2000 = coordinate2000[1];
+                  this.Y_2000 = coordinate2000[0];
+                  this.point.X_WGS84 = X;
+                  this.point.Y_WGS84 = Y;
+                }
+                else {
+                  this.point.X_WGS84 = X;
+                  this.point.Y_WGS84 = Y;
+                  this.X_2000 = null;
+                  this.Y_2000 = null;
+                  console.log('Wpisane współrzędne nie są w ukłądzie 2000 3');
+                }
+              }
+              else {
+                this.point.X_WGS84 = X;
+                this.point.Y_WGS84 = Y;
+                this.X_2000 = null;
+                this.Y_2000 = null;
+                console.log('Wpisane współrzędne nie są w układze 2000 1');
+              }
+            }
+            else {
+              this.point.X_WGS84 = X;
+              this.point.Y_WGS84 = Y;
+              this.X_2000 = null;
+              this.Y_2000 = null;
+              console.log('Wpisane współrzędne nie są w układzie 2000 2');
+            }
+          }
+        }
+      }
+    }
+
+  }
+
+
+  transformCoordinates2000() {
+    let X = this.pointForm.value.X_2000;
+    let Y = this.pointForm.value.Y_2000;
+
+    if (this.pointForm.get('X_2000').valid && this.pointForm.get('Y_2000').valid) {
+      if (Y) {
+        if (X) {
+          if (Y >= 5438667.1168) {
+            if (Y <= 5606974.4722) {
+
+              //2000 zone 5
+              if (X >= 5568580.0317 && X <= 6042141.2701) {
+                let coordinateWGS84 = proj4('EPSG:2176', 'EPSG:4326', [Number(Y), Number(X)]);
+                this.X_2000 = X;
+                this.Y_2000 = Y;
+                this.point.X_WGS84 = coordinateWGS84[1];
+                this.point.Y_WGS84 = coordinateWGS84[0];
+              }
+              else {
+                this.point.X_WGS84 = null;
+                this.point.Y_WGS84 = null;
+                console.log('Współrzędna Y jest niepoprawna');
+              }
+            }
+            else if (Y >= 6390979.5111) {
+              if (Y <= 6609020.4889) {
+
+                //2000 zone 6
+                if (X >= 5466989.5093 && X <= 6078869.0066) {
+                  let coordinateWGS84 = proj4('EPSG:2177', 'EPSG:4326', [Number(Y), Number(X)]);
+                  this.X_2000 = X;
+                  this.Y_2000 = Y;
+                  this.point.X_WGS84 = coordinateWGS84[1];
+                  this.point.Y_WGS84 = coordinateWGS84[0];
+                }
+                else {
+                  this.point.X_WGS84 = null;
+                  this.point.Y_WGS84 = null;
+                  console.log('Współrzędna Y jest niepoprawna');
+                }
+
+              }
+              else if (Y >= 7390450.4069) {
+                if (Y <= 7609549.5931) {
+
+                  //2000 zone 7
+                  if (X >= 5440301.5811 && X <= 6042141.2701) {
+                    let coordinateWGS84 = proj4('EPSG:2178', 'EPSG:4326', [Number(Y), Number(X)]);
+                    this.X_2000 = X;
+                    this.Y_2000 = Y;
+                    this.point.X_WGS84 = coordinateWGS84[1];
+                    this.point.Y_WGS84 = coordinateWGS84[0];
+                  }
+                  else {
+                    this.point.X_WGS84 = null;
+                    this.point.Y_WGS84 = null;
+                    console.log('Współrzędna Y jest niepoprawna');
+                  }
+
+                }
+                else if (Y >= 8390318.4332) {
+                  if (Y <= 8511699.5509) {
+
+                    //2000 zone 8
+                    if (X >= 5432557.9291 && X <= 6036576.6253) {
+                      let coordinateWGS84 = proj4('EPSG:2179', 'EPSG:4326', [Number(Y), Number(X)]);
+                      this.X_2000 = X;
+                      this.Y_2000 = Y;
+                      this.point.X_WGS84 = coordinateWGS84[1];
+                      this.point.Y_WGS84 = coordinateWGS84[0];
+                    }
+                    else {
+                      this.point.X_WGS84 = null;
+                      this.point.Y_WGS84 = null;
+                      console.log('Współrzędna Y jest niepoprawna');
+                    }
+                  }
+                  else {
+                    this.point.X_WGS84 = null;
+                    this.point.Y_WGS84 = null;
+                    console.log('Współrzędna X jest niepoprawna 1');
+                  }
+                }
+                else {
+                  this.point.X_WGS84 = null;
+                  this.point.Y_WGS84 = null;
+                  console.log('Współrzędna X jest niepoprawna 2');
+                }
+              }
+              else {
+                this.point.X_WGS84 = null;
+                this.point.Y_WGS84 = null;
+                console.log('Współrzędna X jest niepoprawna 3');
+              }
+            }
+            else {
+              this.point.X_WGS84 = null;
+              this.point.Y_WGS84 = null;
+              console.log('Współrzędna X jest niepoprawna 4');
+            }
+          }
+          else {
+            this.point.X_WGS84 = null;
+            this.point.Y_WGS84 = null;
+            console.log('Współrzędna X jest niepoprawna 5');
+          }
+
+        }
+      }
+    }
+  }
+
   outputCoordinateX() {
     this.isXBlur = false;
   }
@@ -322,30 +650,71 @@ export class PointDetailsComponent implements OnInit {
     this.isYBlur = false;
   }
 
-  ValidatorX(control: AbstractControl): ValidationErrors {
-    const x = control.value;
-    if (x < -180 || (x > 180 && x < 5438667.1168) || (x > 5606974.4722 && x < 6390979.5111) || (x > 6609020.4889 && x < 7390450.4069) || (x > 7609549.5931 && x < 8390318.4332) || x > 8511699.5509) {
-      return {unproper: true};
-    }
-  }
-
   ValidatorY(control: AbstractControl): ValidationErrors {
     const y = control.value;
-    this.pointForm.value.X = 1;
-    const x = control.root.get('X').value;
-    if (y < -90 || (x <= 16.5000 && y > 180 && (y < 50.2500 || y > 54.5000)) || (x <= 19.5000 && y > 180 && (y < 49.3300 || y > 54.8300)) || (x <= 22.5000 && y > 189 && (y < 49.0900 || y > 54.5000)) || (x <= 24.1600 && y > 180 && (y < 49.0300 || y > 54.4500)) || (x <= 5606974.4722 && (y < 5568580.0317 || y > 6042141.2701) || (x <= 6609020.4889 && (y < 5466989.5093 || y > 6078869.0066)) || (x <= 7609549.5931 && (y < 5440301.5811 || y > 6042141.2701)) || (x <= 8511699.5509 && (y < 5432557.9291 || y > 6036576.6253)))) {
+    if (y < -180 || (y > 180 && y < 5438667.1168) || (y > 5606974.4722 && y < 6390979.5111) || (y > 6609020.4889 && y < 7390450.4069) || (y > 7609549.5931 && y < 8390318.4332) || y > 8511699.5509) {
       return {unproper: true};
     }
   }
 
-  pointForm: FormGroup;
+  ValidatorX(control: AbstractControl): ValidationErrors {
+    const x = control.value;
+    if (x < -90 || (x > 90 && x < 5432557.9291) || (x > 6078869.0066)) {
+      return {unproper: true};
+    }
+  }
+
+  ValidatorYWGS84(control: AbstractControl): ValidationErrors {
+    const y = control.value;
+    if (y < -180 || y > 180) {
+      return {unproper: true};
+    }
+  }
+
+  ValidatorXWGS84(control: AbstractControl): ValidationErrors {
+    const x = control.value;
+    if (x < -90 || x > 90) {
+      return {unproper: true};
+    }
+  }
+
+  ValidatorY2000(control: AbstractControl): ValidationErrors {
+    const y = control.value;
+    if (y < 5438667.1168 || (y > 5606974.4722 && y < 6390979.5111) || (y > 6609020.4889 && y < 7390450.4069) || (y > 7609549.5931 && y < 8390318.4332) || y > 8511699.5509) {
+      return {unproper: true};
+    }
+  }
+
+  ValidatorX2000(control: AbstractControl): ValidationErrors {
+    const x = control.value;
+    if (x < 5432557.9291 || x > 6078869.0066) {
+      return {unproper: true};
+    }
+  }
+
+  getCoordinates() {
+    if (navigator.geolocation) {
+      let that = this;
+      navigator.geolocation.getCurrentPosition(function (location) {
+        that.location = true;
+        that.point.X_WGS84 = location.coords.latitude;
+        that.point.Y_WGS84 = location.coords.longitude;
+        // let coordinate2000 = proj4('EPSG:2179', [Number(that.point.Y_WGS84), Number(that.point.X_WGS84)]);
+        // that.X_2000 = coordinate2000[1];
+        // that.Y_2000 = coordinate2000[0];
+        that.transformCoordinatesWGS84Location(that.point.X_WGS84, that.point.Y_WGS84);
+      });
+    } else {
+      alert('twoja przeglądarka nie wspiera geolokacji...');
+    }
+  }
 
 
+  //TODO poprawić walidację - Walidacja pola Y powinna zależeć od x (w której strefie teraz jestem)
+  //TODO poprawić diagram - bo Y>90 a nie >180
+  //TODO zrobić diagramy do dwóch pozostałych algorytmów
   //TODO get, w którego promisie będzie przekierowanie do ściżki /home (jeśli się uda zapytanie do serwera. Jeśli nie - wyświetl błąd)
   onSubmit() {
     console.log(this.point);
-
-
   }
-
 }
