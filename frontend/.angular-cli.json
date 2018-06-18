@@ -11,11 +11,11 @@
         "assets",
         "favicon.ico",
         {
-  "glob": "**/*",
-  "input": "../node_modules/leaflet/dist/images",
-  "output": "leaflet/",
-  "allowOutsideOutDir": false
-}
+          "glob": "**/*",
+          "input": "../node_modules/leaflet/dist/images",
+          "output": "leaflet/",
+          "allowOutsideOutDir": false
+        }
       ],
       "index": "index.html",
       "main": "main.ts",

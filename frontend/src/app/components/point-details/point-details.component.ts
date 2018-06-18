@@ -321,11 +321,8 @@ export class PointDetailsComponent implements OnInit {
   transformCoordinatesWGS84() {
     let X = this.pointForm.value.X_WGS84;
     let Y = this.pointForm.value.Y_WGS84;
-    console.log('wszedł');
-    console.log('this.pointForm.get(\'X_WGS84\').valid', this.pointForm.get('X_WGS84').valid);
-    console.log('X', X);
-    if (this.pointForm.get('X').valid && this.pointForm.get('Y').valid) {
 
+    if (this.pointForm.get('X_WGS84').valid && this.pointForm.get('Y_WGS84').valid) {
       if (Y) {
         if (X) {
 
@@ -699,9 +696,6 @@ export class PointDetailsComponent implements OnInit {
         that.location = true;
         that.point.X_WGS84 = location.coords.latitude;
         that.point.Y_WGS84 = location.coords.longitude;
-        // let coordinate2000 = proj4('EPSG:2179', [Number(that.point.Y_WGS84), Number(that.point.X_WGS84)]);
-        // that.X_2000 = coordinate2000[1];
-        // that.Y_2000 = coordinate2000[0];
         that.transformCoordinatesWGS84Location(that.point.X_WGS84, that.point.Y_WGS84);
       });
     } else {
@@ -709,11 +703,6 @@ export class PointDetailsComponent implements OnInit {
     }
   }
 
-
-  //TODO poprawić walidację - Walidacja pola Y powinna zależeć od x (w której strefie teraz jestem)
-  //TODO poprawić diagram - bo Y>90 a nie >180
-  //TODO zrobić diagramy do dwóch pozostałych algorytmów
-  //TODO get, w którego promisie będzie przekierowanie do ściżki /home (jeśli się uda zapytanie do serwera. Jeśli nie - wyświetl błąd)
   onSubmit() {
     console.log(this.point);
   }
