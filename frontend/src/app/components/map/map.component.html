@@ -1,7 +1,10 @@
 <div class="map"
      leaflet
+     [leafletLayers]="layers"
+     (leafletMapReady)="onMapReady($event)"
      [leafletOptions]="options">
+  <!--[leafletMarkerCluster]="markerClusterData"-->
      <!--[leafletLayersControl]="layersControl"-->
-  <!--[leafletLayers]="layers"-->
+  <!--[leafletLayers]="laers"-->
 
 </div>

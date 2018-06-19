@@ -1,7 +1,7 @@
 import {Routes, RouterModule} from '@angular/router';
-import {PointDetailsComponent} from "./components/point-details/point-details.component";
-import {NgModule} from "@angular/core";
-import {HomeComponent} from "./components/home/home.component";
+import {PointDetailsComponent} from './components/point-details/point-details.component';
+import {NgModule} from '@angular/core';
+import {HomeComponent} from './components/home/home.component';
 
 const appRoutes: Routes = [
   {
@@ -9,18 +9,14 @@ const appRoutes: Routes = [
     redirectTo: '/home',
     pathMatch: 'full'
   },
-  // {
-  //   path: 'points',
-  //   component: PointDetailsComponent,
-  // },
   {
     path: 'home',
     component: HomeComponent,
-    children:[
+    children: [
       {
-    path: 'points',
-    component: PointDetailsComponent,
-  },
+        path: 'points',
+        component: PointDetailsComponent,
+      },
     ]
   }
 ];
@@ -29,6 +25,6 @@ const appRoutes: Routes = [
   imports: [RouterModule.forRoot(appRoutes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule{
+export class AppRoutingModule {
 
 }

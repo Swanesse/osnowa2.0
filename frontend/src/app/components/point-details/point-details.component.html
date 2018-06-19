@@ -1,3 +1,5 @@
+<div [hidden]="!isAddPanel">
+
 <div class="header-side-container">
   <div class="main-header">
     <h1>Dodaj punkt</h1>
@@ -104,11 +106,13 @@
 
     <!--Wybór lokalizacji-->
     <mat-hint class="localization">
-      <div >
-        <a href ="" >Wybierz z mapy</a>
-
+      <!--Wybór z mapy-->
+      <div class="locationSearching">
+        <a (click)="chooseCoordinatesFromMap()">Wybierz z mapy</a>
       </div>
-      <a id="locationSearching" (click)="getCoordinates()"> <i class="material-icons">location_searching</i>
+
+      <!--Aktualna lokalizacja użytkownika-->
+      <a class="locationSearching" (click)="getCoordinates()"> <i class="material-icons">location_searching</i>
       </a>
     </mat-hint>
 
@@ -197,4 +201,5 @@
 
     <button type="submit" mat-raised-button class="main-button">Zapisz</button>
   </form>
+</div>
 </div>
