@@ -1,4 +1,4 @@
-<div class="map"
+<div class="map" [style.cursor] = "getCrosshair()"
      leaflet
      [leafletLayers]="layers"
      (leafletMapReady)="onMapReady($event)"

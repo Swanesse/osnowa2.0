@@ -1,19 +1,21 @@
-import {ChangeDetectorRef, Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormGroup, FormControl, Validators, AbstractControl, ValidationErrors} from '@angular/forms';
 import {PointDetails} from '../../models/PointDetails';
 import proj4 from 'proj4';
 import {MapService} from '../../services/map.service';
+import {HttpService} from '../../services/http.service';
 
 @Component({
   selector: 'app-point-details',
   templateUrl: './point-details.component.html',
   styleUrls: ['./point-details.component.scss']
 })
-export class PointDetailsComponent implements OnInit {
+export class PointDetailsComponent implements OnInit, OnDestroy {
   @Output() myEvent: EventEmitter<any> = new EventEmitter();
 
   isAddPanel: boolean = true;
   location = false;
+  sub;
   X;
   Y;
   X_2000;
@@ -26,23 +28,31 @@ export class PointDetailsComponent implements OnInit {
   pointForm: FormGroup;
   public mask = [/[- 0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/];
 
-  constructor(private _mapService: MapService, private cdr: ChangeDetectorRef) {
+  constructor(private _mapService: MapService, private cdr: ChangeDetectorRef//, private httpService: HttpService
+  ) {
     proj4.defs([
       ['EPSG:2176', '+proj=tmerc +lat_0=0 +lon_0=15 +k=0.999923 +x_0=5500000 +y_0=0 +ellps=GRS80 +units=m +no_defs'],
       ['EPSG:2177', '+proj=tmerc +lat_0=0 +lon_0=18 +k=0.999923 +x_0=6500000 +y_0=0 +ellps=GRS80 +units=m +no_defs'],
       ['EPSG:2178', '+proj=tmerc +lat_0=0 +lon_0=21 +k=0.999923 +x_0=7500000 +y_0=0 +ellps=GRS80 +units=m +no_defs'],
       ['EPSG:2179', '+proj=tmerc +lat_0=0 +lon_0=24 +k=0.999923 +x_0=8500000 +y_0=0 +ellps=GRS80 +units=m +no_defs']
     ]);
-    this._mapService.listen().subscribe((m: any) => {
+    this.sub = this._mapService.listen().subscribe((m: any) => {
       this.point.X_WGS84 = m[1];
       this.point.Y_WGS84 = m[2];
       this.transformCoordinatesWGS84Location(this.point.X_WGS84, this.point.Y_WGS84);
-      setTimeout(() => {}, 1000);
       this.isAddPanel = m[0];
+      this.location = true;
       this.cdr.detectChanges();
+      // this.cdr.markForCheck();
       console.log('this.isAddPanel: ', this.isAddPanel);
     });
   }
+
+  // getPosts(lat, long) {
+  //   this.httpService.getPosts(lat, long).subscribe(posts => {
+  //     console.log('posts: ', posts);
+  //   });
+  // }
 
   ngOnInit() {
 
@@ -104,6 +114,7 @@ export class PointDetailsComponent implements OnInit {
                     this.Y_2000 = coordinate2000[0];
                     this.point.X_WGS84 = X;
                     this.point.Y_WGS84 = Y;
+                    this.displayPoint();
                   } else {
                     if (X > 90) {
                       this.validY = '0';
@@ -113,6 +124,7 @@ export class PointDetailsComponent implements OnInit {
                       this.validY = '1';
                       this.point.X_WGS84 = X;
                       this.point.Y_WGS84 = Y;
+                      this.displayPoint();
                       console.log('Wpisane współrzędne nie są w układzie 2000');
 
                     }
@@ -128,6 +140,7 @@ export class PointDetailsComponent implements OnInit {
                     this.Y_2000 = coordinate2000[0];
                     this.point.X_WGS84 = X;
                     this.point.Y_WGS84 = Y;
+                    this.displayPoint();
                   } else {
                     if (X > 90) {
                       this.validY = '0';
@@ -137,6 +150,7 @@ export class PointDetailsComponent implements OnInit {
                       this.validY = '1';
                       this.point.X_WGS84 = X;
                       this.point.Y_WGS84 = Y;
+                      this.displayPoint();
                       console.log('Wpisane współrzędne nie są w ukłądzie 2000 4');
 
                     }
@@ -152,6 +166,8 @@ export class PointDetailsComponent implements OnInit {
                     this.Y_2000 = coordinate2000[0];
                     this.point.X_WGS84 = X;
                     this.point.Y_WGS84 = Y;
+                    this.displayPoint();
+                    // this.getPosts(this.point.X_WGS84, this.point.Y_WGS84 );
                   } else {
                     if (X > 90) {
                       this.validY = '0';
@@ -161,6 +177,7 @@ export class PointDetailsComponent implements OnInit {
                       this.validY = '1';
                       this.point.X_WGS84 = X;
                       this.point.Y_WGS84 = Y;
+                      this.displayPoint();
                       console.log('Wpisane współrzędne nie są w układzie 2000 3');
                     }
                   }
@@ -176,6 +193,7 @@ export class PointDetailsComponent implements OnInit {
                     this.Y_2000 = coordinate2000[0];
                     this.point.X_WGS84 = X;
                     this.point.Y_WGS84 = Y;
+                    this.displayPoint();
                   } else {
                     if (X > 90) {
                       this.validY = '0';
@@ -185,6 +203,7 @@ export class PointDetailsComponent implements OnInit {
                       this.validY = '1';
                       this.point.X_WGS84 = X;
                       this.point.Y_WGS84 = Y;
+                      this.displayPoint();
                       console.log('Wpisane współrzędne nie są w ukłądzie 2000 3');
 
                     }
@@ -201,6 +220,7 @@ export class PointDetailsComponent implements OnInit {
                       this.Y_2000 = Y;
                       this.point.X_WGS84 = coordinateWGS84[1];
                       this.point.Y_WGS84 = coordinateWGS84[0];
+                      this.displayPoint();
                     } else {
                       this.validY = '0';
                       console.log('Współrzędna Y jest niepoprawna');
@@ -217,6 +237,7 @@ export class PointDetailsComponent implements OnInit {
                         this.Y_2000 = Y;
                         this.point.X_WGS84 = coordinateWGS84[1];
                         this.point.Y_WGS84 = coordinateWGS84[0];
+                        this.displayPoint();
                       } else {
                         this.validY = '0';
                         console.log('Współrzędna Y jest niepoprawna');
@@ -234,6 +255,7 @@ export class PointDetailsComponent implements OnInit {
                           this.Y_2000 = Y;
                           this.point.X_WGS84 = coordinateWGS84[1];
                           this.point.Y_WGS84 = coordinateWGS84[0];
+                          this.displayPoint();
                         } else {
                           this.validY = '0';
                           console.log('Współrzędna Y jest niepoprawna');
@@ -251,6 +273,7 @@ export class PointDetailsComponent implements OnInit {
                             this.Y_2000 = Y;
                             this.point.X_WGS84 = coordinateWGS84[1];
                             this.point.Y_WGS84 = coordinateWGS84[0];
+                            this.displayPoint();
                           } else {
                             this.validY = '0';
                             console.log('Współrzędna Y jest niepoprawna');
@@ -279,6 +302,7 @@ export class PointDetailsComponent implements OnInit {
                   this.validY = '1';
                   this.point.X_WGS84 = X;
                   this.point.Y_WGS84 = Y;
+                  this.displayPoint();
                   console.log('Wpisane współrzędne nie są w układze 2000 1');
                 }
               } else {
@@ -286,6 +310,7 @@ export class PointDetailsComponent implements OnInit {
                 this.validY = '1';
                 this.point.X_WGS84 = X;
                 this.point.Y_WGS84 = Y;
+                this.displayPoint();
                 console.log('Wpisane współrzędne nie są w układzie 2000 2');
               }
             } else {
@@ -321,9 +346,11 @@ export class PointDetailsComponent implements OnInit {
                     this.Y_2000 = coordinate2000[0];
                     this.point.X_WGS84 = X;
                     this.point.Y_WGS84 = Y;
+                    this.displayPoint();
                   } else {
                     this.point.X_WGS84 = X;
                     this.point.Y_WGS84 = Y;
+                    this.displayPoint();
                     this.X_2000 = null;
                     this.Y_2000 = null;
                     console.log('Wpisane współrzędne nie są w układzie 2000');
@@ -337,9 +364,11 @@ export class PointDetailsComponent implements OnInit {
                     this.Y_2000 = coordinate2000[0];
                     this.point.X_WGS84 = X;
                     this.point.Y_WGS84 = Y;
+                    this.displayPoint();
                   } else {
                     this.point.X_WGS84 = X;
                     this.point.Y_WGS84 = Y;
+                    this.displayPoint();
                     this.X_2000 = null;
                     this.Y_2000 = null;
                     console.log('Wpisane współrzędne nie są w ukłądzie 2000 4');
@@ -353,9 +382,11 @@ export class PointDetailsComponent implements OnInit {
                     this.Y_2000 = coordinate2000[0];
                     this.point.X_WGS84 = X;
                     this.point.Y_WGS84 = Y;
+                    this.displayPoint();
                   } else {
                     this.point.X_WGS84 = X;
                     this.point.Y_WGS84 = Y;
+                    this.displayPoint();
                     this.X_2000 = null;
                     this.Y_2000 = null;
                     console.log('Wpisane współrzędne nie są w układzie 2000 3');
@@ -369,9 +400,11 @@ export class PointDetailsComponent implements OnInit {
                     this.Y_2000 = coordinate2000[0];
                     this.point.X_WGS84 = X;
                     this.point.Y_WGS84 = Y;
+                    this.displayPoint();
                   } else {
                     this.point.X_WGS84 = X;
                     this.point.Y_WGS84 = Y;
+                    this.displayPoint();
                     this.X_2000 = null;
                     this.Y_2000 = null;
                     console.log('Wpisane współrzędne nie są w ukłądzie 2000 3');
@@ -379,6 +412,7 @@ export class PointDetailsComponent implements OnInit {
                 } else {
                   this.point.X_WGS84 = X;
                   this.point.Y_WGS84 = Y;
+                  this.displayPoint();
                   this.X_2000 = null;
                   this.Y_2000 = null;
                   console.log('Wpisane współrzędne nie są w układze 2000 1');
@@ -386,6 +420,7 @@ export class PointDetailsComponent implements OnInit {
               } else {
                 this.point.X_WGS84 = X;
                 this.point.Y_WGS84 = Y;
+                this.displayPoint();
                 this.X_2000 = null;
                 this.Y_2000 = null;
                 console.log('Wpisane współrzędne nie są w układzie 2000 2');
@@ -415,9 +450,11 @@ export class PointDetailsComponent implements OnInit {
                   this.Y_2000 = coordinate2000[0];
                   this.point.X_WGS84 = X;
                   this.point.Y_WGS84 = Y;
+                  this.displayPoint();
                 } else {
                   this.point.X_WGS84 = X;
                   this.point.Y_WGS84 = Y;
+                  this.displayPoint();
                   this.X_2000 = null;
                   this.Y_2000 = null;
                   console.log('Wpisane współrzędne nie są w układzie 2000');
@@ -431,9 +468,11 @@ export class PointDetailsComponent implements OnInit {
                   this.Y_2000 = coordinate2000[0];
                   this.point.X_WGS84 = X;
                   this.point.Y_WGS84 = Y;
+                  this.displayPoint();
                 } else {
                   this.point.X_WGS84 = X;
                   this.point.Y_WGS84 = Y;
+                  this.displayPoint();
                   this.X_2000 = null;
                   this.Y_2000 = null;
                   console.log('Wpisane współrzędne nie są w ukłądzie 2000 4');
@@ -447,9 +486,11 @@ export class PointDetailsComponent implements OnInit {
                   this.Y_2000 = coordinate2000[0];
                   this.point.X_WGS84 = X;
                   this.point.Y_WGS84 = Y;
+                  this.displayPoint();
                 } else {
                   this.point.X_WGS84 = X;
                   this.point.Y_WGS84 = Y;
+                  this.displayPoint();
                   this.X_2000 = null;
                   this.Y_2000 = null;
                   console.log('Wpisane współrzędne nie są w układzie 2000 3');
@@ -463,9 +504,11 @@ export class PointDetailsComponent implements OnInit {
                   this.Y_2000 = coordinate2000[0];
                   this.point.X_WGS84 = X;
                   this.point.Y_WGS84 = Y;
+                  this.displayPoint();
                 } else {
                   this.point.X_WGS84 = X;
                   this.point.Y_WGS84 = Y;
+                  this.displayPoint();
                   this.X_2000 = null;
                   this.Y_2000 = null;
                   console.log('Wpisane współrzędne nie są w ukłądzie 2000 3');
@@ -473,6 +516,7 @@ export class PointDetailsComponent implements OnInit {
               } else {
                 this.point.X_WGS84 = X;
                 this.point.Y_WGS84 = Y;
+                this.displayPoint();
                 this.X_2000 = null;
                 this.Y_2000 = null;
                 console.log('Wpisane współrzędne nie są w układze 2000 1');
@@ -480,6 +524,7 @@ export class PointDetailsComponent implements OnInit {
             } else {
               this.point.X_WGS84 = X;
               this.point.Y_WGS84 = Y;
+              this.displayPoint();
               this.X_2000 = null;
               this.Y_2000 = null;
               console.log('Wpisane współrzędne nie są w układzie 2000 2');
@@ -488,7 +533,6 @@ export class PointDetailsComponent implements OnInit {
         }
       }
     }
-
   }
 
 
@@ -509,9 +553,11 @@ export class PointDetailsComponent implements OnInit {
                 this.Y_2000 = Y;
                 this.point.X_WGS84 = coordinateWGS84[1];
                 this.point.Y_WGS84 = coordinateWGS84[0];
+                this.displayPoint();
               } else {
                 this.point.X_WGS84 = null;
                 this.point.Y_WGS84 = null;
+                this.displayPoint();
                 console.log('Współrzędna Y jest niepoprawna');
               }
             } else if (Y >= 6390979.5111) {
@@ -524,9 +570,11 @@ export class PointDetailsComponent implements OnInit {
                   this.Y_2000 = Y;
                   this.point.X_WGS84 = coordinateWGS84[1];
                   this.point.Y_WGS84 = coordinateWGS84[0];
+                  this.displayPoint();
                 } else {
                   this.point.X_WGS84 = null;
                   this.point.Y_WGS84 = null;
+                  this.displayPoint();
                   console.log('Współrzędna Y jest niepoprawna');
                 }
 
@@ -540,9 +588,11 @@ export class PointDetailsComponent implements OnInit {
                     this.Y_2000 = Y;
                     this.point.X_WGS84 = coordinateWGS84[1];
                     this.point.Y_WGS84 = coordinateWGS84[0];
+                    this.displayPoint();
                   } else {
                     this.point.X_WGS84 = null;
                     this.point.Y_WGS84 = null;
+                    this.displayPoint();
                     console.log('Współrzędna Y jest niepoprawna');
                   }
 
@@ -556,37 +606,43 @@ export class PointDetailsComponent implements OnInit {
                       this.Y_2000 = Y;
                       this.point.X_WGS84 = coordinateWGS84[1];
                       this.point.Y_WGS84 = coordinateWGS84[0];
+                      this.displayPoint();
                     } else {
                       this.point.X_WGS84 = null;
                       this.point.Y_WGS84 = null;
+                      this.displayPoint();
                       console.log('Współrzędna Y jest niepoprawna');
                     }
                   } else {
                     this.point.X_WGS84 = null;
                     this.point.Y_WGS84 = null;
+                    this.displayPoint();
                     console.log('Współrzędna X jest niepoprawna 1');
                   }
                 } else {
                   this.point.X_WGS84 = null;
                   this.point.Y_WGS84 = null;
+                  this.displayPoint();
                   console.log('Współrzędna X jest niepoprawna 2');
                 }
               } else {
                 this.point.X_WGS84 = null;
                 this.point.Y_WGS84 = null;
+                this.displayPoint();
                 console.log('Współrzędna X jest niepoprawna 3');
               }
             } else {
               this.point.X_WGS84 = null;
               this.point.Y_WGS84 = null;
+              this.displayPoint();
               console.log('Współrzędna X jest niepoprawna 4');
             }
           } else {
             this.point.X_WGS84 = null;
             this.point.Y_WGS84 = null;
+            this.displayPoint();
             console.log('Współrzędna X jest niepoprawna 5');
           }
-
         }
       }
     }
@@ -663,5 +719,15 @@ export class PointDetailsComponent implements OnInit {
 
   onSubmit() {
     console.log(this.point);
+  }
+
+  ngOnDestroy() {
+    this.cdr.detach();
+    this.sub.unsubscribe();
+  }
+
+  displayPoint() {
+    const cords = [this.point.X_WGS84, this.point.Y_WGS84];
+    this._mapService.filter2(cords);
   }
 }

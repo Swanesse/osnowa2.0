@@ -1,5 +1,5 @@
-import {Component, EventEmitter, NgZone, Output} from '@angular/core';
-import {circle, icon, latLng, marker, polygon, tileLayer, Layer, Map, Marker, point, polyline} from 'leaflet';
+import {ChangeDetectorRef, Component, EventEmitter, NgZone, Output} from '@angular/core';
+import {icon, latLng, marker, tileLayer, Layer, Map, Marker, point, polyline} from 'leaflet';
 import {MapService} from '../../services/map.service';
 
 @Component({
@@ -13,8 +13,7 @@ export class MapComponent {
 
   layers: Layer[] = [];
   map: Map;
-  catchClicks;
-  ifEvent: boolean;
+  catchClicks: boolean = true;
 
   // tablica ze znacznikami
   markers: Marker[] = [
@@ -43,29 +42,28 @@ export class MapComponent {
       }),
     ],
     zoom: 16,
-    center: latLng([50.06585, 19.92022])
+    center: latLng([50.0537961783603, 19.93534952402115])
   };
 
-  constructor(private zone: NgZone, private _mapService: MapService) {
+  constructor(private zone: NgZone, private _mapService: MapService, private cdr: ChangeDetectorRef) {
     this._mapService.listen().subscribe((m: any) => {
       this.catchClicks = m;
-      console.log(m);
-      this.dziwnaFunkcja(m);
+      this.cdr.detectChanges();
     });
 
+    this._mapService.listen2().subscribe((e: any) => {
+      this.displayPoint(e);
+    });
   }
 
-  dziwnaFunkcja(event) {
-    // console.log('Fire onFilterClicked: ', event);
-    console.log('11111111111122122122212event: ', event);
+  displayPoint(e) {
+    const newPoint = marker([e[0], e[1]], {
+      icon: this.createIcon()
+    });
 
-    if (event === false) {
-
-
-
-
-    }
-
+    this.map.addLayer(newPoint);
+    this.markers.push(newPoint);
+    this.map.setView(latLng([e[0], e[1]]), 19);
   }
 
   // Funkcja używana do tworzenia znaczników
@@ -86,44 +84,37 @@ export class MapComponent {
     });
   }
 
+  getCrosshair() {
+    if (this.catchClicks === false) {
+      return 'crosshair';
+    } else if (this.catchClicks) {
+      return 'move';
+    }
+  }
+
   onMapReady(map: Map) {
-    console.log('onMapReady');
     this.map = map;
 
     this.map.on('moveend', this.updateMarkers.bind(this));
     this.map.on('zoomend', this.updateMarkers.bind(this));
+    this.map.on('click', this.updateMarkers.bind(this));
 
     this.updateMarkers();
 
-    this.map.on('click',  (e:any) => {
-      if(!this.catchClicks){
-        console.log('MMMMMMMwspółrzędne: ', e.latlng);
-        console.log('event: ', event);
+    this.map.on('click', (e: any) => {
+      if (!this.catchClicks) {
+        const newPoint = marker([e.latlng.lat, e.latlng.lng], {
+          icon: this.createIcon()
+        });
+
+        this.map.addLayer(newPoint);
+        this.markers.push(newPoint);
+        map.setView(latLng([e.latlng.lat, e.latlng.lng + 0.00037]), 19);
+
         this.catchClicks = true;
-        console.log('this.catchClicks: ', this.catchClicks);
-        let tab = [true, e.latlng.lat, e.latlng.lng];
+        const tab = [true, e.latlng.lat, e.latlng.lng];
         this._mapService.filter(tab);
-        }
-      });
-
-    // this.map.on('click', function (e) {
-    //   console.log('współrzędne: ', e.latlng);
-      // let markerer = new L.Marker(e.latlng, {draggable:true});
-      // map.addLayer(markerer);
-      // this.markers.push(markerer);
-      // let longMarker = markers.length;
-      // let test = new Array();
-
-      // create a red polyline from an array of LatLng points
-      // if (this.markers.length > 1 ){
-      //   for (i = 0; i < markers.length; i++) {
-      //     test.push(markers[i].getLatLng()) ;
-      //   }
-      //   var polyline = L.polyline(test, {color: 'red', clickable: 'true'}).addTo(map);
-      // }
-    // });
-
-
+      }
+    });
   }
-
 }
