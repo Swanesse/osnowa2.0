@@ -46,7 +46,7 @@ export class MapComponent {
   };
 
   constructor(private zone: NgZone, private _mapService: MapService, private cdr: ChangeDetectorRef) {
-    this._mapService.listen().subscribe((m: any) => {
+    this._mapService.listen3().subscribe((m: any) => {
       this.catchClicks = m;
       this.cdr.detectChanges();
     });

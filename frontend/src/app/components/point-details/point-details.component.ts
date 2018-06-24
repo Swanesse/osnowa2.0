@@ -3,7 +3,8 @@ import {FormGroup, FormControl, Validators, AbstractControl, ValidationErrors} f
 import {PointDetails} from '../../models/PointDetails';
 import proj4 from 'proj4';
 import {MapService} from '../../services/map.service';
-import {HttpService} from '../../services/http.service';
+
+// import {HttpService} from '../../services/http.service';
 
 @Component({
   selector: 'app-point-details',
@@ -13,6 +14,7 @@ import {HttpService} from '../../services/http.service';
 export class PointDetailsComponent implements OnInit, OnDestroy {
   @Output() myEvent: EventEmitter<any> = new EventEmitter();
 
+  checked: boolean = true;
   isAddPanel: boolean = true;
   location = false;
   sub;
@@ -26,10 +28,10 @@ export class PointDetailsComponent implements OnInit, OnDestroy {
   isXBlur: boolean = false;
   isYBlur: boolean = false;
   pointForm: FormGroup;
+  stabilizationWays = ['bolec', 'pal drewniany', 'kamień naturalny', 'pręt', 'rurka', 'słupek betonowy', 'szczegół terenowy', 'inny'];
   public mask = [/[- 0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/];
 
-  constructor(private _mapService: MapService, private cdr: ChangeDetectorRef//, private httpService: HttpService
-  ) {
+  constructor(private _mapService: MapService, private cdr: ChangeDetectorRef) {
     proj4.defs([
       ['EPSG:2176', '+proj=tmerc +lat_0=0 +lon_0=15 +k=0.999923 +x_0=5500000 +y_0=0 +ellps=GRS80 +units=m +no_defs'],
       ['EPSG:2177', '+proj=tmerc +lat_0=0 +lon_0=18 +k=0.999923 +x_0=6500000 +y_0=0 +ellps=GRS80 +units=m +no_defs'],
@@ -43,16 +45,38 @@ export class PointDetailsComponent implements OnInit, OnDestroy {
       this.isAddPanel = m[0];
       this.location = true;
       this.cdr.detectChanges();
-      // this.cdr.markForCheck();
-      console.log('this.isAddPanel: ', this.isAddPanel);
     });
   }
 
-  // getPosts(lat, long) {
-  //   this.httpService.getPosts(lat, long).subscribe(posts => {
-  //     console.log('posts: ', posts);
-  //   });
-  // }
+  getPosts(latlong) {
+    this._mapService.getPost(latlong).subscribe(posts => {
+      this.point.country = posts.address.country;
+      this.point.state = posts.address.state;
+
+      const districtSplit = String(posts.display_name).split(',');
+      if (posts.address.postcode) {
+        this.point.district = districtSplit[districtSplit.length - 4];
+      } else {
+        this.point.district = districtSplit[districtSplit.length - 3];
+      }
+      this.point.county = posts.address.county;
+
+      if (posts.address.city) {
+        this.point.locality = posts.address.city;
+      } else if (posts.address.town) {
+        this.point.locality = posts.address.town;
+      } else {
+        this.point.locality = posts.address.village;
+      }
+
+      this.point.city_district = posts.address.city_district;
+
+
+      this.point.road = posts.address.road;
+      this.point.house_number = posts.address.house_number;
+      console.log('post: ', posts);
+    });
+  }
 
   ngOnInit() {
 
@@ -69,17 +93,25 @@ export class PointDetailsComponent implements OnInit, OnDestroy {
       X_local: new FormControl(null),
       Y_local: new FormControl(null),
 
-      typOsnowy: new FormControl(null),
-      klasa: new FormControl(null),
-      numerKatalogowy: new FormControl(null),
-      woj: new FormControl(null),
-      powiat: new FormControl(null),
-      gmina: new FormControl(null),
+      controlType: new FormControl(null),
+      controlClass: new FormControl(null),
+      id: new FormControl(null),
+
       hAmsterdam: new FormControl(null),
-      HKronsztadt: new FormControl(null),
-      stabilizacja: new FormControl(null),
-      typZnaku: new FormControl(null),
-      znaleziono: new FormControl(null),
+      hKronsztadt: new FormControl(null),
+
+      country: new FormControl(null),
+      state: new FormControl(null),
+      district: new FormControl(null),
+      county: new FormControl(null),
+
+      locality: new FormControl(null),
+      city_district: new FormControl(null),
+      road: new FormControl(null),
+      house_number: new FormControl(null),
+
+      stabilization: new FormControl(null),
+      found: new FormControl(null),
     });
   }
 
@@ -700,12 +732,11 @@ export class PointDetailsComponent implements OnInit, OnDestroy {
 
   getCoordinates() {
     if (navigator.geolocation) {
-      let that = this;
-      navigator.geolocation.getCurrentPosition(function (location) {
-        that.location = true;
-        that.point.X_WGS84 = location.coords.latitude;
-        that.point.Y_WGS84 = location.coords.longitude;
-        that.transformCoordinatesWGS84Location(that.point.X_WGS84, that.point.Y_WGS84);
+      navigator.geolocation.getCurrentPosition(location => {
+        this.location = true;
+        this.point.X_WGS84 = location.coords.latitude;
+        this.point.Y_WGS84 = location.coords.longitude;
+        this.transformCoordinatesWGS84Location(this.point.X_WGS84, this.point.Y_WGS84);
       });
     } else {
       alert('twoja przeglądarka nie wspiera geolokacji...');
@@ -714,10 +745,36 @@ export class PointDetailsComponent implements OnInit, OnDestroy {
 
   chooseCoordinatesFromMap() {
     this.isAddPanel = false;
-    this._mapService.filter(this.isAddPanel);
+    this._mapService.filter3(this.isAddPanel);
   }
 
   onSubmit() {
+
+    this.point.X_WGS84 = this.pointForm.value.X_WGS84;
+    this.point.Y_WGS84 = this.pointForm.value.Y_WGS84;
+    this.point.X_local = this.pointForm.value.X_local;
+    this.point.Y_local = this.pointForm.value.Y_local;
+
+    this.point.controlType = this.pointForm.value.controlType;
+    this.point.controlClass = this.pointForm.value.controlClass;
+    this.point.id = this.pointForm.value.id;
+
+    this.point.hAmsterdam = this.pointForm.value.hAmsterdam;
+    this.point.hKronsztadt = this.pointForm.value.hKronsztadt;
+
+    this.point.country = this.pointForm.value.country;
+    this.point.state = this.pointForm.value.state;
+    this.point.district = this.pointForm.value.district;
+    this.point.county = this.pointForm.value.county;
+
+    this.point.locality = this.pointForm.value.locality;
+    this.point.city_district = this.pointForm.value.city_district;
+
+    this.point.road = this.pointForm.value.road;
+    this.point.house_number = this.pointForm.value.house_number;
+
+    this.point.stabilization = this.pointForm.value.stabilization;
+    this.point.found = this.pointForm.value.found;
     console.log(this.point);
   }
 
@@ -727,6 +784,8 @@ export class PointDetailsComponent implements OnInit, OnDestroy {
   }
 
   displayPoint() {
+    const latlong = [this.point.X_WGS84, this.point.Y_WGS84];
+    this.getPosts(latlong);
     const cords = [this.point.X_WGS84, this.point.Y_WGS84];
     this._mapService.filter2(cords);
   }

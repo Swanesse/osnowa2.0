@@ -16,7 +16,9 @@ import {
   MatIconModule,
   MatFormFieldModule,
   MatDialogModule,
-  MatSelectModule, MatRadioModule
+  MatSelectModule,
+  MatRadioModule,
+  // MatBadgeModule
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -25,7 +27,8 @@ import {FormsModule} from '@angular/forms';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { TextMaskModule } from 'angular2-text-mask';
 import {MapService} from './services/map.service';
-import {HttpService} from './services/http.service';
+import {HttpClientModule} from '@angular/common/http';
+// import {HttpService} from './services/http.service';
 
 @NgModule({
   declarations: [
@@ -43,6 +46,7 @@ import {HttpService} from './services/http.service';
     MatCheckboxModule,
     MatInputModule,
     MatIconModule,
+    // MatBadgeModule,
     BrowserAnimationsModule,
     MatFormFieldModule,
     MatAutocompleteModule,
@@ -53,8 +57,9 @@ import {HttpService} from './services/http.service';
     TextMaskModule,
     MatRadioModule,
     NgxMatSelectSearchModule,
+    HttpClientModule
   ],
-  providers: [MapService, HttpService],
+  providers: [MapService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

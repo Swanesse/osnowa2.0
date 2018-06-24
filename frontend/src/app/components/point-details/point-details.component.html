@@ -21,7 +21,7 @@
       <div class="form_element">
         <label>Współrzędne w układzie WGS84 lub 2000</label>
         <mat-form-field class="short-width mat-form-field-invalid" hintLabel="(np. 50.068436 lub 5548589.65)">
-          <input class="mat-form-field-invalid" [textMask]="{mask: mask, guide: false}" type="text" name="X" id="X"
+          <input class="mat-form-field-invalid" [textMask]="{mask: mask, guide: false}" type="text" id="X"
                  placeholder="X - długość" matInput [(ngModel)]="X"
                  formControlName="X" (blur)="transformCoordinates(); ifXisBlur()" (click)="outputCoordinateX()"
                  required>
@@ -34,7 +34,7 @@
         </mat-form-field>
 
         <mat-form-field class="short-width right" hintLabel="(np. 19.921046 lub 7422760.20)">
-          <input [textMask]="{mask: mask, guide: false}" type="text" name="Y" id="Y"
+          <input [textMask]="{mask: mask, guide: false}" type="text" id="Y"
                  placeholder="Y - szerokość" matInput [(ngModel)]="Y"
                  formControlName="Y" (blur)="transformCoordinates(); ifYisBlur()" (click)="outputCoordinateY()"
                  required>
@@ -92,7 +92,7 @@
           </mat-error>
         </mat-form-field>
         <mat-form-field class="short-width right" hintLabel="(np. 7422760.20)">
-          <input [textMask]="{mask: mask, guide: false}" type="text" name="X_2000" id="Y_2000"
+          <input [textMask]="{mask: mask, guide: false}" type="text" name="Y_2000" id="Y_2000"
                  placeholder="Y w układzie 2000" matInput [(ngModel)]="Y_2000"
                  formControlName="Y_2000" (blur)="transformCoordinates2000()">
           <mat-error
@@ -104,7 +104,6 @@
     </ng-container>
 
 
-    <!--Wybór lokalizacji-->
     <mat-hint class="localization">
       <!--Wybór z mapy-->
       <div class="locationSearching">
@@ -116,11 +115,25 @@
       </a>
     </mat-hint>
 
-    <div class="radio-group-container" id="typOsnowy">
+    <div class="form_element" id="local">
+      <label>Współrzędne lokalne:</label>
+      <mat-form-field class="short-width" hintLabel="(np. -32670.62)">
+        <input [textMask]="{mask: mask, guide: false}" type="text" name="X_local" id="X_local"
+               placeholder="X w układzie lokalnym" matInput
+               formControlName="X_local">
+      </mat-form-field>
+      <mat-form-field class="short-width right" hintLabel="(np.  294708.98)">
+        <input [textMask]="{mask: mask, guide: false}" type="text" name="Y_local" id="Y_local"
+               placeholder="Y w układzie lokalnym" matInput
+               formControlName="Y_local">
+      </mat-form-field>
+    </div>
+
+    <div class="radio-group-container" id="controlType">
       <label>Typ osnowy:</label>
     </div>
     <div class="radio-button-container">
-      <mat-radio-group [(ngModel)]="point.typOsnowy" formControlName="typOsnowy" aria-labelledby="typOsnowy">
+      <mat-radio-group [(ngModel)]="point.controlType" formControlName="controlType" aria-labelledby="controlType">
         <mat-radio-button value="pozioma">Pozioma</mat-radio-button>
         <mat-radio-button value="wysokościowa">Wysokościowa</mat-radio-button>
         <mat-radio-button value="dwufunkcyjna">Dwufunkcyjna</mat-radio-button>
@@ -128,10 +141,10 @@
     </div>
 
     <div class="radio-group-container">
-      <label id="klasa">Klasa:</label>
+      <label>Klasa:</label>
     </div>
     <div class="radio-button-container">
-      <mat-radio-group [(ngModel)]="point.klasa" formControlName="klasa" aria-labelledby="klasa">
+      <mat-radio-group [(ngModel)]="point.controlClass" formControlName="controlClass" aria-labelledby="controlClass">
         <mat-radio-button value="1">1</mat-radio-button>
         <mat-radio-button value="2">2</mat-radio-button>
         <mat-radio-button value="3">3</mat-radio-button>
@@ -139,65 +152,93 @@
     </div>
 
     <mat-form-field class="full-width">
-      <input type="text" placeholder="Numer katalogowy" [(ngModel)]="point.numerKatalogowy" matInput
-             formControlName="numerKatalogowy">
+      <input type="text" placeholder="Numer katalogowy" [(ngModel)]="point.id" matInput
+             formControlName="id">
     </mat-form-field>
 
     <mat-form-field class="full-width">
-
-      <input type="text" placeholder="Województwo" [(ngModel)]="point.woj" matInput formControlName="woj">
-    </mat-form-field>
-
-    <mat-form-field class="full-width">
-      <input type="text" placeholder="Powiat" matInput [(ngModel)]="point.powiat" formControlName="powiat">
-    </mat-form-field>
-
-    <mat-form-field class="full-width">
-      <input type="text" placeholder="Gmina" matInput [(ngModel)]="point.gmina" formControlName="gmina">
-    </mat-form-field>
-
-    <mat-form-field class="full-width">
-      <input type="text" placeholder="Współrzędne (lokalne)" matInput [(ngModel)]="point.X_local"
-             formControlName="X_local">
-    </mat-form-field>
-
-    <mat-form-field class="full-width">
-      <input type="text" placeholder="H (AMSTERDAM)" matInput [(ngModel)]="point.hAmsterdam"
+      <input [textMask]="{mask: mask, guide: false}" type="text" placeholder="H (AMSTERDAM)" matInput [(ngModel)]="point.hAmsterdam"
              formControlName="hAmsterdam">
     </mat-form-field>
 
     <mat-form-field class="full-width">
-      <input type="text" placeholder="H (KRONSZTADT 86)" matInput [(ngModel)]="point.HKronsztadt"
-             formControlName="HKronsztadt">
+      <input [textMask]="{mask: mask, guide: false}" type="text" placeholder="H (KRONSZTADT 86)" matInput [(ngModel)]="point.hKronsztadt"
+             formControlName="hKronsztadt">
     </mat-form-field>
 
-    <mat-form-field class="full-width">
-      <input type="text" placeholder="Stabilizacja" matInput [(ngModel)]="point.stabilizacja"
-             formControlName="stabilizacja">
+    <mat-form-field class="short-width">
+      <input type="text" placeholder="Kraj" [(ngModel)]="point.country" matInput formControlName="country">
     </mat-form-field>
 
-    <mat-form-field class="full-width">
-      <input type="text" placeholder="Typ znaku" matInput [(ngModel)]="point.typZnaku" formControlName="typZnaku">
+    <mat-form-field class="short-width">
+      <input type="text" placeholder="Województwo" [(ngModel)]="point.state" matInput formControlName="state">
     </mat-form-field>
 
-    <mat-form-field class="full-width">
-      <input type="text" placeholder="Punkt znaleziono" matInput [(ngModel)]="point.znaleziono"
-             formControlName="znaleziono">
+    <mat-form-field class="short-width">
+      <input type="text" placeholder="Powiat" matInput [(ngModel)]="point.district" formControlName="district">
     </mat-form-field>
 
-    <mat-form-field class="full-width">
-      <input type="text" placeholder="Stabilizacja" matInput [(ngModel)]="point.stabilizacja"
-             formControlName="stabilizacja">
+    <mat-form-field class="short-width">
+      <input type="text" placeholder="Gmina" matInput [(ngModel)]="point.county" formControlName="county">
     </mat-form-field>
 
-    <mat-form-field class="full-width">
-      <input type="text" placeholder="Typ znaku" matInput [(ngModel)]="point.typZnaku" formControlName="typZnaku">
+
+
+
+    <mat-form-field class="short-width">
+      <input type="text" placeholder="Miejscowość" matInput [(ngModel)]="point.locality" formControlName="locality">
     </mat-form-field>
 
-    <mat-form-field class="full-width">
-      <input type="text" placeholder="Punkt znaleziono" matInput [(ngModel)]="point.znaleziono"
-             formControlName="znaleziono">
+    <mat-form-field class="short-width">
+      <input type="text" placeholder="Dzielnica" matInput [(ngModel)]="point.city_district" formControlName="city_district">
     </mat-form-field>
+
+
+    <mat-form-field class="short-width">
+      <input type="text" placeholder="Ulica" matInput [(ngModel)]="point.road" formControlName="road">
+    </mat-form-field>
+
+    <mat-form-field class="short-width">
+      <input type="text" placeholder="Numer domu" matInput [(ngModel)]="point.house_number" formControlName="house_number">
+    </mat-form-field>
+
+
+
+
+
+
+
+
+
+    <mat-form-field class="short-width">
+      <mat-select placeholder="Stabilizacja"  formControlName="stabilization" [(ngModel)]="point.stabilization" disableRipple>
+        <mat-option *ngFor="let way of this.stabilizationWays" [value]="way">{{way}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+
+      <label><input type="checkbox"  checked [(ngModel)]="point.found" formControlName="found">taaaaaaaaaaaaa</label>
+    <mat-checkbox formControlName="found">Check me!</mat-checkbox>
+
+
+
+    <!--<mat-form-field>-->
+      <!--<mat-checkbox  [(ngModel)]="point.found" formControlName="found">Punkt został odnaleziony w terenie</mat-checkbox>-->
+    <!--</mat-form-field>-->
+
+    <!--<div class="container-button">-->
+      <!--<button mat-raised-button matBadge="8" matBadgePosition="before" matBadgeColor="warn" class="main-button" href="" > {{"Znaleziono"}}</button>-->
+    <!--</div>-->
+
+    <!--<button mat-raised-button color="primary-color" matBadge="8" matBadgePosition="before" matBadgeColor="accent">-->
+      <!--Action-->
+    <!--</button>-->
+
+    <!--<mat-form-field class="full-width">-->
+      <!--<input type="text" placeholder="Punkt znaleziono" matInput [(ngModel)]="point.found"-->
+             <!--formControlName="znaleziono">-->
+    <!--</mat-form-field>-->
+
 
     <button type="submit" mat-raised-button class="main-button">Zapisz</button>
   </form>
