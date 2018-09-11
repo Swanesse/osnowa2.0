@@ -6,35 +6,37 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 
 class Point(models.Model):
-    autor = models.ForeignKey('auth.User')
-    arkusz_mapy = models.CharField(max_length=200)
-    nazwa = models.CharField(max_length=200, verbose_name='Nazwa')
-    klasa = models.CharField(max_length=200)
-    numer_katalogowy = models.CharField(max_length=200)
-    wojewodztwo = models.CharField(max_length=200)
-    powiat = models.CharField(max_length=200)
-    gmina = models.CharField(max_length=200)
-    miejscowosc = models.CharField(max_length=200)
-    wsp_2000 = models.CharField(max_length=200, default='')
-    wsp_lokalne = models.CharField(max_length=200, default='')
-    wsp_WGS84 = models.CharField(max_length=200, default='')
-    h_amsterdam = models.CharField(max_length=200, default='')
-    h_kronsztadt_86 = models.CharField(max_length=200, default='')
-    stabilizacja = models.CharField(max_length=200, default='')
-    typ_znaku = models.CharField(max_length=200, default='')
-    zdjecie = models.ImageField(upload_to='static/images/', default="static/images/znak.jpg")
-    created_date = models.DateTimeField(default=timezone.now)
-    find_date = models.DateTimeField(blank=True, null=True)
-    odnaleziony = models.IntegerField(default=0)
-    uszkodzony = models.IntegerField(default=0)
-    # cokolwiek = models.CharField(max_length=13)
+    # autor = models.ForeignKey('auth.User')
+    # arkusz_mapy = models.CharField(max_length=200)
+    X_WGS84 = models.FloatField()
+    Y_WGS84 = models.FloatField()
+    X_local = models.FloatField(blank=True, null=True)
+    Y_local = models.FloatField(blank=True, null=True)
 
-    def publish(self):
-        self.find_date = timezone.now()
-        self.save()
+    controlType = models.CharField(max_length=200, blank=True)
+    controlClass = models.CharField(max_length=200, blank=True)
+    catalog_number = models.CharField(max_length=200, blank=True)
 
-    def __str__(self):
-        return self.nazwa
+    hAmsterdam = models.FloatField(null=True)
+    hKronsztadt = models.FloatField(null=True)
+
+    country = models.CharField(max_length=200, blank=True)
+    state = models.CharField(max_length=200, blank=True)
+    district = models.CharField(max_length=200, blank=True)
+    county = models.CharField(max_length=200, blank=True)
+    locality = models.CharField(max_length=200, blank=True)
+    city_district = models.CharField(max_length=200, blank=True)
+    road = models.CharField(max_length=200, blank=True)
+    house_number = models.CharField(max_length=200, blank=True)
+    stabilization = models.CharField(max_length=200, blank=True)
+    found= models.BooleanField(default=False)
+
+    # def publish(self):
+    #     self.find_date = timezone.now()
+    #     self.save()
+    #
+    # def __str__(self):
+    #     return self.catalog_number
 
 
 
@@ -47,55 +49,55 @@ class LatLng(models.Model):
     latit = models.FloatField()
     longi = models.FloatField()
 
-class Point2(LatLng):
-    """
-    Każdy użytkownik może umieścić na mapie opisywalny punkt. Dziedziczy po klasie LatLng.
-    Opis punktu jest ciągiem znaków nie dłuższym niż 120. Atrybuty:
-        * :mod:`user` -- wskazuje obiekt użytkownika
-        * :mod:`desc` -- opis punktu
-    """
-    user = models.ForeignKey(User)
-    desc = models.CharField(max_length=120)
+# class Point2(LatLng):
+#     """
+#     Każdy użytkownik może umieścić na mapie opisywalny punkt. Dziedziczy po klasie LatLng.
+#     Opis punktu jest ciągiem znaków nie dłuższym niż 120. Atrybuty:
+#         * :mod:`user` -- wskazuje obiekt użytkownika
+#         * :mod:`desc` -- opis punktu
+#     """
+#     user = models.ForeignKey(User)
+#     desc = models.CharField(max_length=120)
+#
+#     def __unicode__(self):
+#         return "%s created point (%s,%s)" % (self.user, self.latit, self.longi)
 
-    def __unicode__(self):
-        return "%s created point (%s,%s)" % (self.user, self.latit, self.longi)
 
-
-class Map(models.Model):
-    """
-    Każda mapa posiada nazwę, przyjazny adres utworzony na podstawie nazwy,
-    słowa kluczowe, miasto, ciąg punktów z których złożona jest ścieżka,
-    długość trasy w kilometrach oraz współrzędne krańcowe mapy.
-    Nazwa mapy jest ciągiem znaków nieprzekraczającym 256.
-    Przyjazny adres (ang. `slug`) to ciąg znaków nieprzekraczający 50.
-    Słowa kluczowe
-    """
-    name = models.CharField(max_length=256, verbose_name='Nazwa')
-    slug = models.SlugField()
-    tags = models.CharField(max_length=512, verbose_name='Tagi')
-    city = models.CharField(max_length=32, verbose_name='Miasto')
-    latlngs = models.TextField(verbose_name='Współrzędne')
-    distance = models.FloatField(verbose_name='Dystans')
-    southwest = models.ForeignKey(LatLng, related_name="%(class)s_sw")
-    northeast = models.ForeignKey(LatLng, related_name="%(class)s_ne")
-
-    def getlatlngs(self):
-        """
-        Zwraca tablicę par (lat, lng). Atrybut :mod:`latlngs` zawiera ciąg
-        znaków odpowiadających kolejnym punktom na trasie.::
-            10.0,20.3;20.4,50.4;
-        Powyższy ciąg zostanie zmieniony w tablicę par.
-            >>> map = Map(latlngs='10.0,20.3;20.4,50.4;')
-            >>> map.getlatlngs()
-            [(10.0, 20.300000000000001), (20.399999999999999, 50.399999999999999)]
-        """
-        result = []
-        for p in self.latlngs.split(';'):
-            if p:
-                lat, lng = p.split(',')
-                pair = float(lat), float(lng)
-                result.append(pair)
-        return result
+# class Map(models.Model):
+#     """
+#     Każda mapa posiada nazwę, przyjazny adres utworzony na podstawie nazwy,
+#     słowa kluczowe, miasto, ciąg punktów z których złożona jest ścieżka,
+#     długość trasy w kilometrach oraz współrzędne krańcowe mapy.
+#     Nazwa mapy jest ciągiem znaków nieprzekraczającym 256.
+#     Przyjazny adres (ang. `slug`) to ciąg znaków nieprzekraczający 50.
+#     Słowa kluczowe
+#     """
+#     name = models.CharField(max_length=256, verbose_name='Nazwa')
+#     slug = models.SlugField()
+#     tags = models.CharField(max_length=512, verbose_name='Tagi')
+#     city = models.CharField(max_length=32, verbose_name='Miasto')
+#     latlngs = models.TextField(verbose_name='Współrzędne')
+#     distance = models.FloatField(verbose_name='Dystans')
+#     southwest = models.ForeignKey(LatLng, related_name="%(class)s_sw")
+#     northeast = models.ForeignKey(LatLng, related_name="%(class)s_ne")
+#
+#     def getlatlngs(self):
+#         """
+#         Zwraca tablicę par (lat, lng). Atrybut :mod:`latlngs` zawiera ciąg
+#         znaków odpowiadających kolejnym punktom na trasie.::
+#             10.0,20.3;20.4,50.4;
+#         Powyższy ciąg zostanie zmieniony w tablicę par.
+#             >>> map = Map(latlngs='10.0,20.3;20.4,50.4;')
+#             >>> map.getlatlngs()
+#             [(10.0, 20.300000000000001), (20.399999999999999, 50.399999999999999)]
+#         """
+#         result = []
+#         for p in self.latlngs.split(';'):
+#             if p:
+#                 lat, lng = p.split(',')
+#                 pair = float(lat), float(lng)
+#                 result.append(pair)
+#         return result
 
     # def jsonlatlngs(self):
     #     """

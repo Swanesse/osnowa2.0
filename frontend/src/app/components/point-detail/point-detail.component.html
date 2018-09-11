@@ -1,0 +1,39 @@
+<div class="header-side-container">
+  <div class="main-header">
+    <h1>Szczegóły punktu</h1>
+    <button mat-icon-button routerLink="/home">
+      <mat-icon>close</mat-icon>
+    </button>
+
+  </div>
+
+  <div class="bottom-line"></div>
+</div>
+
+<div class="detail-side-container">
+
+  <p>
+    <i class="material-icons md-26">place</i>
+    <sub>WGS84</sub> X: {{ X_WGS84 | number: '.4' }}, Y: {{ Y_WGS84 | number: '.4' }}</p>
+  <p>
+    <i class="material-icons md-26">place</i>
+    <sub>2000</sub> X: , Y:</p>
+  <p>
+    <i class="material-icons md-26">place</i>
+    <sub> lokalne</sub> X: {{ X_local | number: '.4' }}, Y: {{ Y_local | number: '.4' }}</p>
+  <p>Typ osnowy: {{ controlType }}</p>
+  <p>Klasa: {{ controlClass }}</p>
+  <p>Numer katalogowy: {{ id }}</p>
+  <p>H (AMSTERDAM): {{ hAmsterdam }}</p>
+  <p>H (KRONSZTADT 86): {{ hKronsztadt }}</p>
+  <p>Kraj: {{ country }}</p>
+  <p>Województwo: {{ state }}</p>
+  <p>Powiat: {{ district }}</p>
+  <p>Gmina: {{ county }}</p>
+  <p>Miejscowość: {{ locality }}</p>
+  <p>Dzielnica: {{ city_district }}</p>
+  <p>Ulica: {{ road }}</p>
+  <p>Numer domu: {{ house_number }}</p>
+  <p>Stabilizacja: {{ stabilization }}</p>
+  <p>Punkt odnaleziono w terenie: {{ found }}</p>
+</div>

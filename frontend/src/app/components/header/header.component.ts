@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {PointDetailsComponent} from "../point-details/point-details.component";
-import {MatDialog, MAT_DIALOG_DATA} from '@angular/material';
+import {MatDialog} from '@angular/material';
 
 @Component({
   selector: 'app-header',

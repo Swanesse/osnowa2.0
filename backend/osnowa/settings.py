@@ -1,3 +1,5 @@
+# coding=UTF8
+
 """
 Django settings for osnowa project.
 
@@ -15,7 +17,6 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
@@ -23,17 +24,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '33sitzn^tp-ewjs&-v#9pjtq_hxf6cgxb5!is*t7caw*4+pj(1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
 INSTALLED_APPS = (
     'django.contrib.admin',
+    'corsheaders',
 
-    # Tutaj w django/contrib/auth/models.py jest model reprezentujący użytkownika - zarządzający użytkownikami
+    # Tutaj w django/contrib/auth/models.py jest model reprezentujący uzytkownika - zarządzający użytkownikami
     # username - 30 znaków lub mniej (litery, cyfry, podkreślenia)
     # first_name - Opcjonalne, 30 znaków lub mniej.
     # last_name - Opcjonalne, 30 znaków lub mniej.
@@ -54,15 +55,16 @@ INSTALLED_APPS = (
     'rest_framework'
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 )
 
 ROOT_URLCONF = 'osnowa.urls'
@@ -85,7 +87,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'osnowa.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
@@ -95,7 +96,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -109,7 +109,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
@@ -126,3 +125,9 @@ STATICFILES_DIRS = (
 )
 
 LOGIN_REDIRECT_URL = '/'
+
+############# skomentować przed wejściem na produkcję - pierwsze pozwala na wchodzenie na inne porty między backendem i frontem
+# Na produkcji mamy i front i backend na jednym porcie, więc trzzeba to wyrzucić
+#  Drugie pozwala na debagowanie kodu - na produkcji nie powinniśmy móc deagować.
+CORS_ORIGIN_ALLOW_ALL = True
+DEBUG = True

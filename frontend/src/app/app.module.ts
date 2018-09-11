@@ -4,7 +4,7 @@ import {LeafletModule} from '@asymmetrik/ngx-leaflet';
 
 
 import {AppComponent} from './app.component';
-import {PointDetailsComponent} from './components/point-details/point-details.component';
+import {PointAddComponent} from './components/point-add/point-add.component';
 import {AppRoutingModule} from './app.routing.module';
 import {HomeComponent} from './components/home/home.component';
 import {MapComponent} from './components/map/map.component';
@@ -18,22 +18,30 @@ import {
   MatDialogModule,
   MatSelectModule,
   MatRadioModule,
-  // MatBadgeModule
+  MatBadgeModule,
+  MatTooltipModule
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {ReactiveFormsModule} from '@angular/forms';
 import {FormsModule} from '@angular/forms';
-import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-import { TextMaskModule } from 'angular2-text-mask';
+import {NgxMatSelectSearchModule} from 'ngx-mat-select-search';
+import {TextMaskModule} from 'angular2-text-mask';
 import {MapService} from './services/map.service';
 import {HttpClientModule} from '@angular/common/http';
-// import {HttpService} from './services/http.service';
+import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
+import {PointDetailComponent} from "./components/point-detail/point-detail.component";
+import {PointResolveService} from "./services/point-resolve.service";
+// import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
+// import {InMemoryDataService} from "./services/in-memory-data-service";
+// import {HttpService} from "./services/http.service";
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    PointDetailsComponent,
+    PointAddComponent,
+    PointDetailComponent,
     HomeComponent,
     MapComponent,
     HeaderComponent,
@@ -46,7 +54,8 @@ import {HttpClientModule} from '@angular/common/http';
     MatCheckboxModule,
     MatInputModule,
     MatIconModule,
-    // MatBadgeModule,
+    MatBadgeModule,
+    MatTooltipModule,
     BrowserAnimationsModule,
     MatFormFieldModule,
     MatAutocompleteModule,
@@ -57,9 +66,12 @@ import {HttpClientModule} from '@angular/common/http';
     TextMaskModule,
     MatRadioModule,
     NgxMatSelectSearchModule,
-    HttpClientModule
+    HttpClientModule,
+    FontAwesomeModule,
+    // InMemoryWebApiModule.forRoot(InMemoryDataService, {delay: 2500}),
+
   ],
-  providers: [MapService],
+  providers: [MapService, PointResolveService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

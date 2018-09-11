@@ -1,7 +1,9 @@
 import {Routes, RouterModule} from '@angular/router';
-import {PointDetailsComponent} from './components/point-details/point-details.component';
+import {PointAddComponent} from './components/point-add/point-add.component';
 import {NgModule} from '@angular/core';
 import {HomeComponent} from './components/home/home.component';
+import {PointDetailComponent} from "./components/point-detail/point-detail.component";
+import {PointResolveService} from "./services/point-resolve.service";
 
 const appRoutes: Routes = [
   {
@@ -15,7 +17,12 @@ const appRoutes: Routes = [
     children: [
       {
         path: 'points',
-        component: PointDetailsComponent,
+        component: PointAddComponent,
+      },
+      {
+        path: 'detail/:id',
+        resolve: {point : PointResolveService},
+        component: PointDetailComponent,
       },
     ]
   }

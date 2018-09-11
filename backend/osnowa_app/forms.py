@@ -11,7 +11,7 @@ class PointForm(forms.ModelForm):
 
     class Meta:
         model = Point
-        fields = ('arkusz_mapy', 'nazwa', 'klasa','numer_katalogowy', 'wojewodztwo', 'powiat', 'gmina', 'miejscowosc', 'wsp_2000', 'wsp_lokalne', 'wsp_WGS84', 'h_amsterdam', 'h_kronsztadt_86', 'stabilizacja', 'typ_znaku', 'zdjecie')
+        fields = ('X_WGS84', 'Y_WGS84', 'X_local','Y_local', 'controlType', 'controlClass', 'catalog_number', 'hAmsterdam', 'hKronsztadt', 'country', 'state', 'district', 'county', 'locality', 'city_district', 'road', 'house_number', 'stabilization', 'found')
 
 
     # #Formularz logowania

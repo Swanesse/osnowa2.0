@@ -99,6 +99,14 @@
   float: right;
 }
 
+.checkboxPoint{
+  display:block;
+}
+
+.left {
+  float: left;
+}
+
 .more{
   position: relative;
   left:165px;
@@ -109,6 +117,7 @@
   label {
     display: inherit;
     margin-bottom: 5px;
+    font-size: 15px;
   }
 }
 
@@ -132,3 +141,9 @@
 #local{
   margin-top: 40px;
 }
+
+mat-radio-button{
+  padding: 8px;
+  display: block;
+}
+

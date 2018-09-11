@@ -1,55 +1,65 @@
 import {ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormGroup, FormControl, Validators, AbstractControl, ValidationErrors} from '@angular/forms';
-import {PointDetails} from '../../models/PointDetails';
 import proj4 from 'proj4';
 import {MapService} from '../../services/map.service';
+import {faInfoCircle} from '@fortawesome/free-solid-svg-icons';
+import {HttpService} from "../../services/http.service";
+import {Point} from "../../models/Point";
+import {Router} from "@angular/router";
 
-// import {HttpService} from '../../services/http.service';
 
 @Component({
   selector: 'app-point-details',
-  templateUrl: './point-details.component.html',
-  styleUrls: ['./point-details.component.scss']
+  templateUrl: './point-add.component.html',
+  styleUrls: ['./point-add.component.scss']
 })
-export class PointDetailsComponent implements OnInit, OnDestroy {
+export class PointAddComponent implements OnInit {
   @Output() myEvent: EventEmitter<any> = new EventEmitter();
 
+  faInfo = faInfoCircle;
   checked: boolean = true;
-  isAddPanel: boolean = true;
-  location = false;
-  sub;
+  pickMode: boolean = false;
+  location: boolean = false;
   X;
   Y;
   X_2000;
   Y_2000;
-  point = new PointDetails();
+  point: Point = new Point();
   validX: string = '13';
   validY: string = '13';
   isXBlur: boolean = false;
   isYBlur: boolean = false;
   pointForm: FormGroup;
-  stabilizationWays = ['bolec', 'pal drewniany', 'kamień naturalny', 'pręt', 'rurka', 'słupek betonowy', 'szczegół terenowy', 'inny'];
+  stabilizationWays: Array<String> = ['bolec', 'pal drewniany', 'kamień naturalny', 'pręt', 'rurka', 'słupek betonowy', 'szczegół terenowy', 'inny'];
   public mask = [/[- 0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/];
 
-  constructor(private _mapService: MapService, private cdr: ChangeDetectorRef) {
+  constructor(private mapService: MapService,
+              private cdr: ChangeDetectorRef,
+              private httpService: HttpService,
+              private router: Router) {
     proj4.defs([
       ['EPSG:2176', '+proj=tmerc +lat_0=0 +lon_0=15 +k=0.999923 +x_0=5500000 +y_0=0 +ellps=GRS80 +units=m +no_defs'],
       ['EPSG:2177', '+proj=tmerc +lat_0=0 +lon_0=18 +k=0.999923 +x_0=6500000 +y_0=0 +ellps=GRS80 +units=m +no_defs'],
       ['EPSG:2178', '+proj=tmerc +lat_0=0 +lon_0=21 +k=0.999923 +x_0=7500000 +y_0=0 +ellps=GRS80 +units=m +no_defs'],
       ['EPSG:2179', '+proj=tmerc +lat_0=0 +lon_0=24 +k=0.999923 +x_0=8500000 +y_0=0 +ellps=GRS80 +units=m +no_defs']
     ]);
-    this.sub = this._mapService.listen().subscribe((m: any) => {
-      this.point.X_WGS84 = m[1];
-      this.point.Y_WGS84 = m[2];
+    // getPickedCords zwraca współrzędne, które kliknęliśmy na mapie
+    // zwraca 2 wartości - współrzędne
+    this.mapService.getPickedCords().subscribe((cords: Array<number>) => {
+      this.point.X_WGS84 = cords[0];
+      this.point.Y_WGS84 = cords[1];
       this.transformCoordinatesWGS84Location(this.point.X_WGS84, this.point.Y_WGS84);
-      this.isAddPanel = m[0];
+      this.pickMode = false;
       this.location = true;
-      this.cdr.detectChanges();
+      this.pointForm.get('X').clearValidators();
+      this.pointForm.get('Y').clearValidators();
+      this.pointForm.get('X').updateValueAndValidity();
+      this.pointForm.get('Y').updateValueAndValidity();
     });
   }
 
   getPosts(latlong) {
-    this._mapService.getPost(latlong).subscribe(posts => {
+    this.mapService.getPost(latlong).subscribe(posts => {
       this.point.country = posts.address.country;
       this.point.state = posts.address.state;
 
@@ -81,8 +91,8 @@ export class PointDetailsComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.pointForm = new FormGroup({
-      X: new FormControl(null, [Validators.required, this.ValidatorX]),
-      Y: new FormControl(null, [Validators.required, this.ValidatorY]),
+      X: new FormControl(null, Validators.required),
+      Y: new FormControl(null, Validators.required),
 
       X_WGS84: new FormControl(null, [Validators.required, this.ValidatorXWGS84]),
       Y_WGS84: new FormControl(null, [Validators.required, this.ValidatorYWGS84]),
@@ -111,7 +121,7 @@ export class PointDetailsComponent implements OnInit, OnDestroy {
       house_number: new FormControl(null),
 
       stabilization: new FormControl(null),
-      found: new FormControl(null),
+      found: new FormControl(false),
     });
   }
 
@@ -734,6 +744,10 @@ export class PointDetailsComponent implements OnInit, OnDestroy {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(location => {
         this.location = true;
+        this.pointForm.get('X').clearValidators();
+        this.pointForm.get('Y').clearValidators();
+        this.pointForm.get('X').updateValueAndValidity();
+        this.pointForm.get('Y').updateValueAndValidity();
         this.point.X_WGS84 = location.coords.latitude;
         this.point.Y_WGS84 = location.coords.longitude;
         this.transformCoordinatesWGS84Location(this.point.X_WGS84, this.point.Y_WGS84);
@@ -744,49 +758,57 @@ export class PointDetailsComponent implements OnInit, OnDestroy {
   }
 
   chooseCoordinatesFromMap() {
-    this.isAddPanel = false;
-    this._mapService.filter3(this.isAddPanel);
+    // Przesyła do mapy informację, że jesteśmy w trybie wyboru punktu na mapie.
+    // Zmieni się kursor z łapki na krzyżyk
+    this.pickMode = true;
+    this.mapService.enablePickMode();
   }
 
   onSubmit() {
-
-    this.point.X_WGS84 = this.pointForm.value.X_WGS84;
-    this.point.Y_WGS84 = this.pointForm.value.Y_WGS84;
-    this.point.X_local = this.pointForm.value.X_local;
-    this.point.Y_local = this.pointForm.value.Y_local;
-
-    this.point.controlType = this.pointForm.value.controlType;
-    this.point.controlClass = this.pointForm.value.controlClass;
-    this.point.id = this.pointForm.value.id;
-
-    this.point.hAmsterdam = this.pointForm.value.hAmsterdam;
-    this.point.hKronsztadt = this.pointForm.value.hKronsztadt;
-
-    this.point.country = this.pointForm.value.country;
-    this.point.state = this.pointForm.value.state;
-    this.point.district = this.pointForm.value.district;
-    this.point.county = this.pointForm.value.county;
-
-    this.point.locality = this.pointForm.value.locality;
-    this.point.city_district = this.pointForm.value.city_district;
-
-    this.point.road = this.pointForm.value.road;
-    this.point.house_number = this.pointForm.value.house_number;
-
-    this.point.stabilization = this.pointForm.value.stabilization;
-    this.point.found = this.pointForm.value.found;
-    console.log(this.point);
-  }
-
-  ngOnDestroy() {
-    this.cdr.detach();
-    this.sub.unsubscribe();
+    console.log(this.pointForm);
+    console.log('location: ', this.location);
+    if (this.pointForm.valid) {
+      Object.keys(this.pointForm.value).forEach(key => {
+        this.point[key] = this.pointForm.value[key] === '' ? null : this.pointForm.value[key];
+      });
+      console.log(this.point);
+      this.httpService.addPoint(this.point).subscribe(point => {
+      });
+      this.router.navigate(['/home']);
+    }
   }
 
   displayPoint() {
     const latlong = [this.point.X_WGS84, this.point.Y_WGS84];
     this.getPosts(latlong);
-    const cords = [this.point.X_WGS84, this.point.Y_WGS84];
-    this._mapService.filter2(cords);
+    const cords: Array<number> = [this.point.X_WGS84, this.point.Y_WGS84];
+    this.mapService.setChangeCords(cords);
+  }
+
+  chooseNetworkType() {
+    if (this.pointForm.value.controlType === 'pozioma' && (this.pointForm.value.controlClass === '1' || this.pointForm.value.controlClass === '2')) {
+      this.mapService.changeIcon('assets/podstawowa_pozioma.png');
+      this.displayPoint();
+    } else if (this.pointForm.value.controlType === 'wysokosciowa' && (this.pointForm.value.controlClass === '1' || this.pointForm.value.controlClass === '2')) {
+      this.mapService.changeIcon('assets/podstawowa_wysokosciowa.png');
+      this.displayPoint();
+    } else if (this.pointForm.value.controlType === 'dwufunkcyjna' && (this.pointForm.value.controlClass === '1' || this.pointForm.value.controlClass === '2')) {
+      this.mapService.changeIcon('assets/podstawowa_xyh.png');
+      this.displayPoint();
+    } else if (this.pointForm.value.controlType === 'pozioma' && this.pointForm.value.controlClass === '3') {
+      this.mapService.changeIcon('assets/szczegolowa_pozioma.png');
+      this.displayPoint();
+    } else if (this.pointForm.value.controlType === 'wysokosciowa' && this.pointForm.value.controlClass === '3') {
+      this.mapService.changeIcon('assets/szczegolowa_wysokosciowa.png');
+      this.displayPoint();
+
+    } else if (this.pointForm.value.controlType === 'dwufunkcyjna' && this.pointForm.value.controlClass === '3') {
+      this.mapService.changeIcon('assets/szczegolowa_xyh.png');
+      this.displayPoint();
+
+    } else {
+      this.mapService.changeIcon('assets/podstawowa_pozioma.png');
+      this.displayPoint();
+    }
   }
 }

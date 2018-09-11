@@ -1,15 +1,16 @@
-export class PointDetails {
-  X_WGS84?: number;
-  Y_WGS84?: number;
+export class Point {
+  id: number;
+  X_WGS84: number;
+  Y_WGS84: number;
   X_local?: number;
   Y_local?: number;
 
   controlType?: string;
   controlClass?: string;
-  id?: string;
+  catalog_number?: string;
 
-  hAmsterdam?: string;
-  hKronsztadt?: string;
+  hAmsterdam?: number;
+  hKronsztadt?: number;
 
   country?: string;
   state?: string;
