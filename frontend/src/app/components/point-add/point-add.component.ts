@@ -32,6 +32,10 @@ export class PointAddComponent implements OnInit {
   pointForm: FormGroup;
   stabilizationWays: Array<String> = ['bolec', 'pal drewniany', 'kamień naturalny', 'pręt', 'rurka', 'słupek betonowy', 'szczegół terenowy', 'inny'];
   public mask = [/[- 0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/];
+  imageUrls: Array<string> = [];
+  fileToUpload: File = null;
+  theSame: boolean = false;
+  drag: boolean = false;
 
   constructor(private mapService: MapService,
               private cdr: ChangeDetectorRef,
@@ -810,5 +814,61 @@ export class PointAddComponent implements OnInit {
       this.mapService.changeIcon('assets/podstawowa_pozioma.png');
       this.displayPoint();
     }
+  }
+
+  handleFileInput(file: FileList) {
+    console.log('----------------------------------------');
+    console.log(file);
+    // this.imageUrl = '';
+
+    if (file && file[0]) {
+      this.fileToUpload = file.item(0);
+
+      const reader = new FileReader();
+      reader.onload = (event: any) => {
+
+        for (let image of this.imageUrls) {
+          if (image === event.target.result) {
+            console.log('takie same');
+            this.theSame = true;
+            break;
+          }
+        }
+        if (this.theSame === false) {
+          this.imageUrls.push(event.target.result);
+        }
+
+      };
+      reader.readAsDataURL(this.fileToUpload);
+    }
+  }
+
+  removePicture(i) {
+    console.log('removePicture');
+    this.imageUrls = this.imageUrls.filter(e => e !== i);
+  }
+
+  onDrop(event: any) {
+    // event.preventDefault();
+    // event.stopPropagation();
+    this.drag = false;
+
+    // your code goes here after droping files or any
+  }
+
+  onDragOver(evt) {
+    this.drag = true;
+    // evt.preventDefault();
+    // evt.stopPropagation();
+  }
+
+  onDragLeave(evt) {
+    this.drag = false;
+    // evt.preventDefault();
+    // evt.stopPropagation();
+  }
+
+  getBorderColor(){
+    return this.drag === true? '5px dotted #f94f41': '5px dotted #ccc';
   }
 }

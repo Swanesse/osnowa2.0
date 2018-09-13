@@ -1,240 +1,262 @@
 <div [hidden]="pickMode">
 
-<div class="header-side-container">
-  <div class="main-header">
-    <h1>Dodaj punkt</h1>
-    <button mat-icon-button routerLink="/home">
-      <mat-icon>close</mat-icon>
-    </button>
-
+  <div class="header-side-container">
+    <div class="main-header">
+      <h1>Dodaj punkt</h1>
+      <button mat-icon-button routerLink="/home">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div class="bottom-line"></div>
   </div>
 
-  <div class="bottom-line"></div>
-</div>
+  <div class="detail-side-container">
+    <form [formGroup]="pointForm" (ngSubmit)="onSubmit()">
 
-<div class="detail-side-container">
-  <form [formGroup]="pointForm" (ngSubmit)="onSubmit()">
+      <!--Pierwsze wpisanie współrzędnych-->
+      <ng-template #noCoordinate>
+        <div class="form_element">
+          <label>Współrzędne w układzie WGS84 lub 2000 <sup>
+            <fa-icon [icon]="faInfo"
+                     matTooltip="Współrzędne w układzie WGS84 to np. 50.068436 a w układzie 2000 to 5548589.65"></fa-icon>
+          </sup></label>
+          <mat-form-field class="short-width mat-form-field-invalid" hintLabel="(np. 50.068436 lub 5548589.65)">
+            <input class="mat-form-field-invalid" [textMask]="{mask: mask, guide: false}" type="text" id="X"
+                   placeholder="X - długość" matInput [(ngModel)]="X"
+                   formControlName="X" (blur)="transformCoordinates(); ifXisBlur()" (click)="outputCoordinateX()"
+            >
+            <mat-error
+              *ngIf="pointForm.get('X').errors && pointForm.get('X').errors['required']">Pole wymagane
+            </mat-error>
+            <mat-error
+              *ngIf="pointForm.get('X').errors && pointForm.get('X').errors['unproper']">Współrzędna X jest niepoprawna
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="short-width right" hintLabel="(np. 19.921046 lub 7422760.20)">
+            <input [textMask]="{mask: mask, guide: false}" type="text" id="Y"
+                   placeholder="Y - szerokość" matInput [(ngModel)]="Y"
+                   formControlName="Y" (blur)="transformCoordinates(); ifYisBlur()" (click)="outputCoordinateY()"
+            >
+            <mat-error
+              *ngIf="pointForm.get('Y').errors && pointForm.get('Y').errors['required']">Pole wymagane
+            </mat-error>
+            <mat-error
+              *ngIf="pointForm.get('Y').errors && pointForm.get('Y').errors['unproper']">Współrzędna Y jest niepoprawna
+            </mat-error>
+
+          </mat-form-field>
+
+        </div>
+      </ng-template>
+
+      <!--Ponowne wybranie współrzędnych-->
+      <ng-container
+        *ngIf="(validX === '1'&& validY ==='1' && pointForm.get('X').valid && pointForm.get('Y').valid && isXBlur && isYBlur) || location === true; else noCoordinate">
+        <div class="form_element">
+          <label>Współrzędne w układzie WGS84:<sup>
+            <fa-icon [icon]="faInfo" matTooltip="Współrzędne w układzie WGS84 to np. 50.068436 "></fa-icon>
+          </sup></label>
+          <mat-form-field class="short-width" hintLabel="(np. 50.068436)">
+            <input [textMask]="{mask: mask, guide: false}" type="text" name="X_WGS84" id="X_WGS84"
+                   placeholder="X w układzie WGS84" matInput [(ngModel)]="point.X_WGS84"
+                   formControlName="X_WGS84" required (blur)="transformCoordinatesWGS84()">
+            <mat-error *ngIf="pointForm.get('X_WGS84').errors && pointForm.get('X_WGS84').errors['required']">Pole
+              wymagane
+            </mat-error>
+            <mat-error
+              *ngIf="pointForm.get('X_WGS84').errors && pointForm.get('X_WGS84').errors['unproper']">Współrzędna X nie
+              jest w układzie WGS84
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="short-width right" hintLabel="(np. 19.921046)">
+            <input [textMask]="{mask: mask, guide: false}" type="text" name="X_WGS84" id="Y_WGS84"
+                   placeholder="Y w układzie WGS84" matInput [(ngModel)]="point.Y_WGS84"
+                   formControlName="Y_WGS84" required (blur)="transformCoordinatesWGS84()">
+
+            <mat-error *ngIf="pointForm.get('Y_WGS84').errors && pointForm.get('Y_WGS84').errors['required']">Pole
+              wymagane
+            </mat-error>
+            <mat-error
+              *ngIf="pointForm.get('Y_WGS84').errors && pointForm.get('Y_WGS84').errors['unproper']">Współrzędna Y nie
+              jest w układzie WGS84
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form_element">
+
+          <label>Współrzędne w układzie 2000:<sup>
+            <fa-icon [icon]="faInfo" matTooltip="Współrzędne w układzie 2000 to 5548589.65"></fa-icon>
+          </sup></label>
+          <mat-form-field class="short-width" hintLabel="(np. 5548589.65)">
+            <input [textMask]="{mask: mask, guide: false}" type="text" name="X_2000" id="X_2000"
+                   placeholder="X w układzie 2000" matInput [(ngModel)]="X_2000"
+                   formControlName="X_2000" (blur)="transformCoordinates2000()">
+            <mat-error
+              *ngIf="pointForm.get('X_2000').errors && pointForm.get('X_2000').errors['unproper']">Współrzędna X nie
+              jest w układzie 2000
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="short-width right" hintLabel="(np. 7422760.20)">
+            <input [textMask]="{mask: mask, guide: false}" type="text" name="Y_2000" id="Y_2000"
+                   placeholder="Y w układzie 2000" matInput [(ngModel)]="Y_2000"
+                   formControlName="Y_2000" (blur)="transformCoordinates2000()">
+            <mat-error
+              *ngIf="pointForm.get('Y_2000').errors && pointForm.get('Y_2000').errors['unproper']">Współrzędna Y nie
+              jest w układzie 2000
+            </mat-error>
 
 
-    <!--Pierwsze wpisanie współrzędnych-->
-    <ng-template #noCoordinate>
+          </mat-form-field>
+        </div>
+      </ng-container>
+
+
+      <mat-hint class="localization">
+        <!--Wybór z mapy-->
+        <div class="locationSearching">
+          <a title="Pobierz współrzędne poprzez kliknięcie na mapie" (click)="chooseCoordinatesFromMap()">Wybierz z
+            mapy</a>
+        </div>
+
+        <!--Aktualna lokalizacja użytkownika-->
+        <a title="Pobierz współrzędne ze swojej lokalizacji" class="locationSearching" (click)="getCoordinates()"> <i
+          class="material-icons md-24">location_searching</i>
+        </a>
+      </mat-hint>
+
+      <div class="form_element" id="local">
+        <label>Współrzędne lokalne:<sup>
+          <fa-icon [icon]="faInfo"
+                   matTooltip="Współrzędne w układzie lokalnym zależą od miasta, w którym znajduje się punkt"></fa-icon>
+        </sup></label>
+        <mat-form-field class="short-width" hintLabel="(np. -32670.62)">
+          <input [textMask]="{mask: mask, guide: false}" type="text" name="X_local" id="X_local"
+                 placeholder="X w układzie lokalnym" matInput
+                 formControlName="X_local">
+        </mat-form-field>
+        <mat-form-field class="short-width right" hintLabel="(np.  294708.98)">
+          <input [textMask]="{mask: mask, guide: false}" type="text" name="Y_local" id="Y_local"
+                 placeholder="Y w układzie lokalnym" matInput
+                 formControlName="Y_local">
+        </mat-form-field>
+      </div>
+
+      <div class="form_element" id="controlType">
+        <label>Typ osnowy:<sup>
+          <fa-icon [icon]="faInfo"
+                   matTooltip="POZIOMA - określa wzajemne położenie punktów na powierzchni, WYSOKOŚCIOWA - określa wysokość punktów względem punktu odniesienia, DWUFUNKCYJNA - spełnia jednocześnie funkcje osnowy poziomej i wysokościowej"></fa-icon>
+        </sup></label>
+      </div>
+      <div class="radio-button-container">
+        <mat-radio-group [(ngModel)]="point.controlType" formControlName="controlType" (change)="chooseNetworkType()"
+                         aria-labelledby="controlType">
+          <mat-radio-button value="pozioma">Pozioma</mat-radio-button>
+          <mat-radio-button value="wysokosciowa">Wysokościowa</mat-radio-button>
+          <mat-radio-button value="dwufunkcyjna">Dwufunkcyjna</mat-radio-button>
+        </mat-radio-group>
+      </div>
+
       <div class="form_element">
-        <label>Współrzędne w układzie WGS84 lub 2000 <sup><fa-icon [icon]="faInfo" matTooltip="Współrzędne w układzie WGS84 to np. 50.068436 a w układzie 2000 to 5548589.65"></fa-icon></sup></label>
-        <mat-form-field class="short-width mat-form-field-invalid" hintLabel="(np. 50.068436 lub 5548589.65)">
-          <input class="mat-form-field-invalid" [textMask]="{mask: mask, guide: false}" type="text" id="X"
-                 placeholder="X - długość" matInput [(ngModel)]="X"
-                 formControlName="X" (blur)="transformCoordinates(); ifXisBlur()" (click)="outputCoordinateX()"
-                 >
-          <mat-error
-            *ngIf="pointForm.get('X').errors && pointForm.get('X').errors['required']">Pole wymagane
-          </mat-error>
-          <mat-error
-            *ngIf="pointForm.get('X').errors && pointForm.get('X').errors['unproper']">Współrzędna X jest niepoprawna
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field class="short-width right" hintLabel="(np. 19.921046 lub 7422760.20)">
-          <input [textMask]="{mask: mask, guide: false}" type="text" id="Y"
-                 placeholder="Y - szerokość" matInput [(ngModel)]="Y"
-                 formControlName="Y" (blur)="transformCoordinates(); ifYisBlur()" (click)="outputCoordinateY()"
-                 >
-          <mat-error
-            *ngIf="pointForm.get('Y').errors && pointForm.get('Y').errors['required']">Pole wymagane
-          </mat-error>
-          <mat-error
-            *ngIf="pointForm.get('Y').errors && pointForm.get('Y').errors['unproper']">Współrzędna Y jest niepoprawna
-          </mat-error>
-
-        </mat-form-field>
-
+        <label>Klasa:<sup>
+          <fa-icon [icon]="faInfo" matTooltip="Osnowa dzieli się na klasy"></fa-icon>
+        </sup></label>
       </div>
-    </ng-template>
-
-    <!--Ponowne wybranie współrzędnych-->
-    <ng-container
-      *ngIf="(validX === '1'&& validY ==='1' && pointForm.get('X').valid && pointForm.get('Y').valid && isXBlur && isYBlur) || location === true; else noCoordinate">
-      <div class="form_element">
-        <label>Współrzędne w układzie WGS84:<sup><fa-icon [icon]="faInfo" matTooltip="Współrzędne w układzie WGS84 to np. 50.068436 "></fa-icon></sup></label>
-        <mat-form-field class="short-width" hintLabel="(np. 50.068436)">
-          <input [textMask]="{mask: mask, guide: false}" type="text" name="X_WGS84" id="X_WGS84"
-                 placeholder="X w układzie WGS84" matInput [(ngModel)]="point.X_WGS84"
-                 formControlName="X_WGS84" required (blur)="transformCoordinatesWGS84()">
-          <mat-error *ngIf="pointForm.get('X_WGS84').errors && pointForm.get('X_WGS84').errors['required']">Pole
-            wymagane
-          </mat-error>
-          <mat-error
-            *ngIf="pointForm.get('X_WGS84').errors && pointForm.get('X_WGS84').errors['unproper']">Współrzędna X nie jest w układzie WGS84
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field class="short-width right" hintLabel="(np. 19.921046)">
-          <input [textMask]="{mask: mask, guide: false}" type="text" name="X_WGS84" id="Y_WGS84"
-                 placeholder="Y w układzie WGS84" matInput [(ngModel)]="point.Y_WGS84"
-                 formControlName="Y_WGS84" required (blur)="transformCoordinatesWGS84()">
-
-          <mat-error *ngIf="pointForm.get('Y_WGS84').errors && pointForm.get('Y_WGS84').errors['required']">Pole
-            wymagane
-          </mat-error>
-          <mat-error
-            *ngIf="pointForm.get('Y_WGS84').errors && pointForm.get('Y_WGS84').errors['unproper']">Współrzędna Y nie jest w układzie WGS84
-          </mat-error>
-        </mat-form-field>
+      <div class="radio-button-container">
+        <mat-radio-group [(ngModel)]="point.controlClass" formControlName="controlClass" (change)="chooseNetworkType()"
+                         aria-labelledby="controlClass">
+          <mat-radio-button value="1">1 (podstawowa fundamentalna)</mat-radio-button>
+          <mat-radio-button value="2">2 (podstawowa bazowa)</mat-radio-button>
+          <mat-radio-button value="3">3 (szczegółowa)</mat-radio-button>
+        </mat-radio-group>
       </div>
 
-      <div class="form_element">
-
-        <label>Współrzędne w układzie 2000:<sup><fa-icon [icon]="faInfo" matTooltip="Współrzędne w układzie 2000 to 5548589.65"></fa-icon></sup></label>
-        <mat-form-field class="short-width" hintLabel="(np. 5548589.65)">
-          <input [textMask]="{mask: mask, guide: false}" type="text" name="X_2000" id="X_2000"
-                 placeholder="X w układzie 2000" matInput [(ngModel)]="X_2000"
-                 formControlName="X_2000" (blur)="transformCoordinates2000()">
-          <mat-error
-            *ngIf="pointForm.get('X_2000').errors && pointForm.get('X_2000').errors['unproper']">Współrzędna X nie jest w układzie 2000
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field class="short-width right" hintLabel="(np. 7422760.20)">
-          <input [textMask]="{mask: mask, guide: false}" type="text" name="Y_2000" id="Y_2000"
-                 placeholder="Y w układzie 2000" matInput [(ngModel)]="Y_2000"
-                 formControlName="Y_2000" (blur)="transformCoordinates2000()">
-          <mat-error
-            *ngIf="pointForm.get('Y_2000').errors && pointForm.get('Y_2000').errors['unproper']">Współrzędna Y nie jest w układzie 2000
-          </mat-error>
-
-
-        </mat-form-field>
-      </div>
-    </ng-container>
-
-
-    <mat-hint class="localization">
-      <!--Wybór z mapy-->
-      <div class="locationSearching">
-        <a title="Pobierz współrzędne poprzez kliknięcie na mapie" (click)="chooseCoordinatesFromMap()">Wybierz z mapy</a>
-      </div>
-
-      <!--Aktualna lokalizacja użytkownika-->
-      <a title="Pobierz współrzędne ze swojej lokalizacji" class="locationSearching" (click)="getCoordinates()"> <i class="material-icons md-24">location_searching</i>
-      </a>
-    </mat-hint>
-
-    <div class="form_element" id="local">
-      <label>Współrzędne lokalne:<sup><fa-icon [icon]="faInfo" matTooltip="Współrzędne w układzie lokalnym zależą od miasta, w którym znajduje się punkt"></fa-icon></sup></label>
-      <mat-form-field class="short-width" hintLabel="(np. -32670.62)">
-        <input [textMask]="{mask: mask, guide: false}" type="text" name="X_local" id="X_local"
-               placeholder="X w układzie lokalnym" matInput
-               formControlName="X_local">
+      <mat-form-field class="full-width">
+        <input type="text" placeholder="Numer katalogowy" [(ngModel)]="point.catalog_number" matInput
+               formControlName="id">
       </mat-form-field>
-      <mat-form-field class="short-width right" hintLabel="(np.  294708.98)">
-        <input [textMask]="{mask: mask, guide: false}" type="text" name="Y_local" id="Y_local"
-               placeholder="Y w układzie lokalnym" matInput
-               formControlName="Y_local">
+
+      <mat-form-field class="full-width">
+        <input [textMask]="{mask: mask, guide: false}" type="text" placeholder="H (AMSTERDAM)" matInput
+               [(ngModel)]="point.hAmsterdam"
+               formControlName="hAmsterdam">
       </mat-form-field>
-    </div>
 
-    <div class="radio-group-container" id="controlType">
-      <label>Typ osnowy:<sup><fa-icon [icon]="faInfo" matTooltip="Osnowa dzieli się na typy"></fa-icon></sup></label>
-    </div>
-    <div class="radio-button-container">
-      <mat-radio-group [(ngModel)]="point.controlType" formControlName="controlType" (change)="chooseNetworkType()" aria-labelledby="controlType">
-        <mat-radio-button value="pozioma">Pozioma</mat-radio-button>
-        <mat-radio-button value="wysokosciowa">Wysokościowa</mat-radio-button>
-        <mat-radio-button value="dwufunkcyjna">Dwufunkcyjna</mat-radio-button>
-      </mat-radio-group>
-    </div>
+      <mat-form-field class="full-width">
+        <input [textMask]="{mask: mask, guide: false}" type="text" placeholder="H (KRONSZTADT 86)" matInput
+               [(ngModel)]="point.hKronsztadt"
+               formControlName="hKronsztadt">
+      </mat-form-field>
 
-    <div class="radio-group-container">
-      <label>Klasa:<sup><fa-icon [icon]="faInfo" matTooltip="Osnowa dzieli się na klasy"></fa-icon></sup></label>
-    </div>
-    <div class="radio-button-container">
-      <mat-radio-group [(ngModel)]="point.controlClass" formControlName="controlClass" (change)="chooseNetworkType()" aria-labelledby="controlClass">
-        <mat-radio-button value="1">1 (podstawowa fundamentalna)</mat-radio-button>
-        <mat-radio-button value="2">2 (podstawowa bazowa)</mat-radio-button>
-        <mat-radio-button value="3">3 (szczegółowa)</mat-radio-button>
-      </mat-radio-group>
-    </div>
+      <mat-form-field class="short-width left">
+        <input type="text" placeholder="Kraj" [(ngModel)]="point.country" matInput formControlName="country">
+      </mat-form-field>
 
-    <mat-form-field class="full-width">
-      <input type="text" placeholder="Numer katalogowy" [(ngModel)]="point.catalog_number" matInput
-             formControlName="id">
-    </mat-form-field>
+      <mat-form-field class="short-width right">
+        <input type="text" placeholder="Województwo" [(ngModel)]="point.state" matInput formControlName="state">
+      </mat-form-field>
 
-    <mat-form-field class="full-width">
-      <input [textMask]="{mask: mask, guide: false}" type="text" placeholder="H (AMSTERDAM)" matInput [(ngModel)]="point.hAmsterdam"
-             formControlName="hAmsterdam">
-    </mat-form-field>
+      <mat-form-field class="short-width left">
+        <input type="text" placeholder="Powiat" matInput [(ngModel)]="point.district" formControlName="district">
+      </mat-form-field>
 
-    <mat-form-field class="full-width">
-      <input [textMask]="{mask: mask, guide: false}" type="text" placeholder="H (KRONSZTADT 86)" matInput [(ngModel)]="point.hKronsztadt"
-             formControlName="hKronsztadt">
-    </mat-form-field>
-
-    <mat-form-field class="short-width left">
-      <input type="text" placeholder="Kraj" [(ngModel)]="point.country" matInput formControlName="country">
-    </mat-form-field>
-
-    <mat-form-field class="short-width right">
-      <input type="text" placeholder="Województwo" [(ngModel)]="point.state" matInput formControlName="state">
-    </mat-form-field>
-
-    <mat-form-field class="short-width left">
-      <input type="text" placeholder="Powiat" matInput [(ngModel)]="point.district" formControlName="district">
-    </mat-form-field>
-
-    <mat-form-field class="short-width right">
-      <input type="text" placeholder="Gmina" matInput [(ngModel)]="point.county" formControlName="county">
-    </mat-form-field>
+      <mat-form-field class="short-width right">
+        <input type="text" placeholder="Gmina" matInput [(ngModel)]="point.county" formControlName="county">
+      </mat-form-field>
 
 
+      <mat-form-field class="short-width left">
+        <input type="text" placeholder="Miejscowość" matInput [(ngModel)]="point.locality" formControlName="locality">
+      </mat-form-field>
+
+      <mat-form-field class="short-width right">
+        <input type="text" placeholder="Dzielnica" matInput [(ngModel)]="point.city_district"
+               formControlName="city_district">
+      </mat-form-field>
 
 
-    <mat-form-field class="short-width left">
-      <input type="text" placeholder="Miejscowość" matInput [(ngModel)]="point.locality" formControlName="locality">
-    </mat-form-field>
+      <mat-form-field class="short-width left">
+        <input type="text" placeholder="Ulica" matInput [(ngModel)]="point.road" formControlName="road">
+      </mat-form-field>
 
-    <mat-form-field class="short-width right">
-      <input type="text" placeholder="Dzielnica" matInput [(ngModel)]="point.city_district" formControlName="city_district">
-    </mat-form-field>
-
-
-    <mat-form-field class="short-width left">
-      <input type="text" placeholder="Ulica" matInput [(ngModel)]="point.road" formControlName="road">
-    </mat-form-field>
-
-    <mat-form-field class="short-width right">
-      <input type="text" placeholder="Numer domu" matInput [(ngModel)]="point.house_number" formControlName="house_number">
-    </mat-form-field>
+      <mat-form-field class="short-width right">
+        <input type="text" placeholder="Numer domu" matInput [(ngModel)]="point.house_number"
+               formControlName="house_number">
+      </mat-form-field>
 
 
+      <mat-form-field class="short-width">
+        <mat-select placeholder="Stabilizacja" formControlName="stabilization" [(ngModel)]="point.stabilization"
+                    disableRipple>
+          <mat-option *ngFor="let way of this.stabilizationWays" [value]="way">{{ way }}</mat-option>
+        </mat-select>
+      </mat-form-field>
 
-    <mat-form-field class="short-width">
-      <mat-select placeholder="Stabilizacja"  formControlName="stabilization" [(ngModel)]="point.stabilization" disableRipple>
-        <mat-option *ngFor="let way of this.stabilizationWays" [value]="way">{{way}}</mat-option>
-      </mat-select>
-    </mat-form-field>
+      <div class="form_element" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+           (drop)="onDrop($event)">
 
-    <mat-checkbox class="checkboxPoint" formControlName="found">Punkt odnaleziono w terenie</mat-checkbox>
-    <!--<mat-checkbox class="checkboxPoint" formControlName="found">Punkt uszkodzony/przesunięty</mat-checkbox>-->
+        <label class="area" [ngStyle]="{'border': getBorderColor()}">
+          <p>DODAJ ZDJĘCIE PUNKTU</p>
+          <p>Kliknij w pole i wybierz zdjęcie z dysku</p>
+          <p>na komputerze lub</p>
+          <p>przeciągnij i upuść tutaj zdjęcie</p>
 
+          <input type="file" (change)="handleFileInput($event.target.files)">
+        </label>
 
+        <div class="pictureContainer" *ngFor="let image of imageUrls">
+          <button (click)="removePicture(image)">
+            <span class="delete"><mat-icon>delete</mat-icon></span>
+          </button>
 
-    <!--<mat-form-field>-->
-      <!--<mat-checkbox  [(ngModel)]="point.found" formControlName="found">Punkt został odnaleziony w terenie</mat-checkbox>-->
-    <!--</mat-form-field>-->
+          <img id="pointPicture" [src]=image> <br/>
+        </div>
+      </div>
 
-    <!--<div class="container-button">-->
-      <!--<button mat-raised-button matBadge="8" matBadgePosition="before" matBadgeColor="warn" class="main-button" href="" > {{"Znaleziono"}}</button>-->
-    <!--</div>-->
+      <mat-checkbox class="checkboxPoint" formControlName="found">Punkt odnaleziono w terenie</mat-checkbox>
 
-    <!--<button mat-raised-button color="primary-color" matBadge="8" matBadgePosition="before" matBadgeColor="accent">-->
-      <!--Action-->
-    <!--</button>-->
-
-    <!--<mat-form-field class="full-width">-->
-      <!--<input type="text" placeholder=Jest jej bardzo przykro."Punkt znaleziono" matInput [(ngModel)]="point.found"-->
-             <!--formControlName="znaleziono">-->
-    <!--</mat-form-field>-->
-
-
-    <button type="submit" mat-raised-button class="main-button">Zapisz</button>
-  </form>
-</div>
+      <button type="submit" mat-raised-button class="main-button">Zapisz</button>
+    </form>
+  </div>
 </div>
