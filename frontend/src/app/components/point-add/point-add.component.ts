@@ -50,9 +50,7 @@ export class PointAddComponent implements OnInit {
     // getPickedCords zwraca współrzędne, które kliknęliśmy na mapie
     // zwraca 2 wartości - współrzędne
     this.mapService.getPickedCords().subscribe((cords: Array<number>) => {
-      this.point.X_WGS84 = cords[0];
-      this.point.Y_WGS84 = cords[1];
-      this.transformCoordinatesWGS84Location(this.point.X_WGS84, this.point.Y_WGS84);
+      this.transformCoordinatesWGS84Location(cords[0], cords[1]);
       this.pickMode = false;
       this.location = true;
       this.pointForm.get('X').clearValidators();
@@ -64,31 +62,30 @@ export class PointAddComponent implements OnInit {
 
   getPosts(latlong) {
     this.mapService.getPost(latlong).subscribe(posts => {
-      this.point.country = posts.address.country;
-      this.point.state = posts.address.state;
+      this.pointForm.controls['country'].setValue(posts.address.country);
+      this.pointForm.controls['state'].setValue(posts.address.state);
 
       const districtSplit = String(posts.display_name).split(',');
       if (posts.address.postcode) {
-        this.point.district = districtSplit[districtSplit.length - 4];
+        this.pointForm.controls['district'].setValue(districtSplit[districtSplit.length - 4]);
       } else {
-        this.point.district = districtSplit[districtSplit.length - 3];
+        this.pointForm.controls['district'].setValue(districtSplit[districtSplit.length - 3]);
       }
-      this.point.county = posts.address.county;
+      this.pointForm.controls['county'].setValue(posts.address.county);
 
       if (posts.address.city) {
-        this.point.locality = posts.address.city;
+        this.pointForm.controls['locality'].setValue(posts.address.city);
       } else if (posts.address.town) {
-        this.point.locality = posts.address.town;
+        this.pointForm.controls['locality'].setValue(posts.address.town);
       } else {
-        this.point.locality = posts.address.village;
+        this.pointForm.controls['locality'].setValue(posts.address.village);
       }
 
-      this.point.city_district = posts.address.city_district;
+      this.pointForm.controls['city_district'].setValue(posts.address.city_district);
 
 
-      this.point.road = posts.address.road;
-      this.point.house_number = posts.address.house_number;
-      console.log('post: ', posts);
+      this.pointForm.controls['road'].setValue(posts.address.road);
+      this.pointForm.controls['house_number'].setValue(posts.address.house_number);
     });
   }
 
@@ -135,7 +132,17 @@ export class PointAddComponent implements OnInit {
 
   ifYisBlur() {
     this.isYBlur = true;
+  }
 
+  set2000(x, y) {
+    this.pointForm.controls['X_2000'].setValue(x);
+    this.pointForm.controls['Y_2000'].setValue(y);
+  }
+
+  setWGS84AndDisplayPoint(x, y) {
+    this.pointForm.controls['X_WGS84'].setValue(x);
+    this.pointForm.controls['Y_WGS84'].setValue(y);
+    this.displayPoint();
   }
 
   transformCoordinates() {
@@ -156,11 +163,8 @@ export class PointAddComponent implements OnInit {
                     this.validX = '1';
                     this.validY = '1';
                     const coordinate2000 = proj4('EPSG:2176', [Number(Y), Number(X)]);
-                    this.X_2000 = coordinate2000[1];
-                    this.Y_2000 = coordinate2000[0];
-                    this.point.X_WGS84 = X;
-                    this.point.Y_WGS84 = Y;
-                    this.displayPoint();
+                    this.set2000(coordinate2000[1], coordinate2000[0]);
+                    this.setWGS84AndDisplayPoint(X, Y);
                   } else {
                     if (X > 90) {
                       this.validY = '0';
@@ -168,9 +172,7 @@ export class PointAddComponent implements OnInit {
                     } else {
                       this.validX = '1';
                       this.validY = '1';
-                      this.point.X_WGS84 = X;
-                      this.point.Y_WGS84 = Y;
-                      this.displayPoint();
+                      this.setWGS84AndDisplayPoint(X, Y);
                       console.log('Wpisane współrzędne nie są w układzie 2000');
 
                     }
@@ -182,11 +184,8 @@ export class PointAddComponent implements OnInit {
                     this.validX = '1';
                     this.validY = '1';
                     const coordinate2000 = proj4('EPSG:2177', [Number(Y), Number(X)]);
-                    this.X_2000 = coordinate2000[1];
-                    this.Y_2000 = coordinate2000[0];
-                    this.point.X_WGS84 = X;
-                    this.point.Y_WGS84 = Y;
-                    this.displayPoint();
+                    this.set2000(coordinate2000[1], coordinate2000[0]);
+                    this.setWGS84AndDisplayPoint(X, Y);
                   } else {
                     if (X > 90) {
                       this.validY = '0';
@@ -194,9 +193,7 @@ export class PointAddComponent implements OnInit {
                     } else {
                       this.validX = '1';
                       this.validY = '1';
-                      this.point.X_WGS84 = X;
-                      this.point.Y_WGS84 = Y;
-                      this.displayPoint();
+                      this.setWGS84AndDisplayPoint(X, Y);
                       console.log('Wpisane współrzędne nie są w ukłądzie 2000 4');
 
                     }
@@ -208,12 +205,8 @@ export class PointAddComponent implements OnInit {
                     this.validX = '1';
                     this.validY = '1';
                     const coordinate2000 = proj4('EPSG:2178', [Number(Y), Number(X)]);
-                    this.X_2000 = coordinate2000[1];
-                    this.Y_2000 = coordinate2000[0];
-                    this.point.X_WGS84 = X;
-                    this.point.Y_WGS84 = Y;
-                    this.displayPoint();
-                    // this.getPosts(this.point.X_WGS84, this.point.Y_WGS84 );
+                    this.set2000(coordinate2000[1], coordinate2000[0]);
+                    this.setWGS84AndDisplayPoint(X, Y);
                   } else {
                     if (X > 90) {
                       this.validY = '0';
@@ -221,9 +214,7 @@ export class PointAddComponent implements OnInit {
                     } else {
                       this.validX = '1';
                       this.validY = '1';
-                      this.point.X_WGS84 = X;
-                      this.point.Y_WGS84 = Y;
-                      this.displayPoint();
+                      this.setWGS84AndDisplayPoint(X, Y);
                       console.log('Wpisane współrzędne nie są w układzie 2000 3');
                     }
                   }
@@ -235,11 +226,8 @@ export class PointAddComponent implements OnInit {
                     this.validX = '1';
                     this.validY = '1';
                     const coordinate2000 = proj4('EPSG:2179', [Number(Y), Number(X)]);
-                    this.X_2000 = coordinate2000[1];
-                    this.Y_2000 = coordinate2000[0];
-                    this.point.X_WGS84 = X;
-                    this.point.Y_WGS84 = Y;
-                    this.displayPoint();
+                    this.set2000(coordinate2000[1], coordinate2000[0]);
+                    this.setWGS84AndDisplayPoint(X, Y);
                   } else {
                     if (X > 90) {
                       this.validY = '0';
@@ -247,9 +235,7 @@ export class PointAddComponent implements OnInit {
                     } else {
                       this.validX = '1';
                       this.validY = '1';
-                      this.point.X_WGS84 = X;
-                      this.point.Y_WGS84 = Y;
-                      this.displayPoint();
+                      this.setWGS84AndDisplayPoint(X, Y);
                       console.log('Wpisane współrzędne nie są w ukłądzie 2000 3');
 
                     }
@@ -262,11 +248,8 @@ export class PointAddComponent implements OnInit {
                       this.validX = '1';
                       this.validY = '1';
                       const coordinateWGS84 = proj4('EPSG:2176', 'EPSG:4326', [Number(Y), Number(X)]);
-                      this.X_2000 = X;
-                      this.Y_2000 = Y;
-                      this.point.X_WGS84 = coordinateWGS84[1];
-                      this.point.Y_WGS84 = coordinateWGS84[0];
-                      this.displayPoint();
+                      this.set2000(X, Y);
+                      this.setWGS84AndDisplayPoint(coordinateWGS84[1], coordinateWGS84[0]);
                     } else {
                       this.validY = '0';
                       console.log('Współrzędna Y jest niepoprawna');
@@ -279,11 +262,8 @@ export class PointAddComponent implements OnInit {
                         this.validX = '1';
                         this.validY = '1';
                         const coordinateWGS84 = proj4('EPSG:2177', 'EPSG:4326', [Number(Y), Number(X)]);
-                        this.X_2000 = X;
-                        this.Y_2000 = Y;
-                        this.point.X_WGS84 = coordinateWGS84[1];
-                        this.point.Y_WGS84 = coordinateWGS84[0];
-                        this.displayPoint();
+                        this.set2000(X, Y);
+                        this.setWGS84AndDisplayPoint(coordinateWGS84[1], coordinateWGS84[0]);
                       } else {
                         this.validY = '0';
                         console.log('Współrzędna Y jest niepoprawna');
@@ -297,11 +277,8 @@ export class PointAddComponent implements OnInit {
                           this.validX = '1';
                           this.validY = '1';
                           const coordinateWGS84 = proj4('EPSG:2178', 'EPSG:4326', [Number(Y), Number(X)]);
-                          this.X_2000 = X;
-                          this.Y_2000 = Y;
-                          this.point.X_WGS84 = coordinateWGS84[1];
-                          this.point.Y_WGS84 = coordinateWGS84[0];
-                          this.displayPoint();
+                          this.set2000(X, Y);
+                          this.setWGS84AndDisplayPoint(coordinateWGS84[1], coordinateWGS84[0]);
                         } else {
                           this.validY = '0';
                           console.log('Współrzędna Y jest niepoprawna');
@@ -315,11 +292,8 @@ export class PointAddComponent implements OnInit {
                             this.validX = '1';
                             this.validY = '1';
                             const coordinateWGS84 = proj4('EPSG:2179', 'EPSG:4326', [Number(Y), Number(X)]);
-                            this.X_2000 = X;
-                            this.Y_2000 = Y;
-                            this.point.X_WGS84 = coordinateWGS84[1];
-                            this.point.Y_WGS84 = coordinateWGS84[0];
-                            this.displayPoint();
+                            this.set2000(X, Y);
+                            this.setWGS84AndDisplayPoint(coordinateWGS84[1], coordinateWGS84[0]);
                           } else {
                             this.validY = '0';
                             console.log('Współrzędna Y jest niepoprawna');
@@ -346,17 +320,13 @@ export class PointAddComponent implements OnInit {
                 } else {
                   this.validX = '1';
                   this.validY = '1';
-                  this.point.X_WGS84 = X;
-                  this.point.Y_WGS84 = Y;
-                  this.displayPoint();
+                  this.setWGS84AndDisplayPoint(X, Y);
                   console.log('Wpisane współrzędne nie są w układze 2000 1');
                 }
               } else {
                 this.validX = '1';
                 this.validY = '1';
-                this.point.X_WGS84 = X;
-                this.point.Y_WGS84 = Y;
-                this.displayPoint();
+                this.setWGS84AndDisplayPoint(X, Y);
                 console.log('Wpisane współrzędne nie są w układzie 2000 2');
               }
             } else {
@@ -375,9 +345,10 @@ export class PointAddComponent implements OnInit {
   transformCoordinatesWGS84() {
     const X = this.pointForm.value.X_WGS84;
     const Y = this.pointForm.value.Y_WGS84;
-
+    console.log('1');
     if (this.pointForm.get('X_WGS84').valid && this.pointForm.get('Y_WGS84').valid) {
       if (Y) {
+        console.log('1');
         if (X) {
 
           if (X >= -90) {
@@ -388,17 +359,12 @@ export class PointAddComponent implements OnInit {
                   // 2000 zone 5
                   if (X >= 50.25 && X <= 54.5) {
                     const coordinate2000 = proj4('EPSG:2176', [Number(Y), Number(X)]);
-                    this.X_2000 = coordinate2000[1];
-                    this.Y_2000 = coordinate2000[0];
-                    this.point.X_WGS84 = X;
-                    this.point.Y_WGS84 = Y;
-                    this.displayPoint();
+                    this.set2000(coordinate2000[1], coordinate2000[0]);
+                    this.setWGS84AndDisplayPoint(X, Y);
                   } else {
-                    this.point.X_WGS84 = X;
-                    this.point.Y_WGS84 = Y;
-                    this.displayPoint();
-                    this.X_2000 = null;
-                    this.Y_2000 = null;
+                    this.setWGS84AndDisplayPoint(X, Y);
+                    this.set2000(null, null);
+
                     console.log('Wpisane współrzędne nie są w układzie 2000');
                   }
                 } else if (Y <= 19.5000) {
@@ -406,17 +372,11 @@ export class PointAddComponent implements OnInit {
                   // 2000 zone 6
                   if (X >= 49.3300 && X <= 54.8300) {
                     const coordinate2000 = proj4('EPSG:2177', [Number(Y), Number(X)]);
-                    this.X_2000 = coordinate2000[1];
-                    this.Y_2000 = coordinate2000[0];
-                    this.point.X_WGS84 = X;
-                    this.point.Y_WGS84 = Y;
-                    this.displayPoint();
+                    this.set2000(coordinate2000[1], coordinate2000[0]);
+                    this.setWGS84AndDisplayPoint(X, Y);
                   } else {
-                    this.point.X_WGS84 = X;
-                    this.point.Y_WGS84 = Y;
-                    this.displayPoint();
-                    this.X_2000 = null;
-                    this.Y_2000 = null;
+                    this.setWGS84AndDisplayPoint(X, Y);
+                    this.set2000(null, null);
                     console.log('Wpisane współrzędne nie są w ukłądzie 2000 4');
                   }
                 } else if (Y <= 22.5000) {
@@ -424,17 +384,11 @@ export class PointAddComponent implements OnInit {
                   // 2000 zone 7
                   if (X >= 49.0900 && X <= 54.5000) {
                     const coordinate2000 = proj4('EPSG:2178', [Number(Y), Number(X)]);
-                    this.X_2000 = coordinate2000[1];
-                    this.Y_2000 = coordinate2000[0];
-                    this.point.X_WGS84 = X;
-                    this.point.Y_WGS84 = Y;
-                    this.displayPoint();
+                    this.set2000(coordinate2000[1], coordinate2000[0]);
+                    this.setWGS84AndDisplayPoint(X, Y);
                   } else {
-                    this.point.X_WGS84 = X;
-                    this.point.Y_WGS84 = Y;
-                    this.displayPoint();
-                    this.X_2000 = null;
-                    this.Y_2000 = null;
+                    this.setWGS84AndDisplayPoint(X, Y);
+                    this.set2000(null, null);
                     console.log('Wpisane współrzędne nie są w układzie 2000 3');
                   }
                 } else if (Y <= 24.1600) {
@@ -442,33 +396,21 @@ export class PointAddComponent implements OnInit {
                   // 2000 zone 8
                   if (X >= 49.0300 && X <= 54.4500) {
                     const coordinate2000 = proj4('EPSG:2179', [Number(Y), Number(X)]);
-                    this.X_2000 = coordinate2000[1];
-                    this.Y_2000 = coordinate2000[0];
-                    this.point.X_WGS84 = X;
-                    this.point.Y_WGS84 = Y;
-                    this.displayPoint();
+                    this.set2000(coordinate2000[1], coordinate2000[0]);
+                    this.setWGS84AndDisplayPoint(X, Y);
                   } else {
-                    this.point.X_WGS84 = X;
-                    this.point.Y_WGS84 = Y;
-                    this.displayPoint();
-                    this.X_2000 = null;
-                    this.Y_2000 = null;
+                    this.setWGS84AndDisplayPoint(X, Y);
+                    this.set2000(null, null);
                     console.log('Wpisane współrzędne nie są w ukłądzie 2000 3');
                   }
                 } else {
-                  this.point.X_WGS84 = X;
-                  this.point.Y_WGS84 = Y;
-                  this.displayPoint();
-                  this.X_2000 = null;
-                  this.Y_2000 = null;
+                  this.setWGS84AndDisplayPoint(X, Y);
+                  this.set2000(null, null);
                   console.log('Wpisane współrzędne nie są w układze 2000 1');
                 }
               } else {
-                this.point.X_WGS84 = X;
-                this.point.Y_WGS84 = Y;
-                this.displayPoint();
-                this.X_2000 = null;
-                this.Y_2000 = null;
+                this.setWGS84AndDisplayPoint(X, Y);
+                this.set2000(null, null);
                 console.log('Wpisane współrzędne nie są w układzie 2000 2');
               }
             }
@@ -492,17 +434,11 @@ export class PointAddComponent implements OnInit {
                 // 2000 zone 5
                 if (X >= 50.25 && X <= 54.5) {
                   const coordinate2000 = proj4('EPSG:2176', [Number(Y), Number(X)]);
-                  this.X_2000 = coordinate2000[1];
-                  this.Y_2000 = coordinate2000[0];
-                  this.point.X_WGS84 = X;
-                  this.point.Y_WGS84 = Y;
-                  this.displayPoint();
+                  this.set2000(coordinate2000[1], coordinate2000[0]);
+                  this.setWGS84AndDisplayPoint(X, Y);
                 } else {
-                  this.point.X_WGS84 = X;
-                  this.point.Y_WGS84 = Y;
-                  this.displayPoint();
-                  this.X_2000 = null;
-                  this.Y_2000 = null;
+                  this.setWGS84AndDisplayPoint(X, Y);
+                  this.set2000(null, null);
                   console.log('Wpisane współrzędne nie są w układzie 2000');
                 }
               } else if (Y <= 19.5000) {
@@ -510,17 +446,11 @@ export class PointAddComponent implements OnInit {
                 // 2000 zone 6
                 if (X >= 49.3300 && X <= 54.8300) {
                   const coordinate2000 = proj4('EPSG:2177', [Number(Y), Number(X)]);
-                  this.X_2000 = coordinate2000[1];
-                  this.Y_2000 = coordinate2000[0];
-                  this.point.X_WGS84 = X;
-                  this.point.Y_WGS84 = Y;
-                  this.displayPoint();
+                  this.set2000(coordinate2000[1], coordinate2000[0]);
+                  this.setWGS84AndDisplayPoint(X, Y);
                 } else {
-                  this.point.X_WGS84 = X;
-                  this.point.Y_WGS84 = Y;
-                  this.displayPoint();
-                  this.X_2000 = null;
-                  this.Y_2000 = null;
+                  this.setWGS84AndDisplayPoint(X, Y);
+                  this.set2000(null, null);
                   console.log('Wpisane współrzędne nie są w ukłądzie 2000 4');
                 }
               } else if (Y <= 22.5000) {
@@ -528,17 +458,11 @@ export class PointAddComponent implements OnInit {
                 // 2000 zone 7
                 if (X >= 49.0900 && X <= 54.5000) {
                   const coordinate2000 = proj4('EPSG:2178', [Number(Y), Number(X)]);
-                  this.X_2000 = coordinate2000[1];
-                  this.Y_2000 = coordinate2000[0];
-                  this.point.X_WGS84 = X;
-                  this.point.Y_WGS84 = Y;
-                  this.displayPoint();
+                  this.set2000(coordinate2000[1], coordinate2000[0]);
+                  this.setWGS84AndDisplayPoint(X, Y);
                 } else {
-                  this.point.X_WGS84 = X;
-                  this.point.Y_WGS84 = Y;
-                  this.displayPoint();
-                  this.X_2000 = null;
-                  this.Y_2000 = null;
+                  this.setWGS84AndDisplayPoint(X, Y);
+                  this.set2000(null, null);
                   console.log('Wpisane współrzędne nie są w układzie 2000 3');
                 }
               } else if (Y <= 24.1600) {
@@ -546,33 +470,21 @@ export class PointAddComponent implements OnInit {
                 // 2000 zone 8
                 if (X >= 49.0300 && X <= 54.4500) {
                   const coordinate2000 = proj4('EPSG:2179', [Number(Y), Number(X)]);
-                  this.X_2000 = coordinate2000[1];
-                  this.Y_2000 = coordinate2000[0];
-                  this.point.X_WGS84 = X;
-                  this.point.Y_WGS84 = Y;
-                  this.displayPoint();
+                  this.set2000(coordinate2000[1], coordinate2000[0]);
+                  this.setWGS84AndDisplayPoint(X, Y);
                 } else {
-                  this.point.X_WGS84 = X;
-                  this.point.Y_WGS84 = Y;
-                  this.displayPoint();
-                  this.X_2000 = null;
-                  this.Y_2000 = null;
+                  this.setWGS84AndDisplayPoint(X, Y);
+                  this.set2000(null, null);
                   console.log('Wpisane współrzędne nie są w ukłądzie 2000 3');
                 }
               } else {
-                this.point.X_WGS84 = X;
-                this.point.Y_WGS84 = Y;
-                this.displayPoint();
-                this.X_2000 = null;
-                this.Y_2000 = null;
+                this.setWGS84AndDisplayPoint(X, Y);
+                this.set2000(null, null);
                 console.log('Wpisane współrzędne nie są w układze 2000 1');
               }
             } else {
-              this.point.X_WGS84 = X;
-              this.point.Y_WGS84 = Y;
-              this.displayPoint();
-              this.X_2000 = null;
-              this.Y_2000 = null;
+              this.setWGS84AndDisplayPoint(X, Y);
+              this.set2000(null, null);
               console.log('Wpisane współrzędne nie są w układzie 2000 2');
             }
           }
@@ -581,10 +493,9 @@ export class PointAddComponent implements OnInit {
     }
   }
 
-
   transformCoordinates2000() {
-    const X = this.pointForm.value.X_2000;
-    const Y = this.pointForm.value.Y_2000;
+    const X = this.pointForm.get('X_2000').value;
+    const Y = this.pointForm.get('Y_2000').value;
 
     if (this.pointForm.get('X_2000').valid && this.pointForm.get('Y_2000').valid) {
       if (Y) {
@@ -595,15 +506,10 @@ export class PointAddComponent implements OnInit {
               // 2000 zone 5
               if (X >= 5568580.0317 && X <= 6042141.2701) {
                 const coordinateWGS84 = proj4('EPSG:2176', 'EPSG:4326', [Number(Y), Number(X)]);
-                this.X_2000 = X;
-                this.Y_2000 = Y;
-                this.point.X_WGS84 = coordinateWGS84[1];
-                this.point.Y_WGS84 = coordinateWGS84[0];
-                this.displayPoint();
+                this.set2000(X, Y);
+                this.setWGS84AndDisplayPoint(coordinateWGS84[1], coordinateWGS84[0]);
               } else {
-                this.point.X_WGS84 = null;
-                this.point.Y_WGS84 = null;
-                this.displayPoint();
+                this.setWGS84AndDisplayPoint(null, null);
                 console.log('Współrzędna Y jest niepoprawna');
               }
             } else if (Y >= 6390979.5111) {
@@ -612,15 +518,10 @@ export class PointAddComponent implements OnInit {
                 // 2000 zone 6
                 if (X >= 5466989.5093 && X <= 6078869.0066) {
                   const coordinateWGS84 = proj4('EPSG:2177', 'EPSG:4326', [Number(Y), Number(X)]);
-                  this.X_2000 = X;
-                  this.Y_2000 = Y;
-                  this.point.X_WGS84 = coordinateWGS84[1];
-                  this.point.Y_WGS84 = coordinateWGS84[0];
-                  this.displayPoint();
+                  this.set2000(X, Y);
+                  this.setWGS84AndDisplayPoint(coordinateWGS84[1], coordinateWGS84[0]);
                 } else {
-                  this.point.X_WGS84 = null;
-                  this.point.Y_WGS84 = null;
-                  this.displayPoint();
+                  this.setWGS84AndDisplayPoint(null, null);
                   console.log('Współrzędna Y jest niepoprawna');
                 }
 
@@ -630,15 +531,10 @@ export class PointAddComponent implements OnInit {
                   // 2000 zone 7
                   if (X >= 5440301.5811 && X <= 6042141.2701) {
                     const coordinateWGS84 = proj4('EPSG:2178', 'EPSG:4326', [Number(Y), Number(X)]);
-                    this.X_2000 = X;
-                    this.Y_2000 = Y;
-                    this.point.X_WGS84 = coordinateWGS84[1];
-                    this.point.Y_WGS84 = coordinateWGS84[0];
-                    this.displayPoint();
+                    this.set2000(X, Y);
+                    this.setWGS84AndDisplayPoint(coordinateWGS84[1], coordinateWGS84[0]);
                   } else {
-                    this.point.X_WGS84 = null;
-                    this.point.Y_WGS84 = null;
-                    this.displayPoint();
+                    this.setWGS84AndDisplayPoint(null, null);
                     console.log('Współrzędna Y jest niepoprawna');
                   }
 
@@ -648,45 +544,30 @@ export class PointAddComponent implements OnInit {
                     // 2000 zone 8
                     if (X >= 5432557.9291 && X <= 6036576.6253) {
                       const coordinateWGS84 = proj4('EPSG:2179', 'EPSG:4326', [Number(Y), Number(X)]);
-                      this.X_2000 = X;
-                      this.Y_2000 = Y;
-                      this.point.X_WGS84 = coordinateWGS84[1];
-                      this.point.Y_WGS84 = coordinateWGS84[0];
-                      this.displayPoint();
+                      this.set2000(X, Y);
+                      this.setWGS84AndDisplayPoint(coordinateWGS84[1], coordinateWGS84[0]);
                     } else {
-                      this.point.X_WGS84 = null;
-                      this.point.Y_WGS84 = null;
-                      this.displayPoint();
+                      this.setWGS84AndDisplayPoint(null, null);
                       console.log('Współrzędna Y jest niepoprawna');
                     }
                   } else {
-                    this.point.X_WGS84 = null;
-                    this.point.Y_WGS84 = null;
-                    this.displayPoint();
+                    this.setWGS84AndDisplayPoint(null, null);
                     console.log('Współrzędna X jest niepoprawna 1');
                   }
                 } else {
-                  this.point.X_WGS84 = null;
-                  this.point.Y_WGS84 = null;
-                  this.displayPoint();
+                  this.setWGS84AndDisplayPoint(null, null);
                   console.log('Współrzędna X jest niepoprawna 2');
                 }
               } else {
-                this.point.X_WGS84 = null;
-                this.point.Y_WGS84 = null;
-                this.displayPoint();
+                this.setWGS84AndDisplayPoint(null, null);
                 console.log('Współrzędna X jest niepoprawna 3');
               }
             } else {
-              this.point.X_WGS84 = null;
-              this.point.Y_WGS84 = null;
-              this.displayPoint();
+              this.setWGS84AndDisplayPoint(null, null);
               console.log('Współrzędna X jest niepoprawna 4');
             }
           } else {
-            this.point.X_WGS84 = null;
-            this.point.Y_WGS84 = null;
-            this.displayPoint();
+            this.setWGS84AndDisplayPoint(null, null);
             console.log('Współrzędna X jest niepoprawna 5');
           }
         }
@@ -752,9 +633,8 @@ export class PointAddComponent implements OnInit {
         this.pointForm.get('Y').clearValidators();
         this.pointForm.get('X').updateValueAndValidity();
         this.pointForm.get('Y').updateValueAndValidity();
-        this.point.X_WGS84 = location.coords.latitude;
-        this.point.Y_WGS84 = location.coords.longitude;
-        this.transformCoordinatesWGS84Location(this.point.X_WGS84, this.point.Y_WGS84);
+        this.setWGS84AndDisplayPoint(location.coords.latitude, location.coords.longitude);
+        this.transformCoordinatesWGS84Location(this.pointForm.get('X_WGS84').value, this.pointForm.get('Y_WGS84').value);
       });
     } else {
       alert('twoja przeglądarka nie wspiera geolokacji...');
@@ -769,13 +649,10 @@ export class PointAddComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.pointForm);
-    console.log('location: ', this.location);
     if (this.pointForm.valid) {
       Object.keys(this.pointForm.value).forEach(key => {
         this.point[key] = this.pointForm.value[key] === '' ? null : this.pointForm.value[key];
       });
-      console.log(this.point);
       this.httpService.addPoint(this.point).subscribe(point => {
       });
       this.router.navigate(['/home']);
@@ -783,9 +660,9 @@ export class PointAddComponent implements OnInit {
   }
 
   displayPoint() {
-    const latlong = [this.point.X_WGS84, this.point.Y_WGS84];
+    const latlong = [this.pointForm.get('X_WGS84').value, this.pointForm.get('Y_WGS84').value];
     this.getPosts(latlong);
-    const cords: Array<number> = [this.point.X_WGS84, this.point.Y_WGS84];
+    const cords: Array<number> = [this.pointForm.get('X_WGS84').value, this.pointForm.get('Y_WGS84').value];
     this.mapService.setChangeCords(cords);
   }
 
@@ -829,7 +706,6 @@ export class PointAddComponent implements OnInit {
 
         for (let image of this.imageUrls) {
           if (image === event.target.result) {
-            console.log('takie same');
             this.theSame = true;
             break;
           }
@@ -844,7 +720,6 @@ export class PointAddComponent implements OnInit {
   }
 
   removePicture(i) {
-    console.log('removePicture');
     this.imageUrls = this.imageUrls.filter(e => e !== i);
   }
 
@@ -868,7 +743,7 @@ export class PointAddComponent implements OnInit {
     // evt.stopPropagation();
   }
 
-  getBorderColor(){
-    return this.drag === true? '5px dotted #f94f41': '5px dotted #ccc';
+  getBorderColor() {
+    return this.drag === true ? '5px dotted #f94f41' : '5px dotted #ccc';
   }
 }
