@@ -92,8 +92,8 @@ export class PointAddComponent implements OnInit {
   ngOnInit() {
 
     this.pointForm = new FormGroup({
-      X: new FormControl(null, Validators.required),
-      Y: new FormControl(null, Validators.required),
+      X: new FormControl(null, [Validators.required, this.ValidatorX]),
+      Y: new FormControl(null, [Validators.required, this.ValidatorY]),
 
       X_WGS84: new FormControl(null, [Validators.required, this.ValidatorXWGS84]),
       Y_WGS84: new FormControl(null, [Validators.required, this.ValidatorYWGS84]),
@@ -158,7 +158,7 @@ export class PointAddComponent implements OnInit {
               if (Y >= 14.1400) {
                 if (Y <= 16.5000) {
 
-                  // 2000 zone 5
+                  // 2000 zone 5 (długość od 14.14 do 16.5, szerokość od 50.25 do 54.5)
                   if (X >= 50.25 && X <= 54.5) {
                     this.validX = '1';
                     this.validY = '1';
@@ -179,7 +179,7 @@ export class PointAddComponent implements OnInit {
                   }
                 } else if (Y <= 19.5000) {
 
-                  // 2000 zone 6
+                  // 2000 zone 6 (długość od 16.5 do 19.5, szerokość od 49.33 do 54.83)
                   if (X >= 49.3300 && X <= 54.8300) {
                     this.validX = '1';
                     this.validY = '1';
@@ -200,7 +200,7 @@ export class PointAddComponent implements OnInit {
                   }
                 } else if (Y <= 22.5000) {
 
-                  // 2000 zone 7
+                  // 2000 zone 7 (długość od 19.5 do 22.5, szerokość od 49.09 do 54.50)
                   if (X >= 49.0900 && X <= 54.5000) {
                     this.validX = '1';
                     this.validY = '1';
@@ -221,7 +221,7 @@ export class PointAddComponent implements OnInit {
 
                 } else if (Y <= 24.1600) {
 
-                  // 2000 zone 8
+                  // 2000 zone 8 (długość od 22.5 do 24,16, szerokość od 49.03 do 54.45)
                   if (X >= 49.0300 && X <= 54.4500) {
                     this.validX = '1';
                     this.validY = '1';
@@ -660,36 +660,45 @@ export class PointAddComponent implements OnInit {
   }
 
   displayPoint() {
-    const latlong = [this.pointForm.get('X_WGS84').value, this.pointForm.get('Y_WGS84').value];
-    this.getPosts(latlong);
     const cords: Array<number> = [this.pointForm.get('X_WGS84').value, this.pointForm.get('Y_WGS84').value];
+    this.getPosts(cords);
     this.mapService.setChangeCords(cords);
+  }
+
+  updateIcon() {
+    if (this.pointForm.get('X_WGS84').valid && this.pointForm.get('Y_WGS84').valid) {
+      this.mapService.setChangeCords([this.pointForm.get('X_WGS84').value, this.pointForm.get('Y_WGS84').value])
+    }
   }
 
   chooseNetworkType() {
     if (this.pointForm.value.controlType === 'pozioma' && (this.pointForm.value.controlClass === '1' || this.pointForm.value.controlClass === '2')) {
       this.mapService.changeIcon('assets/podstawowa_pozioma.png');
-      this.displayPoint();
+      this.updateIcon();
     } else if (this.pointForm.value.controlType === 'wysokosciowa' && (this.pointForm.value.controlClass === '1' || this.pointForm.value.controlClass === '2')) {
       this.mapService.changeIcon('assets/podstawowa_wysokosciowa.png');
-      this.displayPoint();
+      this.updateIcon();
+
     } else if (this.pointForm.value.controlType === 'dwufunkcyjna' && (this.pointForm.value.controlClass === '1' || this.pointForm.value.controlClass === '2')) {
       this.mapService.changeIcon('assets/podstawowa_xyh.png');
-      this.displayPoint();
+      this.updateIcon();
+
     } else if (this.pointForm.value.controlType === 'pozioma' && this.pointForm.value.controlClass === '3') {
       this.mapService.changeIcon('assets/szczegolowa_pozioma.png');
-      this.displayPoint();
+      this.updateIcon();
+
     } else if (this.pointForm.value.controlType === 'wysokosciowa' && this.pointForm.value.controlClass === '3') {
       this.mapService.changeIcon('assets/szczegolowa_wysokosciowa.png');
-      this.displayPoint();
+      this.updateIcon();
 
     } else if (this.pointForm.value.controlType === 'dwufunkcyjna' && this.pointForm.value.controlClass === '3') {
       this.mapService.changeIcon('assets/szczegolowa_xyh.png');
-      this.displayPoint();
+      this.updateIcon();
 
     } else {
       this.mapService.changeIcon('assets/podstawowa_pozioma.png');
-      this.displayPoint();
+      this.updateIcon();
+
     }
   }
 

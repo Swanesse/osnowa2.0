@@ -3,7 +3,6 @@ import {icon, latLng, marker, tileLayer, Layer, Map, Marker, LayerGroup} from 'l
 import {MapService} from '../../services/map.service';
 import {HttpService} from "../../services/http.service";
 import {NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, Event} from "@angular/router";
-import {Point} from "../../models/Point";
 import {PointMarker} from "../../models/PointMarker";
 
 @Component({
@@ -44,11 +43,6 @@ export class MapComponent {
       this.checkEvent(routerEvent);
     });
 
-
-    // router.events.subscribe((routerEvent) => {
-    //   this.checkEvent(routerEvent);
-    // });
-
     // Prześle z PANELU PUNKTU informację i ustawiamy, że jesteśmy w trybie pobierania kliknięć
     this.mapService.getTurningOnPickMode().subscribe(() => {
       this.pickMode = true;
@@ -64,15 +58,6 @@ export class MapComponent {
       this.pointIcon = icon.toString();
     });
   }
-
-  // checkEvent(routerEvent: Event): void {
-  //   if (routerEvent instanceof NavigationStart) {
-  //     this.isLoading = true;
-  //   } else if (routerEvent instanceof NavigationEnd || routerEvent instanceof NavigationCancel || routerEvent instanceof NavigationError) {
-  //     this.isLoading = false;
-  //   }
-  // }
-
   checkEvent(routerEvent: Event): void {
     if (routerEvent instanceof NavigationStart) {
       this.isLoading = true;
