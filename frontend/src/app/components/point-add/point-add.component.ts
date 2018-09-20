@@ -6,6 +6,7 @@ import {faInfoCircle} from '@fortawesome/free-solid-svg-icons';
 import {HttpService} from "../../services/http.service";
 import {Point} from "../../models/Point";
 import {Router} from "@angular/router";
+import * as _ from 'lodash';
 
 
 @Component({
@@ -61,32 +62,36 @@ export class PointAddComponent implements OnInit {
   }
 
   getPosts(latlong) {
-    this.mapService.getPost(latlong).subscribe(posts => {
-      this.pointForm.controls['country'].setValue(posts.address.country);
-      this.pointForm.controls['state'].setValue(posts.address.state);
+    this.mapService.getPost(latlong).subscribe(
+      posts => {
+        if (!_.has(posts, 'error')) {
+          console.log(posts);
+          this.pointForm.controls['country'].setValue(posts.address.country);
+          this.pointForm.controls['state'].setValue(posts.address.state);
 
-      const districtSplit = String(posts.display_name).split(',');
-      if (posts.address.postcode) {
-        this.pointForm.controls['district'].setValue(districtSplit[districtSplit.length - 4]);
-      } else {
-        this.pointForm.controls['district'].setValue(districtSplit[districtSplit.length - 3]);
-      }
-      this.pointForm.controls['county'].setValue(posts.address.county);
+          const districtSplit = String(posts.display_name).split(',');
+          if (posts.address.postcode) {
+            this.pointForm.controls['district'].setValue(districtSplit[districtSplit.length - 4]);
+          } else {
+            this.pointForm.controls['district'].setValue(districtSplit[districtSplit.length - 3]);
+          }
+          this.pointForm.controls['county'].setValue(posts.address.county);
 
-      if (posts.address.city) {
-        this.pointForm.controls['locality'].setValue(posts.address.city);
-      } else if (posts.address.town) {
-        this.pointForm.controls['locality'].setValue(posts.address.town);
-      } else {
-        this.pointForm.controls['locality'].setValue(posts.address.village);
-      }
+          if (posts.address.city) {
+            this.pointForm.controls['locality'].setValue(posts.address.city);
+          } else if (posts.address.town) {
+            this.pointForm.controls['locality'].setValue(posts.address.town);
+          } else {
+            this.pointForm.controls['locality'].setValue(posts.address.village);
+          }
 
-      this.pointForm.controls['city_district'].setValue(posts.address.city_district);
+          this.pointForm.controls['city_district'].setValue(posts.address.city_district);
 
+          this.pointForm.controls['road'].setValue(posts.address.road);
+          this.pointForm.controls['house_number'].setValue(posts.address.house_number);
+        }
+      });
 
-      this.pointForm.controls['road'].setValue(posts.address.road);
-      this.pointForm.controls['house_number'].setValue(posts.address.house_number);
-    });
   }
 
   ngOnInit() {
