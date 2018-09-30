@@ -96,8 +96,8 @@
                    placeholder="Długość w układzie 2000" matInput formControlName="Y_2000"
                    (blur)="transformCoordinates2000()">
             <mat-error
-              *ngIf="pointForm.get('Y_2000').errors && pointForm.get('Y_2000').errors['unproper']">Współrzędna Y nie
-              jest w układzie 2000
+              *ngIf="pointForm.get('Y_2000').errors && pointForm.get('Y_2000').errors['unproper']">
+              Współrzędna Y nie jest w układzie 2000
             </mat-error>
           </mat-form-field>
           <mat-form-field class="short-width right" hintLabel="(np. 5548589.65)">
@@ -105,8 +105,8 @@
                    placeholder="Szerokość w układzie 2000" matInput formControlName="X_2000"
                    (blur)="transformCoordinates2000()">
             <mat-error
-              *ngIf="pointForm.get('X_2000').errors && pointForm.get('X_2000').errors['unproper']">Współrzędna X nie
-              jest w układzie 2000
+              *ngIf="pointForm.get('X_2000').errors && pointForm.get('X_2000').errors['unproper']">
+              Współrzędna X nie jest w układzie 2000
             </mat-error>
 
 
@@ -226,7 +226,7 @@
 
       <mat-form-field class="short-width">
         <mat-select placeholder="Stabilizacja" formControlName="stabilization" disableRipple>
-          <mat-option *ngFor="let way of this.stabilizationWays" [value]="way">{{way}}</mat-option>
+          <mat-option *ngFor="let way of this.stabilizationWays" [value]="way">{{ way }}</mat-option>
         </mat-select>
       </mat-form-field>
 

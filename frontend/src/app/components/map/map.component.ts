@@ -58,6 +58,7 @@ export class MapComponent {
       this.pointIcon = icon.toString();
     });
   }
+
   checkEvent(routerEvent: Event): void {
     if (routerEvent instanceof NavigationStart) {
       this.isLoading = true;
