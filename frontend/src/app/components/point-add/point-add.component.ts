@@ -61,11 +61,10 @@ export class PointAddComponent implements OnInit {
     });
   }
 
-  getPosts(latlong) {
+  getAddress(latlong) {
     this.mapService.getPost(latlong).subscribe(
       posts => {
         if (!_.has(posts, 'error')) {
-          console.log(posts);
           this.pointForm.controls['country'].setValue(posts.address.country);
           this.pointForm.controls['state'].setValue(posts.address.state);
 
@@ -89,6 +88,16 @@ export class PointAddComponent implements OnInit {
 
           this.pointForm.controls['road'].setValue(posts.address.road);
           this.pointForm.controls['house_number'].setValue(posts.address.house_number);
+        }
+        else {
+          this.pointForm.controls['country'].setValue(null);
+          this.pointForm.controls['state'].setValue(null);
+          this.pointForm.controls['district'].setValue(null);
+          this.pointForm.controls['county'].setValue(null);
+          this.pointForm.controls['locality'].setValue(null);
+          this.pointForm.controls['city_district'].setValue(null);
+          this.pointForm.controls['road'].setValue(null);
+          this.pointForm.controls['house_number'].setValue(null);
         }
       });
 
@@ -670,7 +679,8 @@ export class PointAddComponent implements OnInit {
 
   displayPoint() {
     const cords: Array<number> = [this.pointForm.get('X_WGS84').value, this.pointForm.get('Y_WGS84').value];
-    this.getPosts(cords);
+    // Zwraca adres(kraj, województwo...) ze współrzędnych.
+    this.getAddress(cords);
     this.mapService.setChangeCords(cords);
   }
 
