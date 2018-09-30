@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.utils import timezone
+from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import PointSerializer
@@ -103,14 +104,11 @@ def point_new(request):
 
         serializer = PointSerializer(data=request.data)
         if serializer.is_valid():
+            # save() zapisuje punkt w bazie danych
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors)
-        # form = PointForm(request.POST, request.FILES)
-        # czy formularz jest wypełniony poprawnie
-        # if form.is_valid():
-        # point = form.save(commit=False)
-        # point.autor = request.user
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         # point.created_date = timezone.now()
         # zapisanie punktu w bazie danych
         # point.save()

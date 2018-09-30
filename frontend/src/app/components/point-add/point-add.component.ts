@@ -618,14 +618,14 @@ export class PointAddComponent implements OnInit {
 
   ValidatorY2000(control: AbstractControl): ValidationErrors {
     const y = control.value;
-    if ((y < 5438667.1168 || (y > 5606974.4722 && y < 6390979.5111) || (y > 6609020.4889 && y < 7390450.4069) || (y > 7609549.5931 && y < 8390318.4332) || y > 8511699.5509) && y != null && y!="") {
+    if ((y < 5438667.1168 || (y > 5606974.4722 && y < 6390979.5111) || (y > 6609020.4889 && y < 7390450.4069) || (y > 7609549.5931 && y < 8390318.4332) || y > 8511699.5509) && y != null && y != "") {
       return {unproper: true};
     }
   }
 
   ValidatorX2000(control: AbstractControl): ValidationErrors {
     const x = control.value;
-    if ((x < 5432557.9291 || x > 6078869.0066) && x != null && x!="") {
+    if ((x < 5432557.9291 || x > 6078869.0066) && x != null && x != "") {
       return {unproper: true};
     }
   }
@@ -658,9 +658,13 @@ export class PointAddComponent implements OnInit {
       Object.keys(this.pointForm.value).forEach(key => {
         this.point[key] = this.pointForm.value[key] === '' ? null : this.pointForm.value[key];
       });
-      this.httpService.addPoint(this.point).subscribe(point => {
-      });
-      this.router.navigate(['/home']);
+      this.httpService.addPoint(this.point).subscribe(
+        point => {
+          this.router.navigate(['/home']);
+        },
+        error => {
+          console.log(error.statusText);
+        });
     }
   }
 
