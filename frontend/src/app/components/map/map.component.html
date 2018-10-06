@@ -1,13 +1,8 @@
-<div class="map" [style.cursor] = "getCrosshair()"
+<div class="map" [style.cursor]="getCrosshair()"
      leaflet
      [leafletLayers]="layers"
      (leafletMapReady)="onMapReady($event)"
      [leafletOptions]="options">
-  <!--[leafletMarkerCluster]="markerClusterData"-->
-     <!--[leafletLayersControl]="layersControl"-->
-  <!--[leafletLayers]="laers"-->
-
 </div>
-<div class="loader" *ngIf="isLoading">
 
-</div>
+<div class="loader" *ngIf="isLoading"></div>

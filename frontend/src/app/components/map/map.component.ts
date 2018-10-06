@@ -4,6 +4,7 @@ import {MapService} from '../../services/map.service';
 import {HttpService} from "../../services/http.service";
 import {NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, Event} from "@angular/router";
 import {PointMarker} from "../../models/PointMarker";
+import {Observable} from "rxjs/Rx";
 
 @Component({
   selector: 'app-map',
@@ -167,6 +168,7 @@ export class MapComponent {
   }
 
   onMapReady(map: Map) {
+    Observable.interval(1000).takeWhile(() => true).subscribe(() => this.getCoordinates());
     this.map = map;
     // Aktualizuje wyświetlane punkty w chwili pierwszego wyświetlenia mapy
     this.getAndDisplayPointsFromDB();
@@ -188,6 +190,28 @@ export class MapComponent {
     });
   }
 
+  getCoordinates() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(location => {
+        const newMarker: Marker = marker([location.coords.latitude, location.coords.longitude], {
+          icon: icon({
+            iconSize: [20, 20],
+            iconAnchor: [10, 10],
+            iconUrl: 'assets/location.png',
+            popupAnchor: [0, -28],
+          })
+        });
+        let newPoint: LayerGroup = new LayerGroup();
+
+        // Nadpisujemy poprzedni wyświetlany na mapie punkt
+        newPoint.addLayer(newMarker);
+        this.layers[1] = newPoint;
+      });
+    } else {
+      alert('twoja przeglądarka nie wspiera geolokacji...');
+    }
+  }
+
   displayPoint(cords) {
     const newMarker: Marker = marker([cords[0], cords[1]], {
       icon: this.createIcon()
@@ -196,7 +220,7 @@ export class MapComponent {
 
     // Nadpisujemy poprzedni wyświetlany na mapie punkt
     newPoint.addLayer(newMarker);
-    this.layers[1] = newPoint;
+    this.layers[2] = newPoint;
 
     this.map.setView(latLng([cords[0], cords[1]]), 19);
   }
