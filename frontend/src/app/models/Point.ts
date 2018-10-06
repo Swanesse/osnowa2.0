@@ -25,5 +25,6 @@ export class Point {
 
   stabilization?: string;
   found?: boolean;
+  image?: string;
 }
 

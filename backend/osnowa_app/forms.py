@@ -1,8 +1,6 @@
-from django import forms
 from .models import Point
 import re
 from django import forms
-from osnowa_app.models import User
 from django.core.exceptions import ObjectDoesNotExist
 
 
@@ -11,7 +9,7 @@ class PointForm(forms.ModelForm):
 
     class Meta:
         model = Point
-        fields = ('X_WGS84', 'Y_WGS84', 'X_local','Y_local', 'controlType', 'controlClass', 'catalog_number', 'hAmsterdam', 'hKronsztadt', 'country', 'state', 'district', 'county', 'locality', 'city_district', 'road', 'house_number', 'stabilization', 'found')
+        fields = ('X_WGS84', 'Y_WGS84', 'X_local','Y_local', 'controlType', 'controlClass', 'catalog_number', 'hAmsterdam', 'hKronsztadt', 'country', 'state', 'district', 'county', 'locality', 'city_district', 'road', 'house_number', 'stabilization', 'found', 'image')
 
 
     # #Formularz logowania

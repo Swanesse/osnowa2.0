@@ -667,7 +667,7 @@ export class PointAddComponent implements OnInit {
       Object.keys(this.pointForm.value).forEach(key => {
         this.point[key] = this.pointForm.value[key] === '' ? null : this.pointForm.value[key];
       });
-      this.httpService.addPoint(this.point).subscribe(
+      this.httpService.addPoint(this.point, this.fileToUpload).subscribe(
         point => {
           this.router.navigate(['/home']);
         },
@@ -727,7 +727,7 @@ export class PointAddComponent implements OnInit {
     // this.imageUrl = '';
 
     if (file && file[0]) {
-      this.fileToUpload = file.item(0);
+      this.fileToUpload = <File>file[0];
 
       const reader = new FileReader();
       reader.onload = (event: any) => {

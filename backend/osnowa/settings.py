@@ -119,6 +119,14 @@ STATIC_URL = '/static/'
 # ścieżka do katalogu w którym będą przechowywane wszystkie pliki statyczne. Nie powinniśmy umieszczać tutaj żadnych plików.
 STATIC_ROOT = os.path.join(BASE_DIR, 'public', 'static')
 
+# bazowy adres URL, pod którym dostępne będą pliki mediów.
+MEDIA_URL = '/media/'
+
+# przechowuje pełną ścieżkę do katalogu z mediami. Do tego folderu będą trafiały pliki wrzucane przez użytkowników z poziomu strony www. Stanowi on bazową ścieżkę dla parametru „upload_to” pól FileField i ImageField.
+MEDIA_ROOT = os.path.join(BASE_DIR, 'public', 'media')
+
+
+
 # lista katalogów w naszymi plikami statycznymi nie przynależącymi do żadnej konkretnej aplikacji (ogólnostronowymi)
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),

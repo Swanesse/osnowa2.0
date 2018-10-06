@@ -30,6 +30,7 @@ class Point(models.Model):
     house_number = models.CharField(max_length=200, blank=True, null=True)
     stabilization = models.CharField(max_length=200, blank=True, null=True)
     found= models.BooleanField(default=False)
+    image = models.ImageField(upload_to='images', blank=True)
 
     # def publish(self):
     #     self.find_date = timezone.now()

@@ -2,28 +2,35 @@ import {Injectable} from '@angular/core';
 import {Observable} from "rxjs/Rx";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Point} from "../models/Point";
+import 'rxjs/add/operator/map'
 
-import { InMemoryDbService } from 'angular-in-memory-web-api';
-
+import {InMemoryDbService} from 'angular-in-memory-web-api';
 
 @Injectable({
   providedIn: 'root'
 })
-export class HttpService implements InMemoryDbService{
+export class HttpService implements InMemoryDbService {
 
   constructor(private http: HttpClient) {
   }
 
-  addPoint(point: Point): Observable<Point> {
-    return this.http.post<Point>('http://localhost:8000/point/new', point);
+  addPoint(point: Point, fileToUpload: File): Observable<Point> {
+    const formData: FormData = new FormData();
+    Object.keys(point).forEach(key => {
+      if (point[key] !== null && point[key] !== undefined) {
+        formData.append(key, point[key].toString());
+      }
+    });
+    formData.append('image', fileToUpload, fileToUpload.name);
+    return this.http.post<Point>('http://localhost:8000/point/new', formData);
   }
 
   getPoint(id): Observable<Point> {
-    const param = new HttpParams().set('id', id+'');
-    return this.http.get<Point>('http://localhost:8000/point/get', {params:{param: id}});
-      // .toPromise()
-      // .then(response => response.json().data as Point)
-      // .catch(this.handleError);
+    const param = new HttpParams().set('id', id + '');
+    return this.http.get<Point>('http://localhost:8000/point/get', {params: {param: id}});
+    // .toPromise()
+    // .then(response => response.json().data as Point)
+    // .catch(this.handleError);
   }
 
   // handleError(error: any): Promise<any> {
