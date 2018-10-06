@@ -15,7 +15,7 @@ import {Observable} from "rxjs/Rx";
 export class MapComponent {
   @Output() myEvent: EventEmitter<any> = new EventEmitter();
 
-  layers: Layer[] = [];
+  layers: Layer[] = [new LayerGroup(), new LayerGroup(), new LayerGroup()];
   map: Map;
   pickMode: boolean = false;
   pointIcon: string = 'assets/podstawowa_wysokosciowa.png';
