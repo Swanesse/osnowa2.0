@@ -34,8 +34,7 @@ export class PointAddComponent implements OnInit {
   stabilizationWays: Array<String> = ['bolec', 'pal drewniany', 'kamień naturalny', 'pręt', 'rurka', 'słupek betonowy', 'szczegół terenowy', 'inny'];
   public mask = [/[- 0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/];
   imageUrls: Array<string> = [];
-  fileToUpload: File = null;
-  theSame: boolean = false;
+  fileToUpload: File[] = [];
   drag: boolean = false;
 
   constructor(private mapService: MapService,
@@ -722,28 +721,34 @@ export class PointAddComponent implements OnInit {
   }
 
   handleFileInput(file: FileList) {
-    console.log('----------------------------------------');
-    console.log(file);
-    // this.imageUrl = '';
+    if (file.length > 0) {
 
-    if (file && file[0]) {
-      this.fileToUpload = <File>file[0];
+      for (let i = 0; i < file.length; i++) {
+        const reader = new FileReader();
 
-      const reader = new FileReader();
-      reader.onload = (event: any) => {
+        // Gdy zostanie wczytany plik, on ten plik przechwytuje. Jeden reader może przechwycić tylko jeden plik.
+        reader.onload = (event: any) => {
 
-        for (let image of this.imageUrls) {
-          if (image === event.target.result) {
-            this.theSame = true;
-            break;
+          let theSame = false;
+          for (let image of this.imageUrls) {
+            if (image === event.target.result) {
+              theSame = true;
+              break;
+            }
           }
-        }
-        if (this.theSame === false) {
-          this.imageUrls.push(event.target.result);
-        }
+          if (theSame === false) {
+            this.imageUrls.push(event.target.result);
+            this.fileToUpload.push(file[i]);
+          }
+        };
 
-      };
-      reader.readAsDataURL(this.fileToUpload);
+        reader.onerror = function (event) {
+          console.error("File could not be read! Code");
+        };
+
+        // Zamienia plik na DataURL, dzięki czemu możemy go wyświetlić w przeglądarce
+        reader.readAsDataURL(file[i]);
+      }
     }
   }
 

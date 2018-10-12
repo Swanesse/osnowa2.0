@@ -239,7 +239,7 @@
           <p>na komputerze lub</p>
           <p>przeciągnij i upuść tutaj zdjęcie</p>
 
-          <input type="file" (change)="handleFileInput($event.target.files)">
+          <input type="file" multiple (change)="handleFileInput($event.target.files)">
         </label>
 
         <div class="pictureContainer" *ngFor="let image of imageUrls">
