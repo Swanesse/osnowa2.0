@@ -8,27 +8,60 @@
       </a>
     </div>
 
-    <div class="container-info-contact">
-      <ul>
-        <li>
-          <button mat-button class="href-info-contact" href="" title="Informacje">Informacje</button>
-        </li>
-        <li>
-          <button mat-button class="href-info-contact" href="" title="Kontakt">Kontakt</button>
-        </li>
-      </ul>
-    </div>
 
-    <!--Button add point-->
-    <div class="container-button">
-      <button mat-raised-button class="main-button" href="" routerLink="./points"> {{"Dodaj punkt"}}</button>
-    </div>
+    <button mat-button class="menu_button" [matMenuTriggerFor]="menu" *ngIf="innerWidth <= 680">
+      <i class="material-icons icon_menu">menu</i></button>
+    <mat-menu #menu="matMenu" [overlapTrigger]="false">
 
-    <div class="container-button">
-      <button mat-raised-button class="main-button" href="">
-        <mat-icon>search</mat-icon>
-        {{" Szukaj..."}}
-      </button>
-    </div>
+      <div class="container-button">
+        <button mat-raised-button class="main-button" href="" routerLink="./points"> {{ "Dodaj punkt" }}</button>
+      </div>
+
+      <div class="container-button">
+        <button mat-raised-button class="main-button" href="">
+          <mat-icon>search</mat-icon>
+          {{ " Szukaj..." }}
+        </button>
+      </div>
+
+      <div class="container-info-contact">
+        <ul>
+          <li>
+            <button mat-button class="href-info-contact" href="" title="Informacje" (click)="$event.stopPropagation();">
+              Informacje
+            </button>
+          </li>
+          <li>
+            <button mat-button class="href-info-contact" href="" title="Kontakt">Kontakt</button>
+          </li>
+        </ul>
+      </div>
+
+    </mat-menu>
+
+    <ng-container *ngIf="innerWidth >= 680">
+      <div class="container-info-contact">
+        <ul>
+          <li>
+            <button mat-button class="href-info-contact" href="" title="Informacje">Informacje</button>
+          </li>
+          <li>
+            <button mat-button class="href-info-contact" href="" title="Kontakt">Kontakt</button>
+          </li>
+        </ul>
+      </div>
+
+      <!--Button add point-->
+      <div class="container-button">
+        <button mat-raised-button class="main-button" href="" routerLink="./points"> {{ "Dodaj punkt" }}</button>
+      </div>
+
+      <div class="container-button">
+        <button mat-raised-button class="main-button" href="">
+          <mat-icon>search</mat-icon>
+          {{ " Szukaj..." }}
+        </button>
+      </div>
+    </ng-container>
   </nav>
 </header>

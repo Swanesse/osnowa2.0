@@ -1,16 +1,20 @@
-import {Component, OnInit} from '@angular/core';
-import {MatDialog} from '@angular/material';
+import {Component, HostListener, ViewEncapsulation} from '@angular/core';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
 
-  constructor(public dialog: MatDialog) {
+  innerWidth= window.innerWidth;
+
+  constructor() {
   }
 
-  ngOnInit() {
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.innerWidth = window.innerWidth;
   }
 }
