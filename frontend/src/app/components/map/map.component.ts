@@ -20,6 +20,8 @@ export class MapComponent {
   pickMode: boolean = false;
   pointIcon: string = 'assets/podstawowa_wysokosciowa.png';
   isLoading = false;
+  latitude;
+  longitude;
 
   // tablica ze znacznikami
   pointMarkers: PointMarker[] = [];
@@ -193,7 +195,9 @@ export class MapComponent {
   getCoordinates() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(location => {
-        const newMarker: Marker = marker([location.coords.latitude, location.coords.longitude], {
+        this.latitude = location.coords.latitude;
+        this.longitude = location.coords.longitude;
+        const newMarker: Marker = marker([this.latitude, this.longitude], {
           icon: icon({
             iconSize: [20, 20],
             iconAnchor: [10, 10],
@@ -223,5 +227,10 @@ export class MapComponent {
     this.layers[2] = newPoint;
 
     this.map.setView(latLng([cords[0], cords[1]]), 19);
+  }
+
+  showMyLocalization() {
+    this.getCoordinates();
+    this.map.setView(latLng([this.latitude, this.longitude]), 19);
   }
 }
