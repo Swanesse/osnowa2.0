@@ -22,7 +22,7 @@ export class HttpService implements InMemoryDbService {
       }
     });
     for (let file of fileToUpload) {
-      formData.append('image', file, file.name);
+      formData.append('images', file, file.name);
     }
 
     return this.http.post<Point>('http://localhost:8000/point/new', formData);

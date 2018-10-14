@@ -5,9 +5,9 @@ from django.template.defaultfilters import slugify
 from django.utils import timezone
 from django.contrib.auth.models import User
 
+
 class Point(models.Model):
     # autor = models.ForeignKey('auth.User')
-    # arkusz_mapy = models.CharField(max_length=200)
     X_WGS84 = models.FloatField()
     Y_WGS84 = models.FloatField()
     X_local = models.FloatField(blank=True, null=True)
@@ -29,8 +29,7 @@ class Point(models.Model):
     road = models.CharField(max_length=200, blank=True, null=True)
     house_number = models.CharField(max_length=200, blank=True, null=True)
     stabilization = models.CharField(max_length=200, blank=True, null=True)
-    found= models.BooleanField(default=False)
-    image = models.ImageField(upload_to='images', blank=True)
+    found = models.BooleanField(default=False)
 
     # def publish(self):
     #     self.find_date = timezone.now()
@@ -39,6 +38,10 @@ class Point(models.Model):
     # def __str__(self):
     #     return self.catalog_number
 
+
+class Image(models.Model):
+    point = models.ForeignKey(Point, on_delete=models.CASCADE, )
+    image = models.ImageField(upload_to='images', blank=True, null=True)
 
 
 class LatLng(models.Model):
@@ -100,46 +103,46 @@ class LatLng(models.Model):
 #                 result.append(pair)
 #         return result
 
-    # def jsonlatlngs(self):
-    #     """
-    #     Zwraca napis reprezentujący atrybut :mod:`latlngs` w formacie JSON.
-    #     """
-    # result = "["
-    #     for p in self.latlngs.split(';'):
-    #         if p:
-    #             result += '['+p+'],'
-    #     return result[:-1] + ']'
-    #
-    # def getcenter(self):
-    # """
-    #     Zwraca środek mapy w oparciu o współrzędne krańcowe trasy.
-    #     """
-    # horizontal = (self.northeast.latit + self.southwest.latit) / 2
-    # vertical   = (self.northeast.longi + self.southwest.longi) / 2
-    # return [horizontal, vertical]
-    #
-    # def gettags(self):
-    #     """
-    #     Każde słowo kluczowe jest ciągiem znaków. Atrybut :mod:`tags` zawiera
-    #     słowa kluczowe oddzielone pojedynczym odstępem.
-    #     Metoda zwraca tablicę słów kluczowych.
-    #         >>> map = Map(tags=u'abc, grunwaldzka, rondo regana')
-    #         >>> map.gettags()
-    #         [u'abc', u'grunwaldzka', u'rondo regana']
-    #     """
-    #     return [ tag.strip() for tag in self.tags.split(',') ]
-    #
-    # def save(self):
-    #     """
-    #     Zapisuje mapę do bazy danych tworząc przyjazną nazwę mapy (ang. slug)
-    #     używaną przy tworzeniu adresów map. Zamienia słowa kluczowe na wersję
-    #     bez polskich znaków, spacji oraz znaków interpunkcyjnych.
-    #     """
-    #     self.slug = slugify(self.name)
-    #     self.tags = ','.join([ slugify(tag.strip()) for tag in self.tags.split(',') ])
-    #     super(Map, self).save()
-    #
-    # def __unicode__(self):
-    #     return self.name
-    #
-    # __str__ = __unicode__
+# def jsonlatlngs(self):
+#     """
+#     Zwraca napis reprezentujący atrybut :mod:`latlngs` w formacie JSON.
+#     """
+# result = "["
+#     for p in self.latlngs.split(';'):
+#         if p:
+#             result += '['+p+'],'
+#     return result[:-1] + ']'
+#
+# def getcenter(self):
+# """
+#     Zwraca środek mapy w oparciu o współrzędne krańcowe trasy.
+#     """
+# horizontal = (self.northeast.latit + self.southwest.latit) / 2
+# vertical   = (self.northeast.longi + self.southwest.longi) / 2
+# return [horizontal, vertical]
+#
+# def gettags(self):
+#     """
+#     Każde słowo kluczowe jest ciągiem znaków. Atrybut :mod:`tags` zawiera
+#     słowa kluczowe oddzielone pojedynczym odstępem.
+#     Metoda zwraca tablicę słów kluczowych.
+#         >>> map = Map(tags=u'abc, grunwaldzka, rondo regana')
+#         >>> map.gettags()
+#         [u'abc', u'grunwaldzka', u'rondo regana']
+#     """
+#     return [ tag.strip() for tag in self.tags.split(',') ]
+#
+# def save(self):
+#     """
+#     Zapisuje mapę do bazy danych tworząc przyjazną nazwę mapy (ang. slug)
+#     używaną przy tworzeniu adresów map. Zamienia słowa kluczowe na wersję
+#     bez polskich znaków, spacji oraz znaków interpunkcyjnych.
+#     """
+#     self.slug = slugify(self.name)
+#     self.tags = ','.join([ slugify(tag.strip()) for tag in self.tags.split(',') ])
+#     super(Map, self).save()
+#
+# def __unicode__(self):
+#     return self.name
+#
+# __str__ = __unicode__

@@ -5,16 +5,14 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import PointSerializer
-from .models import Point
+from .models import Point, Image
 from django.shortcuts import render, get_object_or_404
-from .forms import PointForm
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
 from django.contrib.auth import views
 from django.http import HttpResponse
 from django.template.loader import get_template
 from django.template import RequestContext
-from .forms import *
 from pprint import pprint
 
 
@@ -83,6 +81,7 @@ def points(request):
 
     return Response(pointSerializer.data)
 
+
 @api_view(['get'])
 def point_get(request):
     # wyciąga z bazy danych info o punktach.
@@ -107,18 +106,24 @@ def point_new(request):
         serializer = PointSerializer(data=request.data)
         if serializer.is_valid():
             # save() zapisuje punkt w bazie danych
-            serializer.save()
+            newPoint = serializer.save()
+
+            for image in request.data.getlist('images'):
+                newImage = Image(image=image, point=newPoint)
+                newImage.save()
+
             return Response(serializer.data)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        # point.created_date = timezone.now()
-        # zapisanie punktu w bazie danych
-        # point.save()
-        # return redirect('point_detail', pk=point.pk)
-    # else:
-    #     form = PointForm()
-    # return render(request, 'osnowa_app/point_edit.html', {'form': form})
-    # return Response(point)
+
+    # point.created_date = timezone.now()
+    # zapisanie punktu w bazie danych
+    # point.save()
+    # return redirect('point_detail', pk=point.pk)
+# else:
+#     form = PointForm()
+# return render(request, 'osnowa_app/point_edit.html', {'form': form})
+# return Response(point)
 
 
 # def point_edit(request, pk):

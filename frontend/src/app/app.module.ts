@@ -20,7 +20,8 @@ import {
   MatRadioModule,
   MatBadgeModule,
   MatTooltipModule,
-  MatMenuModule
+  MatMenuModule,
+  MatExpansionModule
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -63,6 +64,7 @@ import {PointResolveService} from "./services/point-resolve.service";
     MatDialogModule,
     MatSelectModule,
     MatMenuModule,
+    MatExpansionModule,
     ReactiveFormsModule,
     FormsModule,
     TextMaskModule,
