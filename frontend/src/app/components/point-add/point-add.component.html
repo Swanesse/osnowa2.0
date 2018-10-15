@@ -242,12 +242,12 @@
           <input type="file" multiple (change)="handleFileInput($event.target.files)">
         </label>
 
-        <div class="pictureContainer" *ngFor="let image of imageUrls">
-          <button (click)="removePicture(image)">
+        <div class="pictureContainer" *ngFor="let image of files; let index = index">
+          <button (click)="removePicture(index)">
             <span class="delete"><mat-icon>delete</mat-icon></span>
           </button>
 
-          <img id="pointPicture" [src]=image> <br/>
+          <img id="pointPicture" [src]=image.imageUrls> <br/>
         </div>
       </div>
 

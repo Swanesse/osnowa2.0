@@ -14,15 +14,15 @@ export class HttpService implements InMemoryDbService {
   constructor(private http: HttpClient) {
   }
 
-  addPoint(point: Point, fileToUpload: File[]): Observable<Point> {
+  addPoint(point: Point, files: Array<any>): Observable<Point> {
     const formData: FormData = new FormData();
     Object.keys(point).forEach(key => {
       if (point[key] !== null && point[key] !== undefined) {
         formData.append(key, point[key].toString());
       }
     });
-    for (let file of fileToUpload) {
-      formData.append('images', file, file.name);
+    for (let file of files) {
+      formData.append('images', file.fileToUpload, file.fileToUpload.name);
     }
 
     return this.http.post<Point>('http://localhost:8000/point/new', formData);
