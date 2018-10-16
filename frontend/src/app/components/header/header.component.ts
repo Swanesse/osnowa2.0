@@ -7,8 +7,8 @@ import {Component, HostListener, ViewEncapsulation} from '@angular/core';
   encapsulation: ViewEncapsulation.None
 })
 export class HeaderComponent {
-
-  innerWidth= window.innerWidth;
+  disabled = 'false';
+  innerWidth = window.innerWidth;
 
   constructor() {
   }
@@ -16,5 +16,15 @@ export class HeaderComponent {
   @HostListener('window:resize', ['$event'])
   onResize() {
     this.innerWidth = window.innerWidth;
+  }
+
+  disableInput() {
+    console.log('działa');
+    this.disabled = 'true';
+  }
+
+  undisableInput(){
+    console.log('undisabled');
+    this.disabled = 'false';
   }
 }
