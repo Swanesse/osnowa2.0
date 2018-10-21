@@ -27,7 +27,8 @@
             ],
             "styles": [
               "node_modules/leaflet/dist/leaflet.css",
-              "src/sass/styles.scss"
+              "src/sass/styles.scss",
+              "./node_modules/font-awesome/css/font-awesome.css"
             ],
             "scripts": []
           },

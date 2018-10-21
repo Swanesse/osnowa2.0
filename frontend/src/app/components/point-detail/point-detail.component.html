@@ -36,4 +36,12 @@
   <p>Numer domu: {{ house_number }}</p>
   <p>Stabilizacja: {{ stabilization }}</p>
   <p>Punkt odnaleziono w terenie: {{ found }}</p>
+
+  <div class="pictureContainer" *ngFor="let image of images; let i = index">
+    <img id="pointPicture" [src]="'http://localhost:8000' + image.image">{{image.image}} <br/>
+  </div>
+
+  <!--<img [src]="'http://localhost:8000' + '/media/images/20171128_132337.jpg'">-->
+  <ngx-gallery [options]="galleryOptions" [images]="galleryImages"></ngx-gallery>
+
 </div>

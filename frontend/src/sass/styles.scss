@@ -11,12 +11,11 @@ html, body {
   margin: 0;
   padding: 0;
   font-size: 90%;
+    font-family: QuicksandBook, Helvetica, Arial, sans-serif;
 }
 
 *, *:before, *:after {
   box-sizing: border-box;
-  font-family: QuicksandBook, Helvetica, Arial, sans-serif;
-
 }
 
 *:focus {
@@ -72,4 +71,7 @@ $green-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent);
   background-color: $primary-color-darker;
 }
 
+.mat-sidenav-container, .mat-sidenav-content, .mat-tab-body-content {
+  transform: none !important;
+}
 
