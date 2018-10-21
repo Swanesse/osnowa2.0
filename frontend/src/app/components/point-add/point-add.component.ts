@@ -33,9 +33,7 @@ export class PointAddComponent implements OnInit {
   pointForm: FormGroup;
   stabilizationWays: Array<String> = ['bolec', 'pal drewniany', 'kamień naturalny', 'pręt', 'rurka', 'słupek betonowy', 'szczegół terenowy', 'inny'];
   public mask = [/[- 0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/];
-  imageUrls: Array<string> = [];
-  fileToUpload: File[] = [];
-  files: Array<any> = [];
+  files = {imageUrls: [], fileToUpload: []};
   drag: boolean = false;
 
   constructor(private mapService: MapService,
@@ -667,7 +665,7 @@ export class PointAddComponent implements OnInit {
       Object.keys(this.pointForm.value).forEach(key => {
         this.point[key] = this.pointForm.value[key] === '' ? null : this.pointForm.value[key];
       });
-      this.httpService.addPoint(this.point, this.files).subscribe(
+      this.httpService.addPoint(this.point, this.files.fileToUpload).subscribe(
         point => {
           this.router.navigate(['/home']);
         },
@@ -731,14 +729,15 @@ export class PointAddComponent implements OnInit {
         reader.onload = (event: any) => {
 
           let theSame = false;
-          for (let image of this.files) {
-            if (image.imageUrls === event.target.result) {
+          for (let image of this.files.imageUrls) {
+            if (image === event.target.result) {
               theSame = true;
               break;
             }
           }
           if (theSame === false) {
-            this.files.push({imageUrls: event.target.result, fileToUpload: file[i]});
+            this.files.imageUrls.push(event.target.result);
+            this.files.fileToUpload.push(file[i]);
           }
         };
 
@@ -753,7 +752,8 @@ export class PointAddComponent implements OnInit {
   }
 
   removePicture(i) {
-    this.files.splice(i, 1);
+    this.files.imageUrls.splice(i, 1);
+    this.files.fileToUpload.splice(i, 1);
   }
 
   onDrop(event: any) {

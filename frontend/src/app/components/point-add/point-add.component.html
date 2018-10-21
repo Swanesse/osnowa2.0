@@ -226,7 +226,7 @@
 
       <mat-form-field class="short-width">
         <mat-select placeholder="Stabilizacja" formControlName="stabilization" disableRipple>
-          <mat-option *ngFor="let way of this.stabilizationWays" [value]="way">{{ way }}</mat-option>
+          <mat-option *ngFor="let way of stabilizationWays" [value]="way">{{way}}</mat-option>
         </mat-select>
       </mat-form-field>
 
@@ -242,12 +242,12 @@
           <input type="file" multiple (change)="handleFileInput($event.target.files)">
         </label>
 
-        <div class="pictureContainer" *ngFor="let image of files; let index = index">
-          <button (click)="removePicture(index)">
+        <div class="pictureContainer" *ngFor="let image of files.imageUrls; let i = index">
+          <button (click)="removePicture(i)">
             <span class="delete"><mat-icon>delete</mat-icon></span>
           </button>
 
-          <img id="pointPicture" [src]=image.imageUrls> <br/>
+          <img id="pointPicture" [src]=image> <br/>
         </div>
       </div>
 
