@@ -1,6 +1,8 @@
 from django.conf.urls import url
 from . import views
 from django.views.generic import RedirectView
+from django.conf import settings
+from django.conf.urls.static import static
 
 app_name='osnowa_app'
 urlpatterns = [
@@ -40,4 +42,4 @@ urlpatterns = [
     #
     # url(r'^kontakt/$', views.kontakt, name='kontakt'),
 
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

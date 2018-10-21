@@ -4,7 +4,7 @@ from django.utils import timezone
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import PointSerializer
+from .serializers import PointSerializer, ImageSerializer
 from .models import Point, Image
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
@@ -86,14 +86,20 @@ def points(request):
 def point_get(request):
     # wyciąga z bazy danych info o punktach.
 
-    # gte - grater than or equal
     point = Point.objects.get(id=request.GET['param'])
 
-    # tak serializuję wiele modeli
-    # pointSerializer = PointSerializer(point, many=False)  # serializer zamienia obiekt Pythonowy na jakiś format, np. JSON
-    serializer = PointSerializer(point)
+    serializer1 = PointSerializer(point)
+    pictures = Image.objects.all().filter(point_id=request.GET['param'])
+    serializer2 = ImageSerializer(pictures, many=True)
 
-    return Response(serializer.data)
+    Serializer_list = [serializer1.data, serializer2.data]
+
+    content = {
+        'status': 1,
+        'responseCode': status.HTTP_200_OK,
+        'data': Serializer_list,
+    }
+    return Response(content)
 
 
 @api_view(['post'])
