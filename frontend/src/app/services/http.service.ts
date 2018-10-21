@@ -14,23 +14,23 @@ export class HttpService implements InMemoryDbService {
   constructor(private http: HttpClient) {
   }
 
-  addPoint(point: Point, files: Array<any>): Observable<Point> {
+  addPoint(point: Point, fileToUpload: File[]): Observable<Point> {
     const formData: FormData = new FormData();
     Object.keys(point).forEach(key => {
       if (point[key] !== null && point[key] !== undefined) {
         formData.append(key, point[key].toString());
       }
     });
-    for (let file of files) {
-      formData.append('images', file.fileToUpload, file.fileToUpload.name);
+    for (let file of fileToUpload) {
+      formData.append('images', file, file.name);
     }
 
     return this.http.post<Point>('http://localhost:8000/point/new', formData);
   }
 
-  getPoint(id): Observable<Point> {
+  getPoint(id) {
     const param = new HttpParams().set('id', id + '');
-    return this.http.get<Point>('http://localhost:8000/point/get', {params: {param: id}});
+    return this.http.get('http://localhost:8000/point/get', {params: {param: id}});
     // .toPromise()
     // .then(response => response.json().data as Point)
     // .catch(this.handleError);
@@ -63,5 +63,4 @@ export class HttpService implements InMemoryDbService {
     return {users};
   }
 }
-
 

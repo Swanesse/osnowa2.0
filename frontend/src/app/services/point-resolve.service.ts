@@ -6,7 +6,7 @@ import {HttpService} from "./http.service";
 @Injectable({
   providedIn: 'root'
 })
-export class PointResolveService implements Resolve<Point> {
+export class PointResolveService implements Resolve<any> {
 
   constructor(private httpService: HttpService) {}
 
