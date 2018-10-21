@@ -1,0 +1,58 @@
+﻿Wszędzie gdzie używam komendy `python` może chodzić o komendę `python3`, zależy pod jaką nazwą masz pythona w wersji trzeciej. Wpisz:
+
+python -V
+
+aby sprawdzić jaka jest wersja pythona dostępnego pod komendą `python` i:
+
+python3 -V
+
+aby sprawdzić wersję pythona dostępnego pod komendą `python3`
+
+Jak postawić Backend osnowy:
+
+1. Pobierz .zip z GitHuba i rozpakować.
+2. Wejdź z cmd do podfolderu /backend.
+3. Wpisz:
+python -m venv [nazwa_dla_twojego_wirtualnego_środowiska]
+
+np.
+
+python -m osnowa_venv
+
+4. Poczekaj, bo będzie wyglądać, jakby się zacięło. W końcu się zrobi i pokaże ponownie prompta.
+
+5. Możesz sprawdzić, że zrobił się folder, który będzie Twoim wirtualnym środowiskiem, tam będą się instalowały wszystkie pakiety dla Twojego projektu.
+
+Na Windows:
+
+dir
+
+Na Linuxie:
+
+ls -la
+
+6. Aktywuj wirtualne środowisko:
+
+Windows:
+
+osnowa_venv\Scripts\activate.bat
+
+Linux:
+
+source tutorial-env/bin/activate
+
+7. Zobaczysz (osnowa_venv) na początku prompta. Dopóki tam jest, pakiety instalowane poprzez `pip` zapisują się w Twoim wirtualnym środowisku. Jeśli nie będzie aktywne, to nie zadziałają też skrypty typu: python manage.py {coś}
+
+8. Zainstaluj wszystkie dependencje backendu, zapisane w pliku requirements.txt:
+
+pip install -r requirements.txt
+
+9. To teraz wykonaj migracje, żeby stworzyć w ogóle tabele w bazie danych:
+
+python manage.py migrate
+
+10. Odpal backend:
+
+python manage.py runserver
+
+11. (⌐■_■)

@@ -1,0 +1,43 @@
+﻿Wszędzie gdzie używam komendy `python` może chodzić o komendę `python3`, zależy pod jaką nazwą masz pythona w wersji trzeciej. Wpisz
+
+python -V
+
+aby sprawdzić jaka jest wersja pythona dostępnego pod komendą `python` i
+
+python3 -V
+
+aby sprawdzić wersję pythona dostępnego pod komendą `python3`
+
+Jak postawić Backend osnowy
+
+1. Pobierz .zip z GitHuba i rozpakować.
+2. Otwórz rozpakowany folder w IntelliJ.
+3. Naciśnij CTRL+SHIFT+ALT+S, by otworzyć jakieś dziwne okno Project Structure.
+4. W polu Project SDK wybierz New -> Opcja z Python3 -> Local.
+5. Zwróć uwagę, że zaproponują Ci nazwę wirtualnego środowiska osnowa_venv, fajna nazwa.
+6. Naciskaj okej aż do zatwierdzenia okna Project Structure i jego zamknięcia.
+7. Otwórz CMD i dotrzyj jakoś do folderu backend.
+8. Aktywuj wirtualne środowisko
+
+Windows
+osnowa_venv\Scripts\activate.bat
+
+Linux
+source osnowa_venv/bin/activate
+
+9. Zobaczysz (osnowa_venv) na początku prompta. Dopóki tam jest, pakiety instalowane poprzez `pip` zapisują się w Twoim wirtualnym środowisku. Jeśli nie będzie aktywne, to nie zadziałają też skrypty typu python manage.py {coś}
+
+10. Zainstaluj wszystkie dependencje backendu, zapisane w pliku requirements.txt
+
+pip install -r requirements.txt
+
+11. To teraz wykonaj migracje, żeby stworzyć w ogóle tabele w bazie danych
+
+python manage.py migrate
+
+12. Można odpalić backend tak: 
+
+python manage.py runserver
+
+13. Ale jak chcesz debugować, to Run -> Edit Configurations (a jak nieaktywne, to Debug->Edit configurations) -> Plusik -> Python. W otwartym panelu klikamy w polu Script Path trzy kropeczki i przeglądarką plików wybieramy plik manage.py (z odpowiedniego katalogu - bo możesz mieć na dysku już kilka Osnów :P). W paremeters wpisujemy: runserver. Resztę zostawiamy jak jest. Teraz możemy odpalać serwer nie komendą z punktu 10. Lecz Run -> Debug.
+14. (⌐■_■)
