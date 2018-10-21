@@ -37,6 +37,8 @@ import {PointResolveService} from "./services/point-resolve.service";
 // import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 // import {InMemoryDataService} from "./services/in-memory-data-service";
 // import {HttpService} from "./services/http.service";
+import { NgxGalleryModule } from 'ngx-gallery';
+
 
 
 @NgModule({
@@ -72,6 +74,7 @@ import {PointResolveService} from "./services/point-resolve.service";
     NgxMatSelectSearchModule,
     HttpClientModule,
     FontAwesomeModule,
+    NgxGalleryModule,
     // InMemoryWebApiModule.forRoot(InMemoryDataService, {delay: 2500}),
 
   ],
