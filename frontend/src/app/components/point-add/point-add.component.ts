@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import {FormGroup, FormControl, Validators, AbstractControl, ValidationErrors} from '@angular/forms';
+import {FormGroup, FormControl, Validators, AbstractControl, ValidationErrors, FormBuilder} from '@angular/forms';
 import proj4 from 'proj4';
 import {MapService} from '../../services/map.service';
 import {faInfoCircle} from '@fortawesome/free-solid-svg-icons';
@@ -17,6 +17,42 @@ import * as _ from 'lodash';
 export class PointAddComponent implements OnInit {
   @Output() myEvent: EventEmitter<any> = new EventEmitter();
 
+  pointForm : FormGroup = this.fb.group({
+    X: [null, [Validators.required, this.ValidatorX]],
+    Y: [null, [Validators.required, this.ValidatorY]],
+
+    X_WGS84: [null, [Validators.required, this.ValidatorXWGS84]],
+    Y_WGS84: [null, [Validators.required, this.ValidatorYWGS84]],
+
+    X_2000: [null, this.ValidatorX2000],
+    Y_2000: [null, this.ValidatorY2000],
+
+    X_local: [null],
+    Y_local: [null],
+
+    controlType: [null],
+    controlClass: [null],
+    id: [null],
+
+    hAmsterdam: [null],
+    hKronsztadt: [null],
+
+    country: [null],
+    state: [null],
+    district: [null],
+    county: [null],
+
+    locality: [null],
+    city_district: [null],
+    road: [null],
+    house_number: [null],
+
+    stabilization: [null],
+    found: [false]
+  });
+
+  header: string = 'Dodaj punkt';
+
   faInfo = faInfoCircle;
   checked: boolean = true;
   pickMode: boolean = false;
@@ -30,16 +66,15 @@ export class PointAddComponent implements OnInit {
   validY: string = '13';
   isXBlur: boolean = false;
   isYBlur: boolean = false;
-  pointForm: FormGroup;
   stabilizationWays: Array<String> = ['bolec', 'pal drewniany', 'kamień naturalny', 'pręt', 'rurka', 'słupek betonowy', 'szczegół terenowy', 'inny'];
   public mask = [/[- 0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/];
-  files = {imageUrls: [], fileToUpload: []};
-  drag: boolean = false;
+  files;
 
   constructor(private mapService: MapService,
               private cdr: ChangeDetectorRef,
               private httpService: HttpService,
-              private router: Router) {
+              private router: Router,
+              private fb: FormBuilder) {
     proj4.defs([
       ['EPSG:2176', '+proj=tmerc +lat_0=0 +lon_0=15 +k=0.999923 +x_0=5500000 +y_0=0 +ellps=GRS80 +units=m +no_defs'],
       ['EPSG:2177', '+proj=tmerc +lat_0=0 +lon_0=18 +k=0.999923 +x_0=6500000 +y_0=0 +ellps=GRS80 +units=m +no_defs'],
@@ -102,40 +137,6 @@ export class PointAddComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    this.pointForm = new FormGroup({
-      X: new FormControl(null, [Validators.required, this.ValidatorX]),
-      Y: new FormControl(null, [Validators.required, this.ValidatorY]),
-
-      X_WGS84: new FormControl(null, [Validators.required, this.ValidatorXWGS84]),
-      Y_WGS84: new FormControl(null, [Validators.required, this.ValidatorYWGS84]),
-
-      X_2000: new FormControl(null, this.ValidatorX2000),
-      Y_2000: new FormControl(null, this.ValidatorY2000),
-
-      X_local: new FormControl(null),
-      Y_local: new FormControl(null),
-
-      controlType: new FormControl(null),
-      controlClass: new FormControl(null),
-      id: new FormControl(null),
-
-      hAmsterdam: new FormControl(null),
-      hKronsztadt: new FormControl(null),
-
-      country: new FormControl(null),
-      state: new FormControl(null),
-      district: new FormControl(null),
-      county: new FormControl(null),
-
-      locality: new FormControl(null),
-      city_district: new FormControl(null),
-      road: new FormControl(null),
-      house_number: new FormControl(null),
-
-      stabilization: new FormControl(null),
-      found: new FormControl(false),
-    });
   }
 
   ifXisBlur() {
@@ -157,7 +158,7 @@ export class PointAddComponent implements OnInit {
     this.displayPoint();
   }
 
-  transformCoordinates() {
+  transformCoordinates(){
     const X = this.pointForm.value.X;
     const Y = this.pointForm.value.Y;
 
@@ -719,64 +720,7 @@ export class PointAddComponent implements OnInit {
     }
   }
 
-  handleFileInput(file: FileList) {
-    if (file.length > 0) {
-
-      for (let i = 0; i < file.length; i++) {
-        const reader = new FileReader();
-
-        // Gdy zostanie wczytany plik, on ten plik przechwytuje. Jeden reader może przechwycić tylko jeden plik.
-        reader.onload = (event: any) => {
-
-          let theSame = false;
-          for (let image of this.files.imageUrls) {
-            if (image === event.target.result) {
-              theSame = true;
-              break;
-            }
-          }
-          if (theSame === false) {
-            this.files.imageUrls.push(event.target.result);
-            this.files.fileToUpload.push(file[i]);
-          }
-        };
-
-        reader.onerror = function (event) {
-          console.error("File could not be read! Code");
-        };
-
-        // Zamienia plik na DataURL, dzięki czemu możemy go wyświetlić w przeglądarce
-        reader.readAsDataURL(file[i]);
-      }
-    }
-  }
-
-  removePicture(i) {
-    this.files.imageUrls.splice(i, 1);
-    this.files.fileToUpload.splice(i, 1);
-  }
-
-  onDrop(event: any) {
-    // event.preventDefault();
-    // event.stopPropagation();
-    this.drag = false;
-
-    // your code goes here after droping files or any
-  }
-
-  onDragOver(evt) {
-    this.drag = true;
-    // evt.preventDefault();
-    // evt.stopPropagation();
-  }
-
-  onDragLeave(evt) {
-    this.drag = false;
-    // evt.preventDefault();
-    // evt.stopPropagation();
-  }
-
-  getBorderColor() {
-    return this.drag === true ? '5px dotted #f94f41' : '5px dotted #ccc';
+  grtPhotos(files){
+    this.files = files;
   }
 }

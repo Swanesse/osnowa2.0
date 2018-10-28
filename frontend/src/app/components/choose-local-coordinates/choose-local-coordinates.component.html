@@ -1,0 +1,16 @@
+<div class="form_element" id="local" [formGroup]="parent" >
+  <label>Współrzędne lokalne:<sup>
+    <fa-icon [icon]="faInfo"
+             matTooltip="Współrzędne w układzie lokalnym zależą od miasta, w którym znajduje się punkt"></fa-icon>
+  </sup></label>
+  <mat-form-field class="short-width" hintLabel="(np. -32670.62)" >
+    <input [textMask]="{mask: mask, guide: false}" type="text" name="X_local" id="X_local"
+           placeholder="X w układzie lokalnym" matInput
+           formControlName="X_local">
+  </mat-form-field>
+  <mat-form-field class="short-width right" hintLabel="(np.  294708.98)">
+    <input [textMask]="{mask: mask, guide: false}" type="text" name="Y_local" id="Y_local"
+           placeholder="Y w układzie lokalnym" matInput
+           formControlName="Y_local">
+  </mat-form-field>
+</div>

@@ -1,47 +1,68 @@
-<div class="header-side-container">
-  <div class="main-header">
-    <h1>Szczegóły punktu</h1>
-    <button mat-icon-button routerLink="/home">
-      <mat-icon>close</mat-icon>
-    </button>
+<!--NAGŁÓWEK POLA BOCZNEGO-->
+<app-side-panel-header [header]="header" [pointId]="point.id"></app-side-panel-header>
 
+<div class="detail-side-container" [ngStyle]="{'overflow': scrollBar }">
+
+  <div class="location_container">
+    <i class="material-icons icon_place">place</i>
+    <sub>WGS84</sub>
   </div>
 
-  <div class="bottom-line"></div>
-</div>
+  <!--<mat-form-field class="short_field">-->
+  <!--<mat-label>Długość WGS84</mat-label>-->
+  <!--<input matInput type=text name="Y_WGS84" id="Y_WGS84" value="{{ point.X_WGS84 | number: '.4' }}" [disabled]=pointDetails>-->
+  <!--</mat-form-field>-->
 
-<div class="detail-side-container">
+  <!--<mat-form-field class="short_field">-->
+  <!--<mat-label>Szerokość WGS84</mat-label>-->
+  <!--<input matInput type=text name="X_WGS84" id="X_WGS84" value="{{ point.Y_WGS84 | number: '.4' }}" [readonly]=pointDetails>-->
+  <!--</mat-form-field>-->
 
-  <p>
-    <i class="material-icons md-26">place</i>
-    <sub>WGS84</sub> X: {{ X_WGS84 | number: '.4' }}, Y: {{ Y_WGS84 | number: '.4' }}</p>
-  <p>
-    <i class="material-icons md-26">place</i>
-    <sub>2000</sub> X: , Y:</p>
-  <p>
-    <i class="material-icons md-26">place</i>
-    <sub> lokalne</sub> X: {{ X_local | number: '.4' }}, Y: {{ Y_local | number: '.4' }}</p>
-  <p>Typ osnowy: {{ controlType }}</p>
-  <p>Klasa: {{ controlClass }}</p>
-  <p>Numer katalogowy: {{ id }}</p>
-  <p>H (AMSTERDAM): {{ hAmsterdam }}</p>
-  <p>H (KRONSZTADT 86): {{ hKronsztadt }}</p>
-  <p>Kraj: {{ country }}</p>
-  <p>Województwo: {{ state }}</p>
-  <p>Powiat: {{ district }}</p>
-  <p>Gmina: {{ county }}</p>
-  <p>Miejscowość: {{ locality }}</p>
-  <p>Dzielnica: {{ city_district }}</p>
-  <p>Ulica: {{ road }}</p>
-  <p>Numer domu: {{ house_number }}</p>
-  <p>Stabilizacja: {{ stabilization }}</p>
-  <p>Punkt odnaleziono w terenie: {{ found }}</p>
 
-  <div class="pictureContainer" *ngFor="let image of images; let i = index">
-    <img id="pointPicture" [src]="'http://localhost:8000' + image.image">{{image.image}} <br/>
+  <div class="location_container">
+    <i class="material-icons icon_place">place</i>
+    <sub>2000</sub>
   </div>
+  <mat-form-field class="short_field">
+    <mat-label>Długość WGS84</mat-label>
+    <input matInput type=text name="Y_2000" id="Y_2000" value="{{ point.Y_2000 | number: '.4' }}" readonly>
+  </mat-form-field>
+
+  <mat-form-field class="short_field">
+    <mat-label>Szerokość WGS84</mat-label>
+    <input matInput type=text name="X_2000" id="X_2000" value="{{ point.X_2000 | number: '.4' }}" readonly>
+  </mat-form-field>
+
+
+  <div class="location_container">
+    <i class="material-icons icon_place">place</i>
+    <sub> lokalne</sub>
+  </div>
+  X: {{ point.X_local | number: '.4' }}, Y: {{ point.Y_local | number: '.4' }}
+
+
+  <p>Typ osnowy: {{ point.controlType }}</p>
+  <p>Klasa: {{ point.controlClass }}</p>
+  <p>Numer katalogowy: {{ point.id }}</p>
+  <p>H (AMSTERDAM): {{ point.hAmsterdam }}</p>
+  <p>H (KRONSZTADT 86): {{ point.hKronsztadt }}</p>
+  <p>Kraj: {{ point.country }}</p>
+  <p>Województwo: {{ point.state }}</p>
+  <p>Powiat: {{ point.district }}</p>
+  <p>Gmina: {{ point.county }}</p>
+  <p>Miejscowość: {{ point.locality }}</p>
+  <p>Dzielnica: {{ point.city_district }}</p>
+  <p>Ulica: {{ point.road }}</p>
+  <p>Numer domu: {{ point.house_number }}</p>
+  <p>Stabilizacja: {{ point.stabilization }}</p>
+  <p>Punkt odnaleziono w terenie: {{ point.found }}</p>
+
+
+  <!--<div class="pictureContainer" *ngFor="let image of images; let i = index">-->
+  <!--<img id="pointPicture" [src]="'http://localhost:8000' + image.image">{{image.image}} <br/>-->
+  <!--</div>-->
 
   <!--<img [src]="'http://localhost:8000' + '/media/images/20171128_132337.jpg'">-->
-  <ngx-gallery [options]="galleryOptions" [images]="galleryImages"></ngx-gallery>
+  <app-photos-display [imagess]="images"></app-photos-display>
 
 </div>

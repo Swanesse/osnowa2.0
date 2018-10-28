@@ -1,0 +1,16 @@
+<div class="header-side-container">
+  <div class="main-header">
+    <h1>{{header}}</h1>
+
+    <button mat-icon-button class="button_close" routerLink="/home" title="Zamknij">
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <button mat-icon-button class="button_edit" routerLink="/home/edit/{{pointId}}" title="Edytuj punkt"
+            *ngIf="pointId">
+      <mat-icon>edit</mat-icon>
+    </button>
+
+  </div>
+  <div class="bottom-line"></div>
+</div>

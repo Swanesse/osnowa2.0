@@ -1,11 +1,7 @@
-import {Component, OnChanges, OnInit} from '@angular/core';
-import {MapService} from "../../services/map.service";
-import {Point} from "../../models/Point";
-import {FormControl, Validators} from "@angular/forms";
+import {Component, HostListener, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {HttpService} from "../../services/http.service";
-import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
-
+import {NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation} from 'ngx-gallery';
+import {FormGroup, FormControl, Validators, AbstractControl, ValidationErrors} from '@angular/forms';
 
 
 @Component({
@@ -13,130 +9,76 @@ import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gal
   templateUrl: './point-detail.component.html',
   styleUrls: ['./point-detail.component.scss']
 })
-export class PointDetailComponent implements OnInit, OnChanges {
+export class PointDetailComponent implements OnInit {
 
-  X_WGS84;
-  Y_WGS84;
-
-  X_2000;
-  Y_2000;
-
-  X_local;
-  Y_local;
-
-  controlType;
-  controlClass;
-  id;
-
-  hAmsterdam;
-  hKronsztadt;
-
-  country;
-  state;
-  district;
-  county;
-
-  locality;
-  city_district;
-  road;
-  house_number;
-
-  stabilization;
-  found;
   point;
   images: Array<string>;
-
-  galleryOptions: NgxGalleryOptions[];
-  galleryImages: NgxGalleryImage[];
+  header: string = 'Szczegóły punktu';
+  scrollBar: string = 'auto';
 
   constructor(private router: Router,
               private route: ActivatedRoute,) {
 
-route.params.subscribe(val => {
-    // put the code from `ngOnInit` here
-  this.point = this.route.snapshot.data.point.data[0];
-  this.images = this.route.snapshot.data.point.data[1];
-  console.log(this.point);
-  console.log(this.images);
-
-    this.X_WGS84 = this.point.X_WGS84;
-    this.Y_WGS84 = this.point.Y_WGS84;
-    //     this.X_2000 = point.X_2000;
-    // this.Y_2000 = point.Y_2000;
-
-    this.X_local = this.point.X_local;
-    this.Y_local = this.point.Y_local;
-
-    this.controlType = this.point.controlType;
-    this.controlClass = this.point.controlClass;
-    this.id = this.point.id;
-
-    this.hAmsterdam = this.point.hAmsterdam;
-    this.hKronsztadt = this.point.hKronsztadt;
-
-    this.country = this.point.country;
-    this.state = this.point.state;
-    this.district = this.point.district;
-    this.county = this.point.county;
-
-    this.locality = this.point.locality;
-    this.city_district = this.point.city_district;
-    this.road = this.point.road;
-    this.house_number = this.point.house_number;
-
-    this.stabilization = this.point.stabilization;
-    this.found = this.point.found;
-  });
-
-
+    route.params.subscribe(val => {
+      this.point = this.route.snapshot.data.point.data[0];
+      this.images = this.route.snapshot.data.point.data[1];
+    });
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
 
-    this.galleryOptions = [
-      {
-        width: '600px',
-        height: '400px',
-        thumbnailsColumns: 4,
-        imageAnimation: NgxGalleryAnimation.Slide
-      },
-      // max-width 800
-      {
-        breakpoint: 800,
-        width: '100%',
-        height: '600px',
-        imagePercent: 80,
-        thumbnailsPercent: 20,
-        thumbnailsMargin: 20,
-        thumbnailMargin: 20
-      },
-      {
-        breakpoint: 400,
-        preview: false
-      }
-    ];
-
-    this.galleryImages = [
-      {
-        small: 'assets/podstawowa_pozioma.png',
-        medium: 'assets/podstawowa_pozioma.png',
-        big: 'assets/podstawowa_pozioma.png'
-      },
-      {
-        small: 'assets/logo.png',
-        medium: 'assets/logo.png',
-        big: 'assets/logo.png'
-      },
-      {
-        small: 'assets/location.png',
-        medium: 'assets/location.png',
-        big: 'assets/location.png'
-      }
-    ];
+  deleteScrollBar() {
+    this.scrollBar = 'hidden';
   }
 
-  ngOnChanges(){
-    console.log('onChanges');
+  addScrollBar() {
+    this.scrollBar = 'auto';
+  }
 
+
+
+  editPoint(){
+    console.log('editPoint');
+  }
+  ValidatorY(control: AbstractControl): ValidationErrors {
+    const y = control.value;
+    if (y < -180 || (y > 180 && y < 5438667.1168) || (y > 5606974.4722 && y < 6390979.5111) || (y > 6609020.4889 && y < 7390450.4069) || (y > 7609549.5931 && y < 8390318.4332) || y > 8511699.5509) {
+      return {unproper: true};
+    }
+  }
+
+  ValidatorX(control: AbstractControl): ValidationErrors {
+    const x = control.value;
+    if (x < -90 || (x > 90 && x < 5432557.9291) || (x > 6078869.0066)) {
+      return {unproper: true};
+    }
+  }
+
+  ValidatorYWGS84(control: AbstractControl): ValidationErrors {
+    const y = control.value;
+    if (y < -180 || y > 180) {
+      return {unproper: true};
+    }
+  }
+
+  ValidatorXWGS84(control: AbstractControl): ValidationErrors {
+    const x = control.value;
+    if (x < -90 || x > 90) {
+      return {unproper: true};
+    }
+  }
+
+  ValidatorY2000(control: AbstractControl): ValidationErrors {
+    const y = control.value;
+    if ((y < 5438667.1168 || (y > 5606974.4722 && y < 6390979.5111) || (y > 6609020.4889 && y < 7390450.4069) || (y > 7609549.5931 && y < 8390318.4332) || y > 8511699.5509) && y != null && y != "") {
+      return {unproper: true};
+    }
+  }
+
+  ValidatorX2000(control: AbstractControl): ValidationErrors {
+    const x = control.value;
+    if ((x < 5432557.9291 || x > 6078869.0066) && x != null && x != "") {
+      return {unproper: true};
+    }
   }
 }

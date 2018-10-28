@@ -1,0 +1,34 @@
+#local {
+  margin-top: 40px;
+}
+
+.form_element {
+  margin-bottom: 5px;
+
+  label {
+    display: inherit;
+    margin-bottom: 5px;
+    font-size: 15px;
+
+    @media only screen and (max-width: 500px) {
+      margin-top: 10px;
+    }
+  }
+}
+
+.short-width {
+  width: 165px;
+
+  @media only screen and (max-width: 500px) {
+    width: 243px;
+  }
+}
+
+
+.right {
+  float: right;
+
+  @media only screen and (max-width: 500px) {
+    float: none;
+  }
+}

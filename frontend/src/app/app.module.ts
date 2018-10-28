@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {LeafletModule} from '@asymmetrik/ngx-leaflet';
 
 
@@ -38,6 +38,12 @@ import {PointResolveService} from "./services/point-resolve.service";
 // import {InMemoryDataService} from "./services/in-memory-data-service";
 // import {HttpService} from "./services/http.service";
 import { NgxGalleryModule } from 'ngx-gallery';
+import {PhotosAddComponent} from "./components/photos-add/photos-add.component";
+import {PointEditComponent} from "./components/point-edit/point-edit.component";
+import {SidePanelHeaderComponent} from "./components/side-panel-header/side-panel-header.component";
+import {PhotosDisplayComponent} from "./components/photos-display/photos-display.component";
+import {ChooseCoordinatesComponent} from "./components/choose-coordinates/choose-coordinates.component";
+import {ChooseLocalCoordinatesComponent} from "./components/choose-local-coordinates/choose-local-coordinates.component";
 
 
 
@@ -49,6 +55,12 @@ import { NgxGalleryModule } from 'ngx-gallery';
     HomeComponent,
     MapComponent,
     HeaderComponent,
+    PhotosAddComponent,
+    PointEditComponent,
+    SidePanelHeaderComponent,
+    PhotosDisplayComponent,
+    ChooseCoordinatesComponent,
+    ChooseLocalCoordinatesComponent,
   ],
   imports: [
     BrowserModule,
@@ -79,7 +91,8 @@ import { NgxGalleryModule } from 'ngx-gallery';
 
   ],
   providers: [MapService, PointResolveService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class AppModule {
 }

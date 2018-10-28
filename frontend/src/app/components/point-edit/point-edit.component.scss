@@ -1,0 +1,21 @@
+@import "../../../sass/variables.scss";
+
+.detail-side-container {
+  position: absolute;
+  background-color: #f3f3f3;
+  z-index: 1000;
+  width: 400px;
+  right: 10px;
+  top: 120px;
+  bottom: 10px;
+  display: block;
+  overflow: auto;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .4);
+  border-radius: 0;
+  padding: 20px;
+
+  @media only screen and (max-width: 500px) {
+    width: 300px;
+    padding-top: 10px;
+  }
+}
