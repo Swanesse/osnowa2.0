@@ -1,7 +1,46 @@
+<!--Pierwsze wpisanie współrzędnych-->
+
+<ng-template #noCoordinate >
+  <div class="form_element" [formGroup]="pointForm">
+    <label>Współrzędne w układzie WGS84 lub 2000:<sup>
+      <fa-icon [icon]="faInfo"
+               matTooltip="Długość w układzie WGS84 zawiera się pomiędzy -180 a 180 stopni (w Polsce od 14.14 do 24.16 stopni), szerokość zawiera się pomiędzy -90 a 90 stopni (w Polsce od 49.03 do 54.45 stopni), długość w układzie 2000 zawiera się pomiędzy 5438667.1168 a 8511699.5509 stopni, szerokość zawiera się pomiędzy 5432557.9291 a 6078869.0066 (w zależności od strefy)"></fa-icon>
+    </sup></label>
+    <mat-form-field class="short-width mat-form-field-invalid" hintLabel="(np. 19.92 lub 7422760.20)">
+      <input class="mat-form-field-invalid" [textMask]="{mask: mask, guide: false}" type="text" id="Y"
+             placeholder="Długość" matInput formControlName="Y" (blur)="transformCoordinates(); ifXisBlur()"
+             (click)="outputCoordinateX()"
+      >
+      <mat-error
+        *ngIf="pointForm.get('Y').errors && pointForm.get('Y').errors['required']">Pole wymagane
+      </mat-error>
+      <mat-error
+        *ngIf="pointForm.get('Y').errors && pointForm.get('Y').errors['unproper']">Współrzędna Y jest niepoprawna
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="short-width right" hintLabel="(np. 50.06 lub 5548589.65)">
+      <input [textMask]="{mask: mask, guide: false}" type="text" id="X"
+             placeholder="Szerokość" matInput formControlName="X" (blur)="transformCoordinates(); ifYisBlur()"
+             (click)="outputCoordinateY()"
+      >
+      <mat-error
+        *ngIf="pointForm.get('X').errors && pointForm.get('X').errors['required']">Pole wymagane
+      </mat-error>
+      <mat-error
+        *ngIf="pointForm.get('X').errors && pointForm.get('X').errors['unproper']">Współrzędna X jest niepoprawna
+      </mat-error>
+
+    </mat-form-field>
+
+  </div>
+</ng-template>
+
+
 <!--Ponowne wybranie współrzędnych-->
-<!--<ng-container-->
-  <!--*ngIf="(validX === '1'&& validX ==='1' && pointForm.get('Y').valid && pointForm.get('X').valid && isXBlur && isYBlur) || location === true; else noCoordinate">-->
-  <div class="form_element" [formGroup]="pointForm" >
+<ng-container
+  *ngIf="(addPoint===false || (validX === '1'&& validX ==='1' && pointForm.get('Y').valid && pointForm.get('X').valid && isXBlur && isYBlur) || location === true); else noCoordinate">
+  <div class="form_element" [formGroup]="pointForm">
     <label>Współrzędne w układzie WGS84:<sup>
       <fa-icon [icon]="faInfo"
                matTooltip="Długość w układzie WGS84 zawiera się pomiędzy -180 a 180 stopni (w Polsce od 14.14 do 24.16 stopni), szerokość zawiera się pomiędzy -90 a 90 stopni (w Polsce od 49.03 do 54.45 stopni)"></fa-icon>
@@ -10,30 +49,28 @@
       <input [textMask]="{mask: mask, guide: false}" type="text" name="Y_WGS84" id="Y_WGS84"
              placeholder="Długość w układzie WGS84" matInput formControlName="Y_WGS84" required
              (blur)="transformCoordinatesWGS84()">
-      <!--<mat-error *ngIf="pointForm.get('Y_WGS84').errors && pointForm.get('Y_WGS84').errors['required']">Pole-->
-        <!--wymagane-->
-      <!--</mat-error>-->
-      <!--<mat-error-->
-        <!--*ngIf="pointForm.get('Y_WGS84').errors && pointForm.get('Y_WGS84').errors['unproper']">Współrzędna Y nie-->
-        <!--jest w układzie WGS84-->
-      <!--</mat-error>-->
+      <mat-error *ngIf="pointForm.get('Y_WGS84').errors && pointForm.get('Y_WGS84').errors['required']">Pole wymagane
+      </mat-error>
+      <mat-error *ngIf="pointForm.get('Y_WGS84').errors && pointForm.get('Y_WGS84').errors['unproper']">Współrzędna Y
+        nie
+        jest w układzie WGS84
+      </mat-error>
     </mat-form-field>
     <mat-form-field class="short-width right" hintLabel="(np. 50.068436)">
       <input [textMask]="{mask: mask, guide: false}" type="text" name="X_WGS84" id="X_WGS84"
              placeholder="Szerokość w układzie WGS84" matInput formControlName="X_WGS84" required
              (blur)="transformCoordinatesWGS84()">
 
-      <!--<mat-error *ngIf="pointForm.get('X_WGS84').errors && pointForm.get('X_WGS84').errors['required']">Pole-->
-        <!--wymagane-->
-      <!--</mat-error>-->
-      <!--<mat-error-->
-        <!--*ngIf="pointForm.get('X_WGS84').errors && pointForm.get('X_WGS84').errors['unproper']">Współrzędna X nie-->
-        <!--jest w układzie WGS84-->
-      <!--</mat-error>-->
+      <mat-error *ngIf="pointForm.get('X_WGS84').errors && pointForm.get('X_WGS84').errors['required']">
+        Pole wymagane
+      </mat-error>
+      <mat-error *ngIf="pointForm.get('X_WGS84').errors && pointForm.get('X_WGS84').errors['unproper']">
+        Współrzędna X nie jest w układzie WGS84
+      </mat-error>
     </mat-form-field>
   </div>
 
-  <div class="form_element" [formGroup]="pointForm" >
+  <div class="form_element" [formGroup]="pointForm">
 
     <label>Współrzędne w układzie 2000:<sup>
       <fa-icon [icon]="faInfo"
@@ -43,10 +80,9 @@
       <input [textMask]="{mask: mask, guide: false}" type="text" name="Y_2000" id="Y_2000"
              placeholder="Długość w układzie 2000" matInput formControlName="Y_2000"
              (blur)="transformCoordinates2000()">
-      <!--<mat-error-->
-        <!--*ngIf="pointForm.get('Y_2000').errors && pointForm.get('Y_2000').errors['unproper']">-->
-        <!--Współrzędna Y nie jest w układzie 2000-->
-      <!--</mat-error>-->
+      <mat-error *ngIf="pointForm.get('Y_2000').errors && pointForm.get('Y_2000').errors['unproper']">
+        Współrzędna Y nie jest w układzie 2000
+      </mat-error>
     </mat-form-field>
     <mat-form-field class="short-width right" hintLabel="(np. 5548589.65)">
       <input [textMask]="{mask: mask, guide: false}" type="text" name="X_2000" id="X_2000"
@@ -60,4 +96,18 @@
 
     </mat-form-field>
   </div>
-<!--</ng-container>-->
+</ng-container>
+
+<mat-hint class="localization">
+  <!--Wybór z mapy-->
+  <div class="locationSearching">
+    <a title="Pobierz współrzędne poprzez kliknięcie na mapie" (click)="chooseCoordinatesFromMap()">Wybierz z
+      mapy</a>
+  </div>
+
+  <!--Aktualna lokalizacja użytkownika-->
+  <a title="Pobierz współrzędne ze swojej lokalizacji" class="locationSearching" (click)="getCoordinates()"> <i
+    class="material-icons md-24">location_searching</i>
+  </a>
+</mat-hint>
+
