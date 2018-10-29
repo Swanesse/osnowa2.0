@@ -1,6 +1,6 @@
 <!--Pierwsze wpisanie współrzędnych-->
 
-<ng-template #noCoordinate >
+<ng-template #noCoordinate>
   <div class="form_element" [formGroup]="pointForm">
     <label>Współrzędne w układzie WGS84 lub 2000:<sup>
       <fa-icon [icon]="faInfo"
@@ -48,7 +48,7 @@
     <mat-form-field class="short-width" hintLabel="(np. 19.921046)">
       <input [textMask]="{mask: mask, guide: false}" type="text" name="Y_WGS84" id="Y_WGS84"
              placeholder="Długość w układzie WGS84" matInput formControlName="Y_WGS84" required
-             (blur)="transformCoordinatesWGS84()">
+             (blur)="transformCoordinatesWGS84(pointForm.value.X_WGS84, pointForm.value.Y_WGS84)">
       <mat-error *ngIf="pointForm.get('Y_WGS84').errors && pointForm.get('Y_WGS84').errors['required']">Pole wymagane
       </mat-error>
       <mat-error *ngIf="pointForm.get('Y_WGS84').errors && pointForm.get('Y_WGS84').errors['unproper']">Współrzędna Y
@@ -59,7 +59,7 @@
     <mat-form-field class="short-width right" hintLabel="(np. 50.068436)">
       <input [textMask]="{mask: mask, guide: false}" type="text" name="X_WGS84" id="X_WGS84"
              placeholder="Szerokość w układzie WGS84" matInput formControlName="X_WGS84" required
-             (blur)="transformCoordinatesWGS84()">
+             (blur)="transformCoordinatesWGS84(pointForm.value.X_WGS84, pointForm.value.Y_WGS84)">
 
       <mat-error *ngIf="pointForm.get('X_WGS84').errors && pointForm.get('X_WGS84').errors['required']">
         Pole wymagane

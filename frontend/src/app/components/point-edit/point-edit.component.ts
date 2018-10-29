@@ -11,6 +11,7 @@ export class PointEditComponent implements OnInit {
 
   point;
   pointForm;
+  pickMode: boolean = false;
 
 
   images: Array<string>;
@@ -101,6 +102,10 @@ export class PointEditComponent implements OnInit {
     if ((x < 5432557.9291 || x > 6078869.0066) && x != null && x != "") {
       return {unproper: true};
     }
+  }
+
+  changePickMode(pickMode){
+    this.pickMode = pickMode;
   }
 
 }
