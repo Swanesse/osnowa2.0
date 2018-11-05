@@ -1,0 +1,10 @@
+<div class="form_element">
+  <label>Numer katalogowy:<sup>
+    <fa-icon [icon]="faInfo" matTooltip="Numer katalogowy przyznany przez Ośrodek Geodezji i Kartografii"></fa-icon>
+  </sup></label>
+</div>
+<mat-form-field class="full-width" [formGroup]="pointForm">
+  <mat-label>Numer katalogowy</mat-label>
+  <input type="text" placeholder="Np.12300" matInput
+         formControlName="catalogNumber">
+</mat-form-field>

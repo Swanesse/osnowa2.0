@@ -1,0 +1,14 @@
+<div class="form_element">
+  <label>Wysokość:<sup>
+    <fa-icon [icon]="faInfo" matTooltip="Wysokość bezwzględna punktu"></fa-icon>
+  </sup></label>
+</div>
+<mat-form-field class="short-width left" [formGroup]="pointForm">
+  <input [textMask]="{mask: mask, guide: false}" type="text" placeholder="H (AMSTERDAM)" matInput
+         formControlName="hAmsterdam" >
+</mat-form-field>
+
+<mat-form-field class="short-width right" [formGroup]="pointForm">
+  <input [textMask]="{mask: mask, guide: false}" type="text" placeholder="H (KRONSZTADT 86)" matInput
+         formControlName="hKronsztadt" >
+</mat-form-field>

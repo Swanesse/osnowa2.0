@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators} from "@angular/forms";
+import {AbstractControl, FormBuilder, ValidationErrors, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-point-edit',
@@ -13,7 +13,7 @@ export class PointEditComponent implements OnInit {
   pointForm;
   pickMode: boolean = false;
 
-
+  files;
   images: Array<string>;
   header: string = 'Edytuj punkt';
 
@@ -37,12 +37,12 @@ export class PointEditComponent implements OnInit {
       X_2000: [null, this.ValidatorX2000],
       Y_2000: [null, this.ValidatorY2000],
 
-      X_local: [null],
-      Y_local: [null],
+      X_local: [this.point.X_local],
+      Y_local: [this.point.Y_local],
 
       controlType: [null],
       controlClass: [null],
-      id: [null],
+      catalogNumber: [null],
 
       hAmsterdam: [null],
       hKronsztadt: [null],
@@ -106,6 +106,10 @@ export class PointEditComponent implements OnInit {
 
   changePickMode(pickMode){
     this.pickMode = pickMode;
+  }
+
+  grtPhotos(files){
+    this.files = files;
   }
 
 }

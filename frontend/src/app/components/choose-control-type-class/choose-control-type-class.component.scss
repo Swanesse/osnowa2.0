@@ -1,0 +1,27 @@
+.form_element {
+  margin-bottom: 5px;
+
+  label {
+    display: inherit;
+    margin-bottom: 5px;
+    font-size: 15px;
+
+    @media only screen and (max-width: 500px) {
+      margin-top: 10px;
+    }
+  }
+}
+
+#controlType {
+  margin-top: 25px;
+  margin-bottom: 7px;
+}
+
+.radio-button-container {
+  margin-bottom: 10px;
+}
+
+mat-radio-button {
+  padding: 8px;
+  display: block;
+}

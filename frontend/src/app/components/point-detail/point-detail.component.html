@@ -3,42 +3,55 @@
 
 <div class="detail-side-container" [ngStyle]="{'overflow': scrollBar }">
 
+  <!--WGS84-->
   <div class="location_container">
     <i class="material-icons icon_place">place</i>
     <sub>WGS84</sub>
   </div>
 
-  <!--<mat-form-field class="short_field">-->
-  <!--<mat-label>Długość WGS84</mat-label>-->
-  <!--<input matInput type=text name="Y_WGS84" id="Y_WGS84" value="{{ point.X_WGS84 | number: '.4' }}" [disabled]=pointDetails>-->
-  <!--</mat-form-field>-->
-
-  <!--<mat-form-field class="short_field">-->
-  <!--<mat-label>Szerokość WGS84</mat-label>-->
-  <!--<input matInput type=text name="X_WGS84" id="X_WGS84" value="{{ point.Y_WGS84 | number: '.4' }}" [readonly]=pointDetails>-->
-  <!--</mat-form-field>-->
-
-
-  <div class="location_container">
-    <i class="material-icons icon_place">place</i>
-    <sub>2000</sub>
-  </div>
   <mat-form-field class="short_field">
     <mat-label>Długość WGS84</mat-label>
-    <input matInput type=text name="Y_2000" id="Y_2000" value="{{ point.Y_2000 | number: '.4' }}" readonly>
+    <input matInput type=text name="Y_WGS84" id="Y_WGS84" value="{{ point.X_WGS84 | number: '.4' }}" readonly>
   </mat-form-field>
 
   <mat-form-field class="short_field">
     <mat-label>Szerokość WGS84</mat-label>
-    <input matInput type=text name="X_2000" id="X_2000" value="{{ point.X_2000 | number: '.4' }}" readonly>
+    <input matInput type=text name="X_WGS84" id="X_WGS84" value="{{ point.Y_WGS84 | number: '.4' }}" readonly>
   </mat-form-field>
 
+  <!--2000-->
+  <div class="location_container">
+    <i class="material-icons icon_place">place</i>
+    <sub>2000</sub>
+  </div>
 
+  <mat-form-field class="short_field">
+    <mat-label>Długość 2000</mat-label>
+    <input matInput type=text name="Y_2000" id="Y_2000" value="{{ point.X_2000 | number: '.4' : 'fr' | toDot}}"
+           readonly>
+  </mat-form-field>
+
+  <mat-form-field class="short_field">
+    <mat-label>Szerokość 2000</mat-label>
+    <input matInput type=text name="X_2000" id="X_2000" value="{{ point.Y_2000 | number: '.4' : 'fr' | toDot}}"
+           readonly>
+  </mat-form-field>
+
+  <!--lokalne-->
   <div class="location_container">
     <i class="material-icons icon_place">place</i>
     <sub> lokalne</sub>
   </div>
-  X: {{ point.X_local | number: '.4' }}, Y: {{ point.Y_local | number: '.4' }}
+
+  <mat-form-field class="short_field">
+    <mat-label>Długość lokalna</mat-label>
+    <input matInput type=text name="Y_local" id="Y_local" value="{{ point.X_local | number: '.4' }}" readonly>
+  </mat-form-field>
+
+  <mat-form-field class="short_field">
+    <mat-label>Szerokość lokalna</mat-label>
+    <input matInput type=text name="X_local" id="X_local" value="{{ point.Y_local | number: '.4' }}" readonly>
+  </mat-form-field>
 
 
   <p>Typ osnowy: {{ point.controlType }}</p>
@@ -63,6 +76,6 @@
   <!--</div>-->
 
   <!--<img [src]="'http://localhost:8000' + '/media/images/20171128_132337.jpg'">-->
-  <app-photos-display [imagess]="images"></app-photos-display>
+  <app-photos-display [imagess]="images" (scrollBarView)="openPreview($event)"></app-photos-display>
 
 </div>

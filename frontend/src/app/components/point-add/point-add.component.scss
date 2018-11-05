@@ -40,39 +40,13 @@
   }
 }
 
-#controlType {
-  margin-top: 25px;
-  margin-bottom: 7px;
-}
 
-.radio-button-container {
-  margin-bottom: 10px;
-}
-
-.short-width {
-  width: 165px;
-
-  @media only screen and (max-width: 500px) {
-    width: 243px;
-  }
-}
-
-.right {
-  float: right;
-
-  @media only screen and (max-width: 500px) {
-    float: none;
-  }
-}
 
 .checkboxPoint {
   display: block;
   margin-top: 20px;
 }
 
-.left {
-  float: left;
-}
 
 .more {
   position: relative;

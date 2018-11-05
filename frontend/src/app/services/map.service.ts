@@ -18,7 +18,7 @@ export class MapService {
   }
 
   getPost(latlong): Observable<any> {
-    return this.http.get('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + latlong[0] + '&lon=' + latlong[1]);
+    return this.http.get('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + latlong[1] + '&lon=' + latlong[0]);
   }
 
   //^^^^^^^^^^^^^^^^^^Kliknięcie na MAPIE - pobranie współrzędnch i przesłanie ich do PANELU PUNKTU----------------------------

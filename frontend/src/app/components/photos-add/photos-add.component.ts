@@ -10,7 +10,7 @@ export class PhotosAddComponent implements OnInit {
   @Output()
     filesEmitter = new EventEmitter;
 
-  files = {imageUrls: [], fileToUpload: []};
+  files = {imageUrls: [] = [], fileToUpload: [] =[]};
   drag: boolean = false;
 
   constructor() { }

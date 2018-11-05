@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {NgxGalleryAnimation, NgxGalleryImage, NgxGalleryOptions} from "ngx-gallery";
 
 @Component({
@@ -11,6 +11,9 @@ export class PhotosDisplayComponent implements OnInit {
 
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
+
+  @Output() scrollBarView = new EventEmitter();
+  scrollBar: string = 'auto';
 
   constructor() {
   }
@@ -58,4 +61,13 @@ export class PhotosDisplayComponent implements OnInit {
     });
   }
 
+  deleteScrollBar() {
+    this.scrollBar = 'hidden';
+    this.scrollBarView.emit(this.scrollBar);
+  }
+
+  addScrollBar() {
+    this.scrollBar = 'auto';
+    this.scrollBarView.emit(this.scrollBar);
+  }
 }

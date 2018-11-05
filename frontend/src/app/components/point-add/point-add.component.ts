@@ -1,12 +1,9 @@
-import {ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import {FormGroup, FormControl, Validators, AbstractControl, ValidationErrors, FormBuilder} from '@angular/forms';
-import proj4 from 'proj4';
-import {MapService} from '../../services/map.service';
+import {ChangeDetectorRef, Component, EventEmitter, Output} from '@angular/core';
+import {FormGroup, Validators, AbstractControl, ValidationErrors, FormBuilder} from '@angular/forms';
 import {faInfoCircle} from '@fortawesome/free-solid-svg-icons';
 import {HttpService} from "../../services/http.service";
 import {Point} from "../../models/Point";
 import {Router} from "@angular/router";
-import * as _ from 'lodash';
 
 
 @Component({
@@ -14,12 +11,20 @@ import * as _ from 'lodash';
   templateUrl: './point-add.component.html',
   styleUrls: ['./point-add.component.scss']
 })
-export class PointAddComponent implements OnInit {
+export class PointAddComponent {
   @Output() myEvent: EventEmitter<any> = new EventEmitter();
-
   pickMode: boolean = false;
+  header: string = 'Dodaj punkt';
+  faInfo = faInfoCircle;
+  checked: boolean = true;
+  X;
+  Y;
+  X_2000;
+  Y_2000;
+  point: Point = new Point();
+  files = {imageUrls: [] = [], fileToUpload: [] = []};
 
-  pointForm : FormGroup = this.fb.group({
+  pointForm: FormGroup = this.fb.group({
     X: [null, [Validators.required, this.ValidatorX]],
     Y: [null, [Validators.required, this.ValidatorY]],
 
@@ -34,7 +39,7 @@ export class PointAddComponent implements OnInit {
 
     controlType: [null],
     controlClass: [null],
-    id: [null],
+    catalogNumber: [null],
 
     hAmsterdam: [null],
     hKronsztadt: [null],
@@ -53,83 +58,61 @@ export class PointAddComponent implements OnInit {
     found: [false]
   });
 
-  header: string = 'Dodaj punkt';
-
-  faInfo = faInfoCircle;
-  checked: boolean = true;
-
-  X;
-  Y;
-  X_2000;
-  Y_2000;
-  point: Point = new Point();
-
-
-  stabilizationWays: Array<String> = ['bolec', 'pal drewniany', 'kamień naturalny', 'pręt', 'rurka', 'słupek betonowy', 'szczegół terenowy', 'inny'];
-  public mask = [/[- 0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/];
-  files;
-
-  constructor(private mapService: MapService,
-              private cdr: ChangeDetectorRef,
-              private httpService: HttpService,
+  constructor(private httpService: HttpService,
               private router: Router,
               private fb: FormBuilder) {
   }
 
-  ngOnInit() {
-  }
-
-
-
-  ValidatorY(control: AbstractControl): ValidationErrors {
+  ValidatorX(control: AbstractControl): ValidationErrors {
     const y = control.value;
     if (y < -180 || (y > 180 && y < 5438667.1168) || (y > 5606974.4722 && y < 6390979.5111) || (y > 6609020.4889 && y < 7390450.4069) || (y > 7609549.5931 && y < 8390318.4332) || y > 8511699.5509) {
       return {unproper: true};
     }
   }
 
-  ValidatorX(control: AbstractControl): ValidationErrors {
+  ValidatorY(control: AbstractControl): ValidationErrors {
     const x = control.value;
     if (x < -90 || (x > 90 && x < 5432557.9291) || (x > 6078869.0066)) {
       return {unproper: true};
     }
   }
 
-  ValidatorYWGS84(control: AbstractControl): ValidationErrors {
+  ValidatorXWGS84(control: AbstractControl): ValidationErrors {
     const y = control.value;
     if (y < -180 || y > 180) {
       return {unproper: true};
     }
   }
 
-  ValidatorXWGS84(control: AbstractControl): ValidationErrors {
+  ValidatorYWGS84(control: AbstractControl): ValidationErrors {
     const x = control.value;
     if (x < -90 || x > 90) {
       return {unproper: true};
     }
   }
 
-  ValidatorY2000(control: AbstractControl): ValidationErrors {
+  ValidatorX2000(control: AbstractControl): ValidationErrors {
     const y = control.value;
     if ((y < 5438667.1168 || (y > 5606974.4722 && y < 6390979.5111) || (y > 6609020.4889 && y < 7390450.4069) || (y > 7609549.5931 && y < 8390318.4332) || y > 8511699.5509) && y != null && y != "") {
       return {unproper: true};
     }
   }
 
-  ValidatorX2000(control: AbstractControl): ValidationErrors {
+  ValidatorY2000(control: AbstractControl): ValidationErrors {
     const x = control.value;
     if ((x < 5432557.9291 || x > 6078869.0066) && x != null && x != "") {
       return {unproper: true};
     }
   }
 
-
-
   onSubmit() {
+    console.log(this.pointForm);
     if (this.pointForm.valid) {
       Object.keys(this.pointForm.value).forEach(key => {
         this.point[key] = this.pointForm.value[key] === '' ? null : this.pointForm.value[key];
       });
+      console.log(this.files.fileToUpload);
+      console.log(this.point);
       this.httpService.addPoint(this.point, this.files.fileToUpload).subscribe(
         point => {
           this.router.navigate(['/home']);
@@ -140,50 +123,11 @@ export class PointAddComponent implements OnInit {
     }
   }
 
-
-
-  updateIcon() {
-    if (this.pointForm.get('X_WGS84').valid && this.pointForm.get('Y_WGS84').valid) {
-      this.mapService.setChangeCords([this.pointForm.get('X_WGS84').value, this.pointForm.get('Y_WGS84').value])
-    }
-  }
-
-  chooseNetworkType() {
-    if (this.pointForm.value.controlType === 'pozioma' && (this.pointForm.value.controlClass === '1' || this.pointForm.value.controlClass === '2')) {
-      this.mapService.changeIcon('assets/podstawowa_pozioma.png');
-      this.updateIcon();
-    } else if (this.pointForm.value.controlType === 'wysokosciowa' && (this.pointForm.value.controlClass === '1' || this.pointForm.value.controlClass === '2')) {
-      this.mapService.changeIcon('assets/podstawowa_wysokosciowa.png');
-      this.updateIcon();
-
-    } else if (this.pointForm.value.controlType === 'dwufunkcyjna' && (this.pointForm.value.controlClass === '1' || this.pointForm.value.controlClass === '2')) {
-      this.mapService.changeIcon('assets/podstawowa_xyh.png');
-      this.updateIcon();
-
-    } else if (this.pointForm.value.controlType === 'pozioma' && this.pointForm.value.controlClass === '3') {
-      this.mapService.changeIcon('assets/szczegolowa_pozioma.png');
-      this.updateIcon();
-
-    } else if (this.pointForm.value.controlType === 'wysokosciowa' && this.pointForm.value.controlClass === '3') {
-      this.mapService.changeIcon('assets/szczegolowa_wysokosciowa.png');
-      this.updateIcon();
-
-    } else if (this.pointForm.value.controlType === 'dwufunkcyjna' && this.pointForm.value.controlClass === '3') {
-      this.mapService.changeIcon('assets/szczegolowa_xyh.png');
-      this.updateIcon();
-
-    } else {
-      this.mapService.changeIcon('assets/podstawowa_pozioma.png');
-      this.updateIcon();
-
-    }
-  }
-
-  grtPhotos(files){
+  grtPhotos(files) {
     this.files = files;
   }
 
-  changePickMode(pickMode){
+  changePickMode(pickMode) {
     this.pickMode = pickMode;
   }
 }

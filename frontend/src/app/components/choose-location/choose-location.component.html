@@ -1,0 +1,42 @@
+<div [formGroup]="pointForm">
+
+<div class="form_element">
+  <label>Lokalizacja:<sup>
+    <fa-icon [icon]="faInfo" matTooltip="Lokalizacja punktu"></fa-icon>
+  </sup></label>
+</div>
+
+<mat-form-field class="short-width left">
+  <input type="text" placeholder="Kraj" matInput formControlName="country">
+</mat-form-field>
+
+<mat-form-field class="short-width right">
+  <input type="text" placeholder="Województwo" matInput formControlName="state">
+</mat-form-field>
+
+<mat-form-field class="short-width left">
+  <input type="text" placeholder="Powiat" matInput formControlName="district">
+</mat-form-field>
+
+<mat-form-field class="short-width right">
+  <input type="text" placeholder="Gmina" matInput formControlName="county">
+</mat-form-field>
+
+
+<mat-form-field class="short-width left">
+  <input type="text" placeholder="Miejscowość" matInput formControlName="locality">
+</mat-form-field>
+
+<mat-form-field class="short-width right">
+  <input type="text" placeholder="Dzielnica" matInput formControlName="city_district">
+</mat-form-field>
+
+
+<mat-form-field class="short-width left">
+  <input type="text" placeholder="Ulica" matInput formControlName="road">
+</mat-form-field>
+
+<mat-form-field class="short-width right">
+  <input type="text" placeholder="Numer domu" matInput formControlName="house_number">
+</mat-form-field>
+</div>

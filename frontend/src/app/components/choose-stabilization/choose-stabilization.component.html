@@ -1,0 +1,10 @@
+<div class="form_element">
+  <label>Stabilizacja:<sup>
+    <fa-icon [icon]="faInfo" matTooltip="Stabilizacja to sposób oznaczenia punktu w terenie"></fa-icon>
+  </sup></label>
+</div>
+<mat-form-field class="short-width" [formGroup]="pointForm">
+  <mat-select placeholder="Stabilizacja" formControlName="stabilization" disableRipple>
+    <mat-option *ngFor="let way of stabilizationWays" [value]="way">{{ way }}</mat-option>
+  </mat-select>
+</mat-form-field>

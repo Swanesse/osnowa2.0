@@ -1,0 +1,28 @@
+<div class="form_element" id="controlType">
+  <label>Typ osnowy:<sup>
+    <fa-icon [icon]="faInfo"
+             matTooltip="POZIOMA - określa wzajemne położenie punktów na powierzchni, WYSOKOŚCIOWA - określa wysokość punktów względem punktu odniesienia, DWUFUNKCYJNA - spełnia jednocześnie funkcje osnowy poziomej i wysokościowej"></fa-icon>
+  </sup></label>
+</div>
+<div class="radio-button-container" [formGroup]="pointForm">
+  <mat-radio-group formControlName="controlType" (change)="chooseNetworkType()"
+                   aria-labelledby="controlType">
+    <mat-radio-button value="pozioma">Pozioma</mat-radio-button>
+    <mat-radio-button value="wysokosciowa">Wysokościowa</mat-radio-button>
+    <mat-radio-button value="dwufunkcyjna">Dwufunkcyjna</mat-radio-button>
+  </mat-radio-group>
+</div>
+
+<div class="form_element">
+  <label>Klasa:<sup>
+    <fa-icon [icon]="faInfo" matTooltip="Osnowa dzieli się na klasy"></fa-icon>
+  </sup></label>
+</div>
+<div class="radio-button-container" [formGroup]="pointForm">
+  <mat-radio-group formControlName="controlClass" (change)="chooseNetworkType()"
+                   aria-labelledby="controlClass">
+    <mat-radio-button value="1">1 (podstawowa fundamentalna)</mat-radio-button>
+    <mat-radio-button value="2">2 (podstawowa bazowa)</mat-radio-button>
+    <mat-radio-button value="3">3 (szczegółowa)</mat-radio-button>
+  </mat-radio-group>
+</div>

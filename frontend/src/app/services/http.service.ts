@@ -21,6 +21,7 @@ export class HttpService implements InMemoryDbService {
         formData.append(key, point[key].toString());
       }
     });
+
     for (let file of fileToUpload) {
       formData.append('images', file, file.name);
     }

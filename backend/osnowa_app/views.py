@@ -72,8 +72,8 @@ def points(request):
     # wyciąga z bazy danych info o punktach.
 
     # gte - grater than or equal
-    points = Point.objects.all().filter(X_WGS84__lte=request.GET['north'], X_WGS84__gte=request.GET['south'],
-                                        Y_WGS84__lte=request.GET['east'], Y_WGS84__gte=request.GET['west'])
+    points = Point.objects.all().filter(Y_WGS84__lte=request.GET['north'], Y_WGS84__gte=request.GET['south'],
+                                        X_WGS84__lte=request.GET['east'], X_WGS84__gte=request.GET['west'])
 
     # tak serializuję wiele modeli
     pointSerializer = PointSerializer(points,

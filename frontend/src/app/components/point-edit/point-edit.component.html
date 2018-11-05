@@ -4,7 +4,28 @@
   <app-side-panel-header [header]="header"></app-side-panel-header>
 
   <div class="detail-side-container">
-    <app-choose-coordinates [pointForm]="pointForm" [addPoint]=false (changePickMode)="changePickMode($event)"></app-choose-coordinates>
+    <form [formGroup]="pointForm" (ngSubmit)="onSubmit()">
+      <app-choose-coordinates [pointForm]="pointForm" [addPoint]=false
+                              (changePickMode)="changePickMode($event)"></app-choose-coordinates>
+
+      <app-choose-local-coordinates [parent]="pointForm"></app-choose-local-coordinates>
+
+      <app-choose-control-type-class [pointForm]="pointForm"></app-choose-control-type-class>
+
+      <app-choose-catalog-number [pointForm]="pointForm"></app-choose-catalog-number>
+
+      <app-choose-height [pointForm]="pointForm"></app-choose-height>
+
+      <app-choose-location [pointForm]="pointForm"></app-choose-location>
+
+      <app-choose-stabilization [pointForm]="pointForm"></app-choose-stabilization>
+
+      <app-photos-add (filesEmitter)="grtPhotos($event)"></app-photos-add>
+
+      <mat-checkbox class="checkboxPoint" formControlName="found">Punkt odnaleziono w terenie</mat-checkbox>
+
+      <button type="submit" mat-raised-button class="main-button">Zapisz</button>
+    </form>
 
   </div>
 </div>

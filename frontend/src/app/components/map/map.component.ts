@@ -5,6 +5,7 @@ import {HttpService} from "../../services/http.service";
 import {NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, Event} from "@angular/router";
 import {PointMarker} from "../../models/PointMarker";
 import {Observable} from "rxjs/Rx";
+import {promise} from "selenium-webdriver";
 
 @Component({
   selector: 'app-map',
@@ -22,6 +23,7 @@ export class MapComponent {
   isLoading = false;
   latitude;
   longitude;
+  editCoordinates;
 
   // tablica ze znacznikami
   pointMarkers: PointMarker[] = [];
@@ -53,7 +55,7 @@ export class MapComponent {
 
     // Prześle z PANELU PUNKTU zmienione współrzędne i wrzuci je do funkcji displayPoint()
     this.mapService.getChangeCords().subscribe((cords: Array<number>) => {
-      this.displayPoint(cords);
+        this.displayPoint(cords);
     });
 
     // Prześle z PAMELU PUNKTU informację o zmianie klasy i zmieni ikonkę w pointIcon na MAPIE
@@ -116,7 +118,7 @@ export class MapComponent {
             this.pointIcon = 'assets/podstawowa_pozioma.png';
           }
 
-          const newPoint = marker([onePointFromDB.X_WGS84, onePointFromDB.Y_WGS84], {
+          const newPoint = marker([onePointFromDB.Y_WGS84, onePointFromDB.X_WGS84], {
             icon: this.createIcon(),
             clickable: true,
           })
@@ -172,6 +174,9 @@ export class MapComponent {
   onMapReady(map: Map) {
     Observable.interval(1000).takeWhile(() => true).subscribe(() => this.getCoordinates());
     this.map = map;
+    if(this.editCoordinates !== undefined){
+      this.map.setView(latLng(this.editCoordinates), 19);
+    }
     // Aktualizuje wyświetlane punkty w chwili pierwszego wyświetlenia mapy
     this.getAndDisplayPointsFromDB();
 
@@ -184,7 +189,7 @@ export class MapComponent {
       // Jeśli jesteśmy w trybie wybierania punktu z mapy
       if (this.pickMode) {
         this.pickMode = false;
-        const coordinates: Array<number> = [cords.latlng.lat, cords.latlng.lng];
+        const coordinates: Array<number> = [cords.latlng.lng, cords.latlng.lat];
         // wywołujemy funkcję pickCords() i jako jej argumenty przekazujemy 2 wartości (coordinates)
         this.mapService.pickCords(coordinates);
         this.getAndDisplayPointsFromDB();
@@ -217,17 +222,23 @@ export class MapComponent {
   }
 
   displayPoint(cords) {
-    const newMarker: Marker = marker([cords[0], cords[1]], {
-      icon: this.createIcon()
-    });
-    let newPoint: LayerGroup = new LayerGroup();
 
-    // Nadpisujemy poprzedni wyświetlany na mapie punkt
-    newPoint.addLayer(newMarker);
-    this.layers[2] = newPoint;
+      const newMarker: Marker = marker([cords[1], cords[0]], {
+        icon: this.createIcon()
+      });
+      let newPoint: LayerGroup = new LayerGroup();
 
-    this.map.setView(latLng([cords[0], cords[1]]), 19);
-  }
+      // Nadpisujemy poprzedni wyświetlany na mapie punkt
+      newPoint.addLayer(newMarker);
+      this.layers[2] = newPoint;
+      if(this.map == undefined){
+        this.editCoordinates = [cords[1], cords[0]];
+
+      } else {
+        this.map.setView(latLng([cords[1], cords[0]]), 19);
+      }
+    };
+    // const response = await this.http.get('/login/authenticated').toPromise();
 
   showMyLocalization() {
     this.getCoordinates();

@@ -6,100 +6,21 @@
   <div class="detail-side-container">
     <form [formGroup]="pointForm" (ngSubmit)="onSubmit()">
 
-
       <app-choose-coordinates [pointForm]="pointForm" (changePickMode)="changePickMode($event)"
                               [addPoint]=true></app-choose-coordinates>
 
-
       <app-choose-local-coordinates [parent]="pointForm"></app-choose-local-coordinates>
 
+      <app-choose-control-type-class [pointForm]="pointForm"></app-choose-control-type-class>
 
-      <div class="form_element" id="controlType">
-        <label>Typ osnowy:<sup>
-          <fa-icon [icon]="faInfo"
-                   matTooltip="POZIOMA - określa wzajemne położenie punktów na powierzchni, WYSOKOŚCIOWA - określa wysokość punktów względem punktu odniesienia, DWUFUNKCYJNA - spełnia jednocześnie funkcje osnowy poziomej i wysokościowej"></fa-icon>
-        </sup></label>
-      </div>
-      <div class="radio-button-container">
-        <mat-radio-group formControlName="controlType" (change)="chooseNetworkType()"
-                         aria-labelledby="controlType">
-          <mat-radio-button value="pozioma">Pozioma</mat-radio-button>
-          <mat-radio-button value="wysokosciowa">Wysokościowa</mat-radio-button>
-          <mat-radio-button value="dwufunkcyjna">Dwufunkcyjna</mat-radio-button>
-        </mat-radio-group>
-      </div>
+      <app-choose-catalog-number [pointForm]="pointForm"></app-choose-catalog-number>
 
-      <div class="form_element">
-        <label>Klasa:<sup>
-          <fa-icon [icon]="faInfo" matTooltip="Osnowa dzieli się na klasy"></fa-icon>
-        </sup></label>
-      </div>
-      <div class="radio-button-container">
-        <mat-radio-group formControlName="controlClass" (change)="chooseNetworkType()"
-                         aria-labelledby="controlClass">
-          <mat-radio-button value="1">1 (podstawowa fundamentalna)</mat-radio-button>
-          <mat-radio-button value="2">2 (podstawowa bazowa)</mat-radio-button>
-          <mat-radio-button value="3">3 (szczegółowa)</mat-radio-button>
-        </mat-radio-group>
-      </div>
+      <app-choose-height [pointForm]="pointForm"></app-choose-height>
 
-      <mat-form-field class="full-width">
-        <input type="text" placeholder="Numer katalogowy" matInput
-               formControlName="id">
-      </mat-form-field>
+      <app-choose-location [pointForm]="pointForm"></app-choose-location>
 
-      <mat-form-field class="full-width">
-        <input [textMask]="{mask: mask, guide: false}" type="text" placeholder="H (AMSTERDAM)" matInput
-               formControlName="hAmsterdam">
-      </mat-form-field>
+      <app-choose-stabilization [pointForm]="pointForm"></app-choose-stabilization>
 
-      <mat-form-field class="full-width">
-        <input [textMask]="{mask: mask, guide: false}" type="text" placeholder="H (KRONSZTADT 86)" matInput
-               formControlName="hKronsztadt">
-      </mat-form-field>
-
-      <mat-form-field class="short-width left">
-        <input type="text" placeholder="Kraj" matInput formControlName="country">
-      </mat-form-field>
-
-      <mat-form-field class="short-width right">
-        <input type="text" placeholder="Województwo" matInput formControlName="state">
-      </mat-form-field>
-
-      <mat-form-field class="short-width left">
-        <input type="text" placeholder="Powiat" matInput formControlName="district">
-      </mat-form-field>
-
-      <mat-form-field class="short-width right">
-        <input type="text" placeholder="Gmina" matInput formControlName="county">
-      </mat-form-field>
-
-
-      <mat-form-field class="short-width left">
-        <input type="text" placeholder="Miejscowość" matInput formControlName="locality">
-      </mat-form-field>
-
-      <mat-form-field class="short-width right">
-        <input type="text" placeholder="Dzielnica" matInput formControlName="city_district">
-      </mat-form-field>
-
-
-      <mat-form-field class="short-width left">
-        <input type="text" placeholder="Ulica" matInput formControlName="road">
-      </mat-form-field>
-
-      <mat-form-field class="short-width right">
-        <input type="text" placeholder="Numer domu" matInput formControlName="house_number">
-      </mat-form-field>
-
-
-      <mat-form-field class="short-width">
-        <mat-select placeholder="Stabilizacja" formControlName="stabilization" disableRipple>
-          <mat-option *ngFor="let way of stabilizationWays" [value]="way">{{ way }}</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <!--DODAWANIE ZDJĘĆ-->
       <app-photos-add (filesEmitter)="grtPhotos($event)"></app-photos-add>
 
       <mat-checkbox class="checkboxPoint" formControlName="found">Punkt odnaleziono w terenie</mat-checkbox>
