@@ -43,6 +43,10 @@
     z-index: 400;
     right: 30px;
     top: 0;
+    @media only screen and (max-width: 500px) {
+      top: 23px;
+      right:0
+    }
   }
 }
 

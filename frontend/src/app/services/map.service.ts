@@ -9,10 +9,12 @@ export class MapService {
   private pickedCords = new Subject<Array<number>>();
   private clickedPoint = new Subject<Point>();
   private changeCords = new Subject<Array<number>>();
+  private centerView = new Subject<Array<number>>();
+  private removePoint = new Subject<Array<number>>();
   private turningOnPickMode = new Subject<any>();
   private icon = new Subject();
 
-  private pointIcon = 'assets/podstawowa_wysokosciowa.png';
+  private pointIcon = 'assets/point.jpg';
 
   constructor(private http: HttpClient) {
   }
@@ -29,7 +31,7 @@ export class MapService {
   }
 
   //cords to 2 wartości pochodzące z MAPY - współrzędne
-  // next - będcordszie informował, że ma w sobie nowe współrzędne
+  // next - będzie informował, że ma w sobie nowe współrzędne
   pickCords(cords) {
     this.pickedCords.next(cords);
   }
@@ -52,6 +54,26 @@ export class MapService {
   // next - będzie informował, że ma w sobie nowe współrzędne
   setChangeCords(point) {
     this.changeCords.next(point);
+  }
+  //^^^^^^^^^^^^^^^^^^Pobranie punktu pochodzącego z PANELU PUNKTU i wyświetlenie na MAPIE----------------------------
+
+  getPoint(): Observable<Array<number>> {
+    return this.removePoint.asObservable();
+  }
+
+  setPoint(pointId){
+  this.removePoint.next(pointId);
+}
+
+  //^^^^^^^^^^^^^^^^^^Pobranie punktu pochodzącego z PANELU PUNKTU i wyświetlenie na MAPIE----------------------------
+  getMapView(): Observable<Array<number>> {
+    return this.centerView.asObservable();
+  }
+
+  // cords to 2 wartości pochodzące z PANELU PUNKTU - współrzędne
+  // next - będzie informował, że ma w sobie nowe współrzędne
+  setMapView(point) {
+    this.centerView.next(point);
   }
 
   //^^^^^^^^^^^^^^^^^^Kliknięcie na PANELU PUNKTU - przejście w tryb klikania na MAPIE----------------------------

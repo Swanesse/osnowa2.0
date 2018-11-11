@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {FormGroup, Validators, AbstractControl, ValidationErrors, FormBuilder} from '@angular/forms';
 import {faInfoCircle} from '@fortawesome/free-solid-svg-icons';
 import {HttpService} from "../../services/http.service";
@@ -60,62 +60,59 @@ export class PointAddComponent {
 
   constructor(private httpService: HttpService,
               private router: Router,
-              private fb: FormBuilder) {
+              private fb: FormBuilder,) {
   }
 
   ValidatorX(control: AbstractControl): ValidationErrors {
-    const y = control.value;
-    if (y < -180 || (y > 180 && y < 5438667.1168) || (y > 5606974.4722 && y < 6390979.5111) || (y > 6609020.4889 && y < 7390450.4069) || (y > 7609549.5931 && y < 8390318.4332) || y > 8511699.5509) {
+    const x = control.value;
+    if (x < -180 || (x > 180 && x < 5438667.1168) || (x > 5606974.4722 && x < 6390979.5111) || (x > 6609020.4889 && x < 7390450.4069) || (x > 7609549.5931 && x < 8390318.4332) || x > 8511699.5509) {
       return {unproper: true};
     }
   }
 
   ValidatorY(control: AbstractControl): ValidationErrors {
-    const x = control.value;
-    if (x < -90 || (x > 90 && x < 5432557.9291) || (x > 6078869.0066)) {
+    const y = control.value;
+    if (y < -90 || (y > 90 && y < 5432557.9291) || (y > 6078869.0066)) {
       return {unproper: true};
     }
   }
 
   ValidatorXWGS84(control: AbstractControl): ValidationErrors {
-    const y = control.value;
-    if (y < -180 || y > 180) {
+    const x = control.value;
+    if (x < -180 || x > 180) {
       return {unproper: true};
     }
   }
 
   ValidatorYWGS84(control: AbstractControl): ValidationErrors {
-    const x = control.value;
-    if (x < -90 || x > 90) {
+    const y = control.value;
+    if (y < -90 || y > 90) {
       return {unproper: true};
     }
   }
 
   ValidatorX2000(control: AbstractControl): ValidationErrors {
-    const y = control.value;
-    if ((y < 5438667.1168 || (y > 5606974.4722 && y < 6390979.5111) || (y > 6609020.4889 && y < 7390450.4069) || (y > 7609549.5931 && y < 8390318.4332) || y > 8511699.5509) && y != null && y != "") {
+    const x = control.value;
+    if ((x < 5438667.1168 || (x > 5606974.4722 && x < 6390979.5111) || (x > 6609020.4889 && x < 7390450.4069) || (x > 7609549.5931 && x < 8390318.4332) || x > 8511699.5509) && x != null && x != "") {
       return {unproper: true};
     }
   }
 
   ValidatorY2000(control: AbstractControl): ValidationErrors {
-    const x = control.value;
-    if ((x < 5432557.9291 || x > 6078869.0066) && x != null && x != "") {
+    const y = control.value;
+    if ((y < 5432557.9291 || y > 6078869.0066) && y != null && y != "") {
       return {unproper: true};
     }
   }
 
   onSubmit() {
-    console.log(this.pointForm);
     if (this.pointForm.valid) {
       Object.keys(this.pointForm.value).forEach(key => {
         this.point[key] = this.pointForm.value[key] === '' ? null : this.pointForm.value[key];
       });
-      console.log(this.files.fileToUpload);
-      console.log(this.point);
       this.httpService.addPoint(this.point, this.files.fileToUpload).subscribe(
         point => {
-          this.router.navigate(['/home']);
+          this.router.navigate(['/home/detail/' + point.id]);
         },
         error => {
           console.log(error.statusText);

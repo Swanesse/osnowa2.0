@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {AbstractControl, FormBuilder, ValidationErrors, Validators} from "@angular/forms";
+import {MapService} from "../../services/map.service";
 
 @Component({
   selector: 'app-point-edit',
@@ -18,11 +19,13 @@ export class PointEditComponent implements OnInit {
   header: string = 'Edytuj punkt';
 
   constructor(private route: ActivatedRoute,
+              private mapService: MapService,
               private fb: FormBuilder) {
     route.params.subscribe(val => {
       this.point = this.route.snapshot.data.point.data[0];
       this.images = this.route.snapshot.data.point.data[1];
     });
+    this.mapService.setPoint(this.point.id);
   }
 
   ngOnInit() {
@@ -40,25 +43,25 @@ export class PointEditComponent implements OnInit {
       X_local: [this.point.X_local],
       Y_local: [this.point.Y_local],
 
-      controlType: [null],
-      controlClass: [null],
-      catalogNumber: [null],
+      controlType: [this.point.controlType],
+      controlClass: [this.point.controlClass],
+      catalogNumber: [this.point.catalogNumber],
 
-      hAmsterdam: [null],
-      hKronsztadt: [null],
+      hAmsterdam: [this.point.hAmsterdam],
+      hKronsztadt: [this.point.hKronsztadt],
 
-      country: [null],
-      state: [null],
-      district: [null],
-      county: [null],
+      country: [this.point.country],
+      state: [this.point.state],
+      district: [this.point.district],
+      county: [this.point.county],
 
-      locality: [null],
-      city_district: [null],
-      road: [null],
-      house_number: [null],
+      locality: [this.point.locality],
+      city_district: [this.point.city_district],
+      road: [this.point.road],
+      house_number: [this.point.house_number],
 
-      stabilization: [null],
-      found: [false]
+      stabilization: [this.point.stabilization],
+      found: [this.point.found]
     });
   }
 

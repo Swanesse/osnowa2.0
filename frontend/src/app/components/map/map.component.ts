@@ -19,7 +19,7 @@ export class MapComponent {
   layers: Layer[] = [new LayerGroup(), new LayerGroup(), new LayerGroup()];
   map: Map;
   pickMode: boolean = false;
-  pointIcon: string = 'assets/podstawowa_wysokosciowa.png';
+  pointIcon: string = 'assets/point.jpg';
   isLoading = false;
   latitude;
   longitude;
@@ -56,6 +56,27 @@ export class MapComponent {
     // Prześle z PANELU PUNKTU zmienione współrzędne i wrzuci je do funkcji displayPoint()
     this.mapService.getChangeCords().subscribe((cords: Array<number>) => {
         this.displayPoint(cords);
+    });
+
+    this.mapService.getPoint().subscribe((pointId) => {
+      for (let pointMarker of this.pointMarkers) {
+        if (pointMarker.id.toString() == pointId.toString()){
+          console.log('llllllllllllllllllllll: ',pointMarker.marker.options.icon.options.iconUrl);
+          pointMarker.marker.options.icon.options.iconUrl = 'assets/point.jpg';
+
+        }
+      }
+    });
+
+
+
+    this.mapService.getMapView().subscribe((cords: Array<number>) => {
+      if(this.map == undefined){
+        this.editCoordinates = [cords[1], cords[0]];
+
+      } else {
+        this.map.setView(latLng([cords[1], cords[0]]), 19);
+      }
     });
 
     // Prześle z PAMELU PUNKTU informację o zmianie klasy i zmieni ikonkę w pointIcon na MAPIE
@@ -115,7 +136,7 @@ export class MapComponent {
           } else if (onePointFromDB.controlType === 'dwufunkcyjna' && onePointFromDB.controlClass === '3') {
             this.pointIcon = 'assets/szczegolowa_xyh.png';
           } else {
-            this.pointIcon = 'assets/podstawowa_pozioma.png';
+            this.pointIcon = 'assets/point.jpg';
           }
 
           const newPoint = marker([onePointFromDB.Y_WGS84, onePointFromDB.X_WGS84], {
@@ -124,13 +145,9 @@ export class MapComponent {
           })
             .on('click', () => {
               // alert("I have a click." + value.Y_WGS84);
-              // this.router.navigate(['home/
               this.zone.run(() => {
 
                 this.router.navigate(['home/detail/' + onePointFromDB.id]).then(() => {
-                  // this.mapService.clickPoint(value);
-                  setTimeout(() => {
-                  }, 40000)
                 });
               });
             });
@@ -222,7 +239,6 @@ export class MapComponent {
   }
 
   displayPoint(cords) {
-
       const newMarker: Marker = marker([cords[1], cords[0]], {
         icon: this.createIcon()
       });
@@ -238,7 +254,6 @@ export class MapComponent {
         this.map.setView(latLng([cords[1], cords[0]]), 19);
       }
     };
-    // const response = await this.http.get('/login/authenticated').toPromise();
 
   showMyLocalization() {
     this.getCoordinates();

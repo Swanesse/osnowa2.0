@@ -1,22 +1,32 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
+import {NotificationsService} from "angular2-notifications";
 
 @Component({
   selector: 'app-photos-add',
   templateUrl: './photos-add.component.html',
   styleUrls: ['./photos-add.component.scss']
 })
-export class PhotosAddComponent implements OnInit {
+export class PhotosAddComponent {
+  @Output() filesEmitter = new EventEmitter;
 
-  @Output()
-    filesEmitter = new EventEmitter;
-
-  files = {imageUrls: [] = [], fileToUpload: [] =[]};
+  files = {imageUrls: [] = [], fileToUpload: [] = []};
   drag: boolean = false;
 
-  constructor() { }
+  constructor(private _notificationsService: NotificationsService,) {
 
-  ngOnInit() {
   }
+  public options = {
+    timeOut: 0,
+    lastOnBottom: true,
+    clickToClose: true,
+    maxLength: 0,
+    maxStack: 7,
+    showProgressBar: true,
+    pauseOnHover: true,
+    rtl: false,
+    animate: 'scale',
+    position: ['right', 'bottom']
+  };
 
   removePicture(i) {
     this.files.imageUrls.splice(i, 1);
@@ -80,5 +90,4 @@ export class PhotosAddComponent implements OnInit {
       this.filesEmitter.emit(this.files);
     }
   }
-
 }

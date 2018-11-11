@@ -59,23 +59,49 @@
   <p>Numer katalogowy: {{ point.id }}</p>
   <p>H (AMSTERDAM): {{ point.hAmsterdam }}</p>
   <p>H (KRONSZTADT 86): {{ point.hKronsztadt }}</p>
-  <p>Kraj: {{ point.country }}</p>
-  <p>Województwo: {{ point.state }}</p>
-  <p>Powiat: {{ point.district }}</p>
-  <p>Gmina: {{ point.county }}</p>
-  <p>Miejscowość: {{ point.locality }}</p>
-  <p>Dzielnica: {{ point.city_district }}</p>
-  <p>Ulica: {{ point.road }}</p>
-  <p>Numer domu: {{ point.house_number }}</p>
+
+  <div class="form_element">
+    <label>Lokalizacja:</label>
+  </div>
+
+  <mat-form-field class="short-width left">
+    <input type="text" placeholder="Kraj" matInput value="{{ point.country }}" readonly>
+  </mat-form-field>
+
+  <mat-form-field class="short-width right">
+    <input type="text" placeholder="Województwo" matInput value="{{ point.state }}" readonly>
+  </mat-form-field>
+
+  <mat-form-field class="short-width left">
+    <input type="text" placeholder="Powiat" matInput value="{{ point.district }}" readonly>
+  </mat-form-field>
+
+  <mat-form-field class="short-width right">
+    <input type="text" placeholder="Gmina" matInput value="{{ point.county }}" readonly>
+  </mat-form-field>
+
+
+  <mat-form-field class="short-width left">
+    <input type="text" placeholder="Miejscowość" matInput value="{{ point.locality }}" readonly>
+  </mat-form-field>
+
+  <mat-form-field class="short-width right">
+    <input type="text" placeholder="Dzielnica" matInput value="{{ point.city_district }}" readonly>
+  </mat-form-field>
+
+
+  <mat-form-field class="short-width left">
+    <input type="text" placeholder="Ulica" matInput value="{{ point.road }}" readonly>
+  </mat-form-field>
+
+  <mat-form-field class="short-width right">
+    <input type="text" placeholder="Numer domu" matInput value="{{ point.house_number }}" readonly>
+  </mat-form-field>
+
+
   <p>Stabilizacja: {{ point.stabilization }}</p>
   <p>Punkt odnaleziono w terenie: {{ point.found }}</p>
 
-
-  <!--<div class="pictureContainer" *ngFor="let image of images; let i = index">-->
-  <!--<img id="pointPicture" [src]="'http://localhost:8000' + image.image">{{image.image}} <br/>-->
-  <!--</div>-->
-
-  <!--<img [src]="'http://localhost:8000' + '/media/images/20171128_132337.jpg'">-->
-  <app-photos-display [imagess]="images" (scrollBarView)="openPreview($event)"></app-photos-display>
+  <app-photos-display [imagess]="images" (scrollBarView)="openPreview($event)" *ngIf="images.length > 0"></app-photos-display>
 
 </div>

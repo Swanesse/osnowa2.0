@@ -46,6 +46,7 @@ import {ChooseLocationComponent} from "./components/choose-location/choose-locat
 import {ChooseHeightComponent} from "./components/choose-height/choose-height.component";
 import {ChooseStabilizationComponent} from "./components/choose-stabilization/choose-stabilization.component";
 import {ToDotPipe} from "./pipes/to-dot.pipe";
+import { SimpleNotificationsModule } from 'angular2-notifications';
 
 @NgModule({
   declarations: [
@@ -93,6 +94,7 @@ import {ToDotPipe} from "./pipes/to-dot.pipe";
     HttpClientModule,
     FontAwesomeModule,
     NgxGalleryModule,
+    SimpleNotificationsModule.forRoot(),
   ],
   providers: [MapService, PointResolveService],
   bootstrap: [AppComponent],

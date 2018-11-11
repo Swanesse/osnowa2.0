@@ -10,6 +10,7 @@
     <input type="file" multiple (change)="handleFileInput($event.target.files)">
   </label>
 
+  <simple-notifications [options]="options"></simple-notifications>
   <div class="pictureContainer" *ngFor="let image of files.imageUrls; let i = index">
     <button (click)="removePicture(i)">
       <span class="delete"><mat-icon>delete</mat-icon></span>

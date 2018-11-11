@@ -51,10 +51,16 @@
 
 .short-width {
   width: 165px;
+  @media only screen and (max-width: 500px) {
+    width: 240px;
+  }
 }
 
 .right {
   float: right;
+  @media only screen and (max-width: 500px) {
+    float: left;
+  }
 }
 
 .checkboxPoint {
@@ -103,10 +109,17 @@ mat-radio-button {
 .short_field {
   width: 120px;
   margin-left: 15px;
+  @media only screen and (max-width: 500px) {
+    width: 170px;
+  }
 }
 
 .location_container {
   width: 60px;
   float: left;
+  @media only screen and (max-width: 500px) {
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
 }
 

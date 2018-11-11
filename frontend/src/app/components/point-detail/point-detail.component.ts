@@ -76,11 +76,9 @@ export class PointDetailComponent {
                 if (Y >= this.startLatitude5WGS84 && Y <= this.endLatitude5WGS84) {
                   const coordinate2000 = proj4('EPSG:2176', [X, Y]);
                   this.setCoordinates2000(coordinate2000[0], coordinate2000[1]);
-
                 } else {
                   this.setCoordinates2000(null, null);
-
-                  console.log('Wpisane współrzędne nie są w układzie 2000');
+                  //Wpisane współrzędne nie są w ukłądzie 2000
                 }
               } else if (X <= this.startLongitude7WGS84) {
 
@@ -90,7 +88,7 @@ export class PointDetailComponent {
                   this.setCoordinates2000(coordinate2000[0], coordinate2000[1]);
                 } else {
                   this.setCoordinates2000(null, null);
-                  console.log('Wpisane współrzędne nie są w ukłądzie 2000 4');
+                  //Wpisane współrzędne nie są w ukłądzie 2000
                 }
               } else if (X <= this.startLongitude8WGS84) {
 
@@ -100,7 +98,7 @@ export class PointDetailComponent {
                   this.setCoordinates2000(coordinate2000[0], coordinate2000[1]);
                 } else {
                   this.setCoordinates2000(null, null);
-                  console.log('Wpisane współrzędne nie są w układzie 2000 3');
+                  //Wpisane współrzędne nie są w ukłądzie 2000
                 }
               } else if (X <= this.endLongitude8WGS84) {
 
@@ -110,15 +108,15 @@ export class PointDetailComponent {
                   this.setCoordinates2000(coordinate2000[0], coordinate2000[1]);
                 } else {
                   this.setCoordinates2000(null, null);
-                  console.log('Wpisane współrzędne nie są w ukłądzie 2000 3');
+                  //Wpisane współrzędne nie są w ukłądzie 2000
                 }
               } else {
                 this.setCoordinates2000(null, null);
-                console.log('Wpisane współrzędne nie są w układze 2000 1');
+                //Wpisane współrzędne nie są w ukłądzie 2000
               }
             } else {
               this.setCoordinates2000(null, null);
-              console.log('Wpisane współrzędne nie są w układzie 2000 2');
+              //Wpisane współrzędne nie są w ukłądzie 2000
             }
           }
         }
@@ -129,6 +127,6 @@ export class PointDetailComponent {
   setCoordinates2000(x2000, y2000) {
     this.point.X_2000 = x2000;
     this.point.Y_2000 = y2000;
-    this.mapService.setChangeCords([this.point.X_WGS84, this.point.Y_WGS84]);
+    this.mapService.setMapView([this.point.X_WGS84, this.point.Y_WGS84]);
   }
 }

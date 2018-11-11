@@ -52,7 +52,6 @@ export class PhotosDisplayComponent implements OnInit {
 
     Object.keys(this.imagess).forEach(key => {
       let image = this.imagess[key].image === '' ? null : 'http://localhost:8000' + this.imagess[key].image;
-      console.log('this.image: ', image);
       this.galleryImages.push({
         small: image,
         medium: image,

@@ -33,6 +33,7 @@
   float: left;
   border: 1px $primary-color solid;
   margin: 5px 5px 5px 0;
+  position: static;
 
   button {
     position: relative;
@@ -68,4 +69,12 @@ input[type="file"] {
   margin: 0 auto;
   position: relative;
   bottom: 29px;
+}
+
+.simple-notification-wrapper {
+  position: fixed;
+  //bottom: 20px;
+  //right: 20px;
+  //width: 300px;
+  z-index: 10000000000000000000000;
 }

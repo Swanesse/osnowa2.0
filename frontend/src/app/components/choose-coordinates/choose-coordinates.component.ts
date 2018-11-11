@@ -1,9 +1,10 @@
-import {Component, Input, Output, EventEmitter, OnInit, AfterContentInit, AfterViewInit} from '@angular/core';
+import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import {FormGroup} from "@angular/forms";
 import {faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 import proj4 from 'proj4';
 import {MapService} from "../../services/map.service";
 import * as _ from 'lodash';
+import {NotificationsService} from "angular2-notifications";
 
 @Component({
   selector: 'app-choose-coordinates',
@@ -64,7 +65,8 @@ export class ChooseCoordinatesComponent implements OnInit {
   startLatitudeEPSG2179 = 5432557.9291;
   endLatitudeEPSG2179 = 6036576.6253;
 
-  constructor(private mapService: MapService,) {
+  constructor(private mapService: MapService,
+              private _notificationsService: NotificationsService,) {
     proj4.defs([
       ['EPSG:2176', '+proj=tmerc +lat_0=0 +lon_0=15 +k=0.999923 +x_0=5500000 +y_0=0 +ellps=GRS80 +units=m +no_defs'],
       ['EPSG:2177', '+proj=tmerc +lat_0=0 +lon_0=18 +k=0.999923 +x_0=6500000 +y_0=0 +ellps=GRS80 +units=m +no_defs'],
@@ -86,194 +88,217 @@ export class ChooseCoordinatesComponent implements OnInit {
 
   }
 
-  ngOnInit () {
+  ngOnInit() {
     if (this.addPoint === false) {
       this.transformCoordinatesWGS84(this.pointForm.get('X_WGS84').value, this.pointForm.get('Y_WGS84').value);
     }
+  }
+
+  public options = {
+    timeOut: 3000,
+    lastOnBottom: true,
+    clickToClose: true,
+    maxLength: 0,
+    maxStack: 7,
+    pauseOnHover: true,
+    rtl: false,
+    animate: 'scale',
+    position: ['right', 'bottom']
+  };
+
+  alertInvalidY() {
+    this._notificationsService.error('Uwaga', 'Podana szerokość jest niepoprawna');
+  }
+
+  alertInvalidX() {
+    this._notificationsService.error('Uwaga', 'Podana długość jest niepoprawna');
+  }
+
+  alertNot2000(){
+    this._notificationsService.warn('Uwaga', 'Wpisane współrzędne nie są w układze 2000');
   }
 
   transformCoordinates() {
     const X = this.pointForm.get('X').value;
     const Y = this.pointForm.get('Y').value;
 
-    if (this.pointForm.get('X').valid && this.pointForm.get('Y').valid) {
-      if (X) {
-        if (Y) {
 
-          if (Y >= this.southernLimitLatitude) {
-            if (X >= this.westernLimitLongitude) {
-              if (X >= this.startLongitude5WGS84) {
-                if (X <= this.startLongitude6WGS84) {
+    if (X) {
+      if (Y) {
 
-                  // 2000 zone 5 (długość od 14.14 do 16.5, szerokość od 50.25 do 54.5)
-                  if (Y >= this.startLatitude5WGS84 && Y <= this.endLatitude5WGS84) {
-                    this.validX = '1';
-                    this.validY = '1';
-                    const coordinate2000 = proj4('EPSG:2176', [X, Y]);
-                    this.setCoordinates(coordinate2000[0], coordinate2000[1], X, Y);
+        if (Y >= this.southernLimitLatitude) {
+          if (X >= this.westernLimitLongitude) {
+            if (X >= this.startLongitude5WGS84) {
+              if (X <= this.startLongitude6WGS84) {
+
+                // 2000 zone 5 (długość od 14.14 do 16.5, szerokość od 50.25 do 54.5)
+                if (Y >= this.startLatitude5WGS84 && Y <= this.endLatitude5WGS84) {
+                  this.validX = '1';
+                  this.validY = '1';
+                  const coordinate2000 = proj4('EPSG:2176', [X, Y]);
+                  this.setCoordinates(coordinate2000[0], coordinate2000[1], X, Y);
+                } else {
+                  if (Y > this.northernLimitLatitude) {
+                    this.validX = '0';
+                    this.alertInvalidY();
                   } else {
-                    if (Y > this.northernLimitLatitude) {
-                      this.validX = '0';
-                      console.log('Współrzędna X jest niepoprawna');
-                    } else {
-                      this.validY = '1';
-                      this.validX = '1';
-                      this.setWGS84AndDisplayPoint(X, Y);
-                      console.log('Wpisane współrzędne nie są w układzie 2000');
-
-                    }
-                  }
-                } else if (X <= this.startLongitude7WGS84) {
-
-                  // 2000 zone 6 (długość od 16.5 do 19.5, szerokość od 49.3300 do 54.8300)
-                  if (Y >= this.startLatitude6WGS84 && Y <= this.endLatitude6WGS84) {
                     this.validY = '1';
                     this.validX = '1';
-                    const coordinate2000 = proj4('EPSG:2177', [X, Y]);
-                    this.setCoordinates(coordinate2000[0], coordinate2000[1], X, Y);
-                  } else {
-                    if (Y > this.northernLimitLatitude) {
-                      this.validX = '0';
-                      console.log('Współrzędna X jest niepoprawna');
-                    } else {
-                      this.validY = '1';
-                      this.validX = '1';
-                      this.setWGS84AndDisplayPoint(X, Y);
-                      console.log('Wpisane współrzędne nie są w ukłądzie 2000 4');
-                    }
+                    this.setWGS84AndDisplayPoint(X, Y);
+                    this.alertNot2000();
                   }
-                } else if (X <= this.startLongitude8WGS84) {
+                }
+              } else if (X <= this.startLongitude7WGS84) {
 
-                  // 2000 zone 7 (długość od 19.5 do 22.5, szerokość od 49.0900 do 54.5000)
-                  if (Y >= this.startLatitude7WGS84 && Y <= this.endLatitude7WGS84) {
+                // 2000 zone 6 (długość od 16.5 do 19.5, szerokość od 49.3300 do 54.8300)
+                if (Y >= this.startLatitude6WGS84 && Y <= this.endLatitude6WGS84) {
+                  this.validY = '1';
+                  this.validX = '1';
+                  const coordinate2000 = proj4('EPSG:2177', [X, Y]);
+                  this.setCoordinates(coordinate2000[0], coordinate2000[1], X, Y);
+                } else {
+                  if (Y > this.northernLimitLatitude) {
+                    this.validX = '0';
+                    this.alertInvalidY();
+                  } else {
                     this.validY = '1';
                     this.validX = '1';
-                    const coordinate2000 = proj4('EPSG:2178', [X, Y]);
-                    this.setCoordinates(coordinate2000[0], coordinate2000[1], X, Y);
-                  } else {
-                    if (Y > this.northernLimitLatitude) {
-                      this.validX = '0';
-                      console.log('Współrzędna Y jest niepoprawna');
-                    } else {
-                      this.validY = '1';
-                      this.validX = '1';
-                      this.setWGS84AndDisplayPoint(X, Y);
-                      console.log('Wpisane współrzędne nie są w układzie 2000 3');
-                    }
+                    this.setWGS84AndDisplayPoint(X, Y);
+                    this.alertNot2000();
                   }
+                }
+              } else if (X <= this.startLongitude8WGS84) {
 
-                } else if (X <= this.endLongitude8WGS84) {
-
-                  // 2000 zone 8 (długość od 22.5 do 24.16, szerokość od 49.0300 do 54.4500)
-                  if (Y >= this.startLatitude8WGS84 && Y <= this.endLatitude8WGS84) {
+                // 2000 zone 7 (długość od 19.5 do 22.5, szerokość od 49.0900 do 54.5000)
+                if (Y >= this.startLatitude7WGS84 && Y <= this.endLatitude7WGS84) {
+                  this.validY = '1';
+                  this.validX = '1';
+                  const coordinate2000 = proj4('EPSG:2178', [X, Y]);
+                  this.setCoordinates(coordinate2000[0], coordinate2000[1], X, Y);
+                } else {
+                  if (Y > this.northernLimitLatitude) {
+                    this.validX = '0';
+                    this.alertInvalidY();
+                  } else {
                     this.validY = '1';
                     this.validX = '1';
-                    const coordinate2000 = proj4('EPSG:2179', [X, Y]);
-                    this.setCoordinates(coordinate2000[0], coordinate2000[1], X, Y);
-                  } else {
-                    if (Y > this.northernLimitLatitude) {
-                      this.validX = '0';
-                      console.log('Współrzędna X jest niepoprawna');
-                    } else {
-                      this.validY = '1';
-                      this.validX = '1';
-                      this.setWGS84AndDisplayPoint(X, Y);
-                      console.log('Wpisane współrzędne nie są w ukłądzie 2000 3');
-                    }
+                    this.setWGS84AndDisplayPoint(X, Y);
+                    this.alertNot2000();
                   }
-                } else if (X >= this.startLongitudeEPSG2176) {
-                  if (X <= this.endLongitudeEPSG2176) {
+                }
 
-                    // 2000 zone 5 (długość od 5438667.1168 do 5606974.4722, szerokość od 5568580.0317 do 6042141.2701)
-                    if (Y >= this.startLatitudeEPSG2176 && Y <= this.endLatitudeEPSG2176) {
+              } else if (X <= this.endLongitude8WGS84) {
+
+                // 2000 zone 8 (długość od 22.5 do 24.16, szerokość od 49.0300 do 54.4500)
+                if (Y >= this.startLatitude8WGS84 && Y <= this.endLatitude8WGS84) {
+                  this.validY = '1';
+                  this.validX = '1';
+                  const coordinate2000 = proj4('EPSG:2179', [X, Y]);
+                  this.setCoordinates(coordinate2000[0], coordinate2000[1], X, Y);
+                } else {
+                  if (Y > this.northernLimitLatitude) {
+                    this.validX = '0';
+                    this.alertInvalidY();
+                  } else {
+                    this.validY = '1';
+                    this.validX = '1';
+                    this.setWGS84AndDisplayPoint(X, Y);
+                    this.alertNot2000();
+                  }
+                }
+              } else if (X >= this.startLongitudeEPSG2176) {
+                if (X <= this.endLongitudeEPSG2176) {
+
+                  // 2000 zone 5 (długość od 5438667.1168 do 5606974.4722, szerokość od 5568580.0317 do 6042141.2701)
+                  if (Y >= this.startLatitudeEPSG2176 && Y <= this.endLatitudeEPSG2176) {
+                    this.validY = '1';
+                    this.validX = '1';
+                    const coordinateWGS84 = proj4('EPSG:2176', 'EPSG:4326', [X, Y]);
+                    this.setCoordinates(X, Y, coordinateWGS84[0], coordinateWGS84[1]);
+                  } else {
+                    this.validX = '0';
+                    this.alertInvalidY();
+                  }
+                } else if (X >= this.startLongitudeEPSG2177) {
+                  if (X <= this.endLongitudeEPSG2177) {
+
+                    // 2000 zone 6 (długość od 6390979.5111 do 6609020.4889, szerokość od 5466989.5093 do 6078869.0066)
+                    if (Y >= this.startLatitudeEPSG2177 && Y <= this.endLatitudeEPSG2177) {
                       this.validY = '1';
                       this.validX = '1';
-                      const coordinateWGS84 = proj4('EPSG:2176', 'EPSG:4326', [X, Y]);
+                      const coordinateWGS84 = proj4('EPSG:2177', 'EPSG:4326', [X, Y]);
                       this.setCoordinates(X, Y, coordinateWGS84[0], coordinateWGS84[1]);
                     } else {
                       this.validX = '0';
-                      console.log('Współrzędna X jest niepoprawna');
+                      this.alertInvalidY();
                     }
-                  } else if (X >= this.startLongitudeEPSG2177) {
-                    if (X <= this.endLongitudeEPSG2177) {
 
-                      // 2000 zone 6 (długość od 6390979.5111 do 6609020.4889, szerokość od 5466989.5093 do 6078869.0066)
-                      if (Y >= this.startLatitudeEPSG2177 && Y <= this.endLatitudeEPSG2177) {
+                  } else if (X >= this.startLongitudeEPSG2178) {
+                    if (X <= this.endLongitudeEPSG2178) {
+
+                      // 2000 zone 7 (długość od 7390450.4069 do 7609549.5931, szerokość od 5440301.5811 do 6042141.2701)
+                      if (Y >= this.startLatitudeEPSG2178 && Y <= this.endLatitudeEPSG2178) {
                         this.validY = '1';
                         this.validX = '1';
-                        const coordinateWGS84 = proj4('EPSG:2177', 'EPSG:4326', [X, Y]);
+                        const coordinateWGS84 = proj4('EPSG:2178', 'EPSG:4326', [X, Y]);
                         this.setCoordinates(X, Y, coordinateWGS84[0], coordinateWGS84[1]);
                       } else {
                         this.validX = '0';
-                        console.log('Współrzędna X jest niepoprawna');
+                        this.alertInvalidY();
                       }
 
-                    } else if (X >= this.startLongitudeEPSG2178) {
-                      if (X <= this.endLongitudeEPSG2178) {
+                    } else if (X >= this.startLongitudeEPSG2179) {
+                      if (X <= this.endLongitudeEPSG2179) {
 
-                        // 2000 zone 7 (długość od 7390450.4069 do 7609549.5931, szerokość od 5440301.5811 do 6042141.2701)
-                        if (Y >= this.startLatitudeEPSG2178 && Y <= this.endLatitudeEPSG2178) {
+                        // 2000 zone 8 (długość od 8390318.4332 do 8511699.5509, szerokość od 5432557.9291 do 6036576.6253)
+                        if (Y >= this.startLatitudeEPSG2179 && Y <= this.endLatitudeEPSG2179) {
                           this.validY = '1';
                           this.validX = '1';
-                          const coordinateWGS84 = proj4('EPSG:2178', 'EPSG:4326', [X, Y]);
+                          const coordinateWGS84 = proj4('EPSG:2179', 'EPSG:4326', [X, Y]);
                           this.setCoordinates(X, Y, coordinateWGS84[0], coordinateWGS84[1]);
                         } else {
                           this.validX = '0';
-                          console.log('Współrzędna X jest niepoprawna');
-                        }
-
-                      } else if (X >= this.startLongitudeEPSG2179) {
-                        if (X <= this.endLongitudeEPSG2179) {
-
-                          // 2000 zone 8 (długość od 8390318.4332 do 8511699.5509, szerokość od 5432557.9291 do 6036576.6253)
-                          if (Y >= this.startLatitudeEPSG2179 && Y <= this.endLatitudeEPSG2179) {
-                            this.validY = '1';
-                            this.validX = '1';
-                            const coordinateWGS84 = proj4('EPSG:2179', 'EPSG:4326', [X, Y]);
-                            this.setCoordinates(X, Y, coordinateWGS84[0], coordinateWGS84[1]);
-                          } else {
-                            this.validX = '0';
-                            console.log('Współrzędna X jest niepoprawna');
-                          }
-                        } else {
-                          this.validY = '0';
-                          console.log('Współrzędna Y jest niepoprawna 1');
+                          this.alertInvalidY();
                         }
                       } else {
                         this.validY = '0';
-                        console.log('Współrzędna Y jest niepoprawna 2');
+                        this.alertInvalidX();
                       }
                     } else {
                       this.validY = '0';
-                      console.log('Współrzędna Y jest niepoprawna 3');
+                      this.alertInvalidX();
                     }
                   } else {
                     this.validY = '0';
-                    console.log('Współrzędna Y jest niepoprawna 4');
+                    this.alertInvalidX();
                   }
-                } else if (Y > this.easternLimitLongitude) {
-                  this.validY = '0';
-                  console.log('Współrzędna Y jest niepoprawna 5');
                 } else {
-                  this.validY = '1';
-                  this.validX = '1';
-                  this.setWGS84AndDisplayPoint(X, Y);
-                  console.log('Wpisane współrzędne nie są w układze 2000 1');
+                  this.validY = '0';
+                  this.alertInvalidX();
                 }
+              } else if (Y > this.easternLimitLongitude) {
+                this.validY = '0';
+                this.alertInvalidX();
+
               } else {
                 this.validY = '1';
                 this.validX = '1';
                 this.setWGS84AndDisplayPoint(X, Y);
-                console.log('Wpisane współrzędne nie są w układzie 2000 2');
+                this.alertNot2000();
               }
             } else {
-              this.validY = '0';
-              console.log('Współrzędna Y jest niepoprawna');
+              this.validY = '1';
+              this.validX = '1';
+              this.setWGS84AndDisplayPoint(X, Y);
+              this.alertNot2000();
             }
           } else {
-            this.validX = '0';
-            console.log('Współrzędna X jest niepoprawna');
+            this.validY = '0';
+            this.alertInvalidX();
           }
+        } else {
+          this.validX = '0';
+          this.alertInvalidY();
         }
       }
     }
@@ -299,7 +324,7 @@ export class ChooseCoordinatesComponent implements OnInit {
                   } else {
                     this.setCoordinates(null, null, X, Y);
 
-                    console.log('Wpisane współrzędne nie są w układzie 2000');
+                    this.alertNot2000();
                   }
                 } else if (X <= this.startLongitude7WGS84) {
 
@@ -309,7 +334,7 @@ export class ChooseCoordinatesComponent implements OnInit {
                     this.setCoordinates(coordinate2000[0], coordinate2000[1], X, Y);
                   } else {
                     this.setCoordinates(null, null, X, Y);
-                    console.log('Wpisane współrzędne nie są w ukłądzie 2000 4');
+                    this.alertNot2000();
                   }
                 } else if (X <= this.startLongitude8WGS84) {
 
@@ -319,7 +344,7 @@ export class ChooseCoordinatesComponent implements OnInit {
                     this.setCoordinates(coordinate2000[0], coordinate2000[1], X, Y);
                   } else {
                     this.setCoordinates(null, null, X, Y);
-                    console.log('Wpisane współrzędne nie są w układzie 2000 3');
+                    this.alertNot2000();
                   }
                 } else if (X <= this.endLongitude8WGS84) {
 
@@ -329,15 +354,15 @@ export class ChooseCoordinatesComponent implements OnInit {
                     this.setCoordinates(coordinate2000[0], coordinate2000[1], X, Y);
                   } else {
                     this.setCoordinates(null, null, X, Y);
-                    console.log('Wpisane współrzędne nie są w ukłądzie 2000 3');
+                    this.alertNot2000();
                   }
                 } else {
                   this.setCoordinates(null, null, X, Y);
-                  console.log('Wpisane współrzędne nie są w układze 2000 1');
+                  this.alertNot2000();
                 }
               } else {
                 this.setCoordinates(null, null, X, Y);
-                console.log('Wpisane współrzędne nie są w układzie 2000 2');
+                this.alertNot2000();
               }
             }
           }
@@ -362,7 +387,7 @@ export class ChooseCoordinatesComponent implements OnInit {
                 this.setCoordinates(X, Y, coordinateWGS84[0], coordinateWGS84[1]);
               } else {
                 this.setWGS84AndDisplayPoint(null, null);
-                console.log('Współrzędna X jest niepoprawna');
+                this.alertInvalidY();
               }
             } else if (X >= this.startLongitudeEPSG2177) {
               if (X <= this.endLongitudeEPSG2177) {
@@ -373,7 +398,7 @@ export class ChooseCoordinatesComponent implements OnInit {
                   this.setCoordinates(X, Y, coordinateWGS84[0], coordinateWGS84[1]);
                 } else {
                   this.setWGS84AndDisplayPoint(null, null);
-                  console.log('Współrzędna X jest niepoprawna');
+                  this.alertInvalidY();
                 }
 
               } else if (X >= this.startLongitudeEPSG2178) {
@@ -385,7 +410,7 @@ export class ChooseCoordinatesComponent implements OnInit {
                     this.setCoordinates(X, Y, coordinateWGS84[0], coordinateWGS84[1]);
                   } else {
                     this.setWGS84AndDisplayPoint(null, null);
-                    console.log('Współrzędna X jest niepoprawna');
+                    this.alertInvalidY();
                   }
 
                 } else if (X >= this.startLongitudeEPSG2179) {
@@ -397,27 +422,27 @@ export class ChooseCoordinatesComponent implements OnInit {
                       this.setCoordinates(X, Y, coordinateWGS84[0], coordinateWGS84[1]);
                     } else {
                       this.setWGS84AndDisplayPoint(null, null);
-                      console.log('Współrzędna X jest niepoprawna');
+                      this.alertInvalidY();
                     }
                   } else {
                     this.setWGS84AndDisplayPoint(null, null);
-                    console.log('Współrzędna Y jest niepoprawna 1');
+                    this.alertInvalidX();
                   }
                 } else {
                   this.setWGS84AndDisplayPoint(null, null);
-                  console.log('Współrzędna Y jest niepoprawna 2');
+                  this.alertInvalidX();
                 }
               } else {
                 this.setWGS84AndDisplayPoint(null, null);
-                console.log('Współrzędna Y jest niepoprawna 3');
+                this.alertInvalidX();
               }
             } else {
               this.setWGS84AndDisplayPoint(null, null);
-              console.log('Współrzędna Y jest niepoprawna 4');
+              this.alertInvalidX();
             }
           } else {
             this.setWGS84AndDisplayPoint(null, null);
-            console.log('Współrzędna Y jest niepoprawna 5');
+            this.alertInvalidX();
           }
         }
       }
@@ -437,6 +462,23 @@ export class ChooseCoordinatesComponent implements OnInit {
   }
 
   displayPoint() {
+
+    // if (this.pointForm.controls['controlType'].value === 'pozioma' && (this.pointForm.controls['controlClass'].value === '1' || this.pointForm.controls['controlClass'].value === '2')) {
+    //   this.pointIcon = 'assets/podstawowa_pozioma.png';
+    // } else if (this.pointForm.controls['controlType'].value === 'wysokosciowa' && (this.pointForm.controls['controlClass'].value === '1' || this.pointForm.controls['controlClass'].value === '2')) {
+    //   this.pointIcon = 'assets/podstawowa_wysokosciowa.png';
+    // } else if (this.pointForm.controls['controlType'].value === 'dwufunkcyjna' && (this.pointForm.controls['controlClass'].value === '1' || this.pointForm.controls['controlClass'].value === '2')) {
+    //   this.pointIcon = 'assets/podstawowa_xyh.png';
+    // } else if (this.pointForm.controls['controlType'].value === 'pozioma' && this.pointForm.controls['controlClass'].value === '3') {
+    //   this.pointIcon = 'assets/szczegolowa_pozioma.png';
+    // } else if (this.pointForm.controls['controlType'].value === 'wysokosciowa' && this.pointForm.controls['controlClass'].value === '3') {
+    //   this.pointIcon = 'assets/szczegolowa_wysokosciowa.png';
+    // } else if (this.pointForm.controls['controlType'].value === 'dwufunkcyjna' && this.pointForm.controls['controlClass'].value === '3') {
+    //   this.pointIcon = 'assets/szczegolowa_xyh.png';
+    // } else {
+    //   this.pointIcon = 'assets/point.jpg';
+    // }
+
     const cords: Array<number> = [this.pointForm.get('X_WGS84').value, this.pointForm.get('Y_WGS84').value];
     // Zwraca adres(kraj, województwo...) ze współrzędnych.
     this.getAddress(cords);
