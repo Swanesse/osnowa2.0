@@ -40,7 +40,7 @@ export class ChooseControlTypeClassComponent {
       this.updateIcon();
 
     } else {
-      this.mapService.changeIcon('assets/assets/point.jpg');
+      this.mapService.changeIcon('assets/assets/point.png');
       this.updateIcon();
     }
   }

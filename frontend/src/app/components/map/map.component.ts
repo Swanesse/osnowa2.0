@@ -19,7 +19,7 @@ export class MapComponent {
   layers: Layer[] = [new LayerGroup(), new LayerGroup(), new LayerGroup()];
   map: Map;
   pickMode: boolean = false;
-  pointIcon: string = 'assets/point.jpg';
+  pointIcon: string = 'assets/point.png';
   isLoading = false;
   latitude;
   longitude;
@@ -61,9 +61,7 @@ export class MapComponent {
     this.mapService.getPoint().subscribe((pointId) => {
       for (let pointMarker of this.pointMarkers) {
         if (pointMarker.id.toString() == pointId.toString()){
-          console.log('llllllllllllllllllllll: ',pointMarker.marker.options.icon.options.iconUrl);
-          pointMarker.marker.options.icon.options.iconUrl = 'assets/point.jpg';
-
+          pointMarker.marker.options.icon.options.iconUrl = 'assets/transparent.png';
         }
       }
     });
@@ -136,7 +134,7 @@ export class MapComponent {
           } else if (onePointFromDB.controlType === 'dwufunkcyjna' && onePointFromDB.controlClass === '3') {
             this.pointIcon = 'assets/szczegolowa_xyh.png';
           } else {
-            this.pointIcon = 'assets/point.jpg';
+            this.pointIcon = 'assets/point.png';
           }
 
           const newPoint = marker([onePointFromDB.Y_WGS84, onePointFromDB.X_WGS84], {

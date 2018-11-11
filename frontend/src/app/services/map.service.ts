@@ -14,7 +14,7 @@ export class MapService {
   private turningOnPickMode = new Subject<any>();
   private icon = new Subject();
 
-  private pointIcon = 'assets/point.jpg';
+  private pointIcon = 'assets/point.png';
 
   constructor(private http: HttpClient) {
   }

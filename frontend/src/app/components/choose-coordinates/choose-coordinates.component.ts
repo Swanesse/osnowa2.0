@@ -476,7 +476,7 @@ export class ChooseCoordinatesComponent implements OnInit {
     // } else if (this.pointForm.controls['controlType'].value === 'dwufunkcyjna' && this.pointForm.controls['controlClass'].value === '3') {
     //   this.pointIcon = 'assets/szczegolowa_xyh.png';
     // } else {
-    //   this.pointIcon = 'assets/point.jpg';
+    //   this.pointIcon = 'assets/point.png';
     // }
 
     const cords: Array<number> = [this.pointForm.get('X_WGS84').value, this.pointForm.get('Y_WGS84').value];
