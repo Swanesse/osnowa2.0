@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {AbstractControl, FormBuilder, ValidationErrors, Validators} from "@angular/forms";
 import {MapService} from "../../services/map.service";
@@ -8,7 +8,7 @@ import {MapService} from "../../services/map.service";
   templateUrl: './point-edit.component.html',
   styleUrls: ['./point-edit.component.scss']
 })
-export class PointEditComponent implements OnInit {
+export class PointEditComponent implements OnInit, OnDestroy {
 
   point;
   pointForm;
@@ -63,6 +63,10 @@ export class PointEditComponent implements OnInit {
       stabilization: [this.point.stabilization],
       found: [this.point.found]
     });
+  }
+
+  ngOnDestroy(){
+    this.mapService.setOldIcon(this.point);
   }
 
   ValidatorY(control: AbstractControl): ValidationErrors {

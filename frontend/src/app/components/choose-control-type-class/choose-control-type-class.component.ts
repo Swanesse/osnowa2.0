@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 import {MapService} from "../../services/map.service";
 import {FormGroup} from "@angular/forms";
@@ -8,12 +8,16 @@ import {FormGroup} from "@angular/forms";
   templateUrl: './choose-control-type-class.component.html',
   styleUrls: ['./choose-control-type-class.component.scss']
 })
-export class ChooseControlTypeClassComponent {
+export class ChooseControlTypeClassComponent implements OnInit{
 
   faInfo = faInfoCircle;
   @Input() pointForm: FormGroup;
 
   constructor(private mapService: MapService,) { }
+
+  ngOnInit(){
+    this.chooseNetworkType();
+  }
 
   chooseNetworkType() {
     if (this.pointForm.value.controlType === 'pozioma' && (this.pointForm.value.controlClass === '1' || this.pointForm.value.controlClass === '2')) {
@@ -40,7 +44,7 @@ export class ChooseControlTypeClassComponent {
       this.updateIcon();
 
     } else {
-      this.mapService.changeIcon('assets/assets/point.png');
+      this.mapService.changeIcon('assets/point.png');
       this.updateIcon();
     }
   }

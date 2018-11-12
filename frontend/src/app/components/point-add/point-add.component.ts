@@ -1,9 +1,11 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, Output} from '@angular/core';
 import {FormGroup, Validators, AbstractControl, ValidationErrors, FormBuilder} from '@angular/forms';
 import {faInfoCircle} from '@fortawesome/free-solid-svg-icons';
 import {HttpService} from "../../services/http.service";
 import {Point} from "../../models/Point";
 import {Router} from "@angular/router";
+import {LayerGroup} from "leaflet";
+import {MapService} from "../../services/map.service";
 
 
 @Component({
@@ -11,7 +13,7 @@ import {Router} from "@angular/router";
   templateUrl: './point-add.component.html',
   styleUrls: ['./point-add.component.scss']
 })
-export class PointAddComponent {
+export class PointAddComponent implements OnDestroy{
   @Output() myEvent: EventEmitter<any> = new EventEmitter();
   pickMode: boolean = false;
   header: string = 'Dodaj punkt';
@@ -60,7 +62,13 @@ export class PointAddComponent {
 
   constructor(private httpService: HttpService,
               private router: Router,
-              private fb: FormBuilder,) {
+              private fb: FormBuilder,
+              private mapService: MapService,) {
+  }
+
+  ngOnDestroy(){
+    this.mapService.setNewPoint();
+
   }
 
   ValidatorX(control: AbstractControl): ValidationErrors {

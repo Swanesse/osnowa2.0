@@ -2,10 +2,17 @@ import {Component, EventEmitter, NgZone, Output} from '@angular/core';
 import {icon, latLng, marker, tileLayer, Layer, Map, Marker, LayerGroup} from 'leaflet';
 import {MapService} from '../../services/map.service';
 import {HttpService} from "../../services/http.service";
-import {NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, Event} from "@angular/router";
+import {
+  NavigationCancel,
+  NavigationEnd,
+  NavigationError,
+  NavigationStart,
+  Router,
+  Event,
+  ActivatedRoute
+} from "@angular/router";
 import {PointMarker} from "../../models/PointMarker";
 import {Observable} from "rxjs/Rx";
-import {promise} from "selenium-webdriver";
 
 @Component({
   selector: 'app-map',
@@ -16,6 +23,7 @@ import {promise} from "selenium-webdriver";
 export class MapComponent {
   @Output() myEvent: EventEmitter<any> = new EventEmitter();
 
+  //layers[0] - punkty z bazy danych, layers[1] - niebieski znacznik lokalizacji, layers[2] - nowo dodawany punkt
   layers: Layer[] = [new LayerGroup(), new LayerGroup(), new LayerGroup()];
   map: Map;
   pickMode: boolean = false;
@@ -24,6 +32,7 @@ export class MapComponent {
   latitude;
   longitude;
   editCoordinates;
+  pointId = null;
 
   // tablica ze znacznikami
   pointMarkers: PointMarker[] = [];
@@ -43,7 +52,8 @@ export class MapComponent {
   constructor(private zone: NgZone,
               private mapService: MapService,
               private httpService: HttpService,
-              private router: Router) {
+              private router: Router,
+              private route: ActivatedRoute,) {
     router.events.subscribe((routerEvent: Event) => {
       this.checkEvent(routerEvent);
     });
@@ -55,21 +65,62 @@ export class MapComponent {
 
     // Prześle z PANELU PUNKTU zmienione współrzędne i wrzuci je do funkcji displayPoint()
     this.mapService.getChangeCords().subscribe((cords: Array<number>) => {
-        this.displayPoint(cords);
+      this.displayPoint(cords);
     });
 
     this.mapService.getPoint().subscribe((pointId) => {
+      this.pointId = pointId;
       for (let pointMarker of this.pointMarkers) {
-        if (pointMarker.id.toString() == pointId.toString()){
+        if (pointMarker.id.toString() == pointId.toString()) {
           pointMarker.marker.options.icon.options.iconUrl = 'assets/transparent.png';
         }
       }
     });
 
+    this.mapService.getNewPoint().subscribe(()=>{
+       this.layers[2]= new LayerGroup();
+    });
+
+    this.mapService.getOldIcon().subscribe((point: any) => {
+      this.pointId = null;
+      for (let pointMarker of this.pointMarkers) {
+        if (pointMarker.id.toString() == point.id.toString()) {
+
+
+          if (point.controlType === 'pozioma' && (point.controlClass === '1' || point.controlClass === '2')) {
+            console.log('point, point, point: ', point);
+              pointMarker.marker.options.icon.options.iconUrl = 'assets/podstawowa_pozioma.png';
+
+          } else if (point.controlType === 'wysokosciowa' && (point.controlClass === '1' || point.controlClass === '2')) {
+
+              pointMarker.marker.options.icon.options.iconUrl = 'assets/podstawowa_wysokosciowa.png';
+          } else if (point.controlType === 'dwufunkcyjna' && (point.controlClass === '1' || point.controlClass === '2')) {
+            this.route.params.subscribe(params => {
+
+              pointMarker.marker.options.icon.options.iconUrl = 'assets/podstawowa_xyh.png';
+            });
+          } else if (point.controlType === 'pozioma' && point.controlClass === '3') {
+            this.route.params.subscribe(params => {
+
+              pointMarker.marker.options.icon.options.iconUrl = 'assets/szczegolowa_pozioma.png';
+            });
+          } else if (point.controlType === 'wysokosciowa' && point.controlClass === '3') {
+            pointMarker.marker.options.icon.options.iconUrl = 'assets/szczegolowa_wysokosciowa.png';
+          } else if (point.controlType === 'dwufunkcyjna' && point.controlClass === '3') {
+            pointMarker.marker.options.icon.options.iconUrl = 'assets/szczegolowa_xyh.png';
+          } else {
+            pointMarker.marker.options.icon.options.iconUrl = 'assets/point.png';
+          }
+
+        }
+      }
+      this.displayPoints();
+      this.layers[2]= new LayerGroup();
+    });
 
 
     this.mapService.getMapView().subscribe((cords: Array<number>) => {
-      if(this.map == undefined){
+      if (this.map == undefined) {
         this.editCoordinates = [cords[1], cords[0]];
 
       } else {
@@ -77,7 +128,7 @@ export class MapComponent {
       }
     });
 
-    // Prześle z PAMELU PUNKTU informację o zmianie klasy i zmieni ikonkę w pointIcon na MAPIE
+    // Prześle z PANELU PUNKTU informację o zmianie klasy i zmieni ikonkę w pointIcon na MAPIE
     this.mapService.setIcon().subscribe(icon => {
       this.pointIcon = icon.toString();
     });
@@ -153,7 +204,25 @@ export class MapComponent {
           this.pointMarkers.push(pointMarker);
         }
 
-      this.zone.run(() => {
+      this.displayPoints()
+
+    });
+    if (this.pointId !== null) {
+      for (let pointMarker of this.pointMarkers) {
+        if (pointMarker.id.toString() == this.pointId.toString()) {
+          pointMarker.marker.options.icon.options.iconUrl = 'assets/transparent.png';
+        }
+      }
+    }
+
+    // odfiltrowuje się wszystkie znaczniki, które nie znajdują się w bieżących granicach widoku mapy
+    // następnie ustawia wynikową kolekcję znaczników jako nowy zestaw warstw mapy.
+    //zone.run potrzebne, żeby Angular zaktualizował widok
+
+  }
+
+  displayPoints(){
+    this.zone.run(() => {
         let markers: Marker[] = [];
         for (let pointMarker of this.pointMarkers) {
           markers.push(pointMarker.marker);
@@ -167,13 +236,6 @@ export class MapComponent {
 
         this.layers[0] = pointsFromDB;
       });
-
-    });
-
-    // odfiltrowuje się wszystkie znaczniki, które nie znajdują się w bieżących granicach widoku mapy
-    // następnie ustawia wynikową kolekcję znaczników jako nowy zestaw warstw mapy.
-    //zone.run potrzebne, żeby Angular zaktualizował widok
-
   }
 
   // Ustawianie wyglądu kursora podczas przesuwania po mapie.
@@ -189,7 +251,7 @@ export class MapComponent {
   onMapReady(map: Map) {
     Observable.interval(1000).takeWhile(() => true).subscribe(() => this.getCoordinates());
     this.map = map;
-    if(this.editCoordinates !== undefined){
+    if (this.editCoordinates !== undefined) {
       this.map.setView(latLng(this.editCoordinates), 19);
     }
     // Aktualizuje wyświetlane punkty w chwili pierwszego wyświetlenia mapy
@@ -227,7 +289,7 @@ export class MapComponent {
         });
         let newPoint: LayerGroup = new LayerGroup();
 
-        // Nadpisujemy poprzedni wyświetlany na mapie punkt
+        // Nadpisujemy poprzedni wyświetlany na mapie znacznik lokalizacji
         newPoint.addLayer(newMarker);
         this.layers[1] = newPoint;
       });
@@ -237,21 +299,21 @@ export class MapComponent {
   }
 
   displayPoint(cords) {
-      const newMarker: Marker = marker([cords[1], cords[0]], {
-        icon: this.createIcon()
-      });
-      let newPoint: LayerGroup = new LayerGroup();
+    const newMarker: Marker = marker([cords[1], cords[0]], {
+      icon: this.createIcon()
+    });
+    let newPoint: LayerGroup = new LayerGroup();
 
-      // Nadpisujemy poprzedni wyświetlany na mapie punkt
-      newPoint.addLayer(newMarker);
-      this.layers[2] = newPoint;
-      if(this.map == undefined){
-        this.editCoordinates = [cords[1], cords[0]];
+    // Nadpisujemy poprzedni wyświetlany na mapie punkt
+    newPoint.addLayer(newMarker);
+    this.layers[2] = newPoint;
+    if (this.map == undefined) {
+      this.editCoordinates = [cords[1], cords[0]];
 
-      } else {
-        this.map.setView(latLng([cords[1], cords[0]]), 19);
-      }
-    };
+    } else {
+      this.map.setView(latLng([cords[1], cords[0]]), 19);
+    }
+  };
 
   showMyLocalization() {
     this.getCoordinates();

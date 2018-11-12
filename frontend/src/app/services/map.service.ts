@@ -11,6 +11,8 @@ export class MapService {
   private changeCords = new Subject<Array<number>>();
   private centerView = new Subject<Array<number>>();
   private removePoint = new Subject<Array<number>>();
+  private restorePoint = new Subject();
+  private deletePoint = new Subject();
   private turningOnPickMode = new Subject<any>();
   private icon = new Subject();
 
@@ -64,6 +66,28 @@ export class MapService {
   setPoint(pointId){
   this.removePoint.next(pointId);
 }
+
+  //^^^^^^^^^^^^^^^^^^Pobranie punktu pochodzącego z PANELU PUNKTU i wyświetlenie na MAPIE----------------------------
+
+  getOldIcon() {
+    return this.restorePoint.asObservable();
+  }
+
+  setOldIcon(pointId){
+  this.restorePoint.next(pointId);
+}
+
+ //^^^^^^^^^^^^^^^^^^Usuwanie punktu nowo dodanego----------------------------
+
+  getNewPoint() {
+    return this.deletePoint.asObservable();
+  }
+
+  setNewPoint(){
+  this.deletePoint.next();
+}
+
+
 
   //^^^^^^^^^^^^^^^^^^Pobranie punktu pochodzącego z PANELU PUNKTU i wyświetlenie na MAPIE----------------------------
   getMapView(): Observable<Array<number>> {
