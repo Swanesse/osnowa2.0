@@ -29,9 +29,25 @@ export class HttpService implements InMemoryDbService {
     return this.http.post<Point>('http://localhost:8000/point/new', formData);
   }
 
+  editPoint(point: Point, fileToUpload: File[]): Observable<Point> {
+    const formData: FormData = new FormData();
+    Object.keys(point).forEach(key => {
+      if (point[key] !== null && point[key] !== undefined) {
+        formData.append(key, point[key].toString());
+      }
+    });
+
+    for (let file of fileToUpload) {
+      formData.append('images', file, file.name);
+    }
+
+    return this.http.put<Point>('http://localhost:8000/point/edit', formData);
+  }
+
+
   getPoint(id) {
     const param = new HttpParams().set('id', id + '');
-    return this.http.get('http://localhost:8000/point/get', {params: {param: id}});
+    return this.http.get('http://localhost:8000/point/get', {params: {id: id}});
     // .toPromise()
     // .then(response => response.json().data as Point)
     // .catch(this.handleError);
@@ -43,7 +59,7 @@ export class HttpService implements InMemoryDbService {
   // }
 
   viewPoints(north, south, east, west): Observable<Array<Point>> {
-    return this.http.get<Array<Point>>('http://localhost:8000/point/view', {
+    return this.http.get<Array<Point>>('http://localhost:8000/point/get-all', {
       params: {
         north: north,
         south: south,

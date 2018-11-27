@@ -12,6 +12,7 @@ export class MapService {
   private centerView = new Subject<Array<number>>();
   private removePoint = new Subject<Array<number>>();
   private restorePoint = new Subject();
+  private pointIdToDelete = new Subject();
   private deletePoint = new Subject();
   private turningOnPickMode = new Subject<any>();
   private icon = new Subject();
@@ -37,6 +38,17 @@ export class MapService {
   pickCords(cords) {
     this.pickedCords.next(cords);
   }
+
+  getDeleteEditPoint() {
+    return this.pointIdToDelete.asObservable();
+  }
+
+  //cords to 2 wartości pochodzące z MAPY - współrzędne
+  // next - będzie informował, że ma w sobie nowe współrzędne
+  setDeleteEditPoint(pointId) {
+    this.pointIdToDelete.next(pointId);
+  }
+
 
   //^^^^^^^^^^^^^^^^^^Kliknięcie na punkt na MAPIE i wyświetlenie szczegółów o nim w PANELU PUNKTU----------------------------
   getClickPoint(): Observable<Point> {

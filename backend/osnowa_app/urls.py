@@ -10,16 +10,17 @@ urlpatterns = [
     # url(r'^$', views.point_list, name='point_list'),
     # link ma prowadzić do strony ze szczegółami o punkcie .com/point/2/
     # url(r'^point/(?P<pk>[0-9]+)/$', views.point_detail, name='point_detail'),
-    url(r'^points/$', views.points, name='points'),
 
-
-    # link do formularza tworzenia nowego punktu
+    # link do tworzenia nowego punktu
     url(r'^point/new$', views.point_new, name='point_new'),
+
+# link do edytowania punktu
+    url(r'^point/edit$', views.point_edit, name='point_edit'),
 
     url(r'^point/get$', views.point_get, name='point_get'),
 
-    # Wyświetlenie punktów z bazy na mapie
-    url(r'^point/view$', views.points, name='points'),
+    # Wyświetlenie wszystkich punktów z bazy na mapie
+    url(r'^point/get-all$', views.points, name='points'),
 
     #
     # # edycja formularza

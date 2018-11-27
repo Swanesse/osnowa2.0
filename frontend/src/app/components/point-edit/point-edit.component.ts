@@ -1,7 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {AbstractControl, FormBuilder, ValidationErrors, Validators} from "@angular/forms";
 import {MapService} from "../../services/map.service";
+import {HttpService} from "../../services/http.service";
 
 @Component({
   selector: 'app-point-edit',
@@ -14,13 +15,15 @@ export class PointEditComponent implements OnInit, OnDestroy {
   pointForm;
   pickMode: boolean = false;
 
-  files;
+  files = {imageUrls: [] = [], fileToUpload: [] = []};
   images: Array<string>;
   header: string = 'Edytuj punkt';
 
   constructor(private route: ActivatedRoute,
               private mapService: MapService,
-              private fb: FormBuilder) {
+              private fb: FormBuilder,
+              private httpService: HttpService,
+              private router: Router,) {
     route.params.subscribe(val => {
       this.point = this.route.snapshot.data.point.data[0];
       this.images = this.route.snapshot.data.point.data[1];
@@ -31,9 +34,6 @@ export class PointEditComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.pointForm = this.fb.group({
-      X: [null, [Validators.required, this.ValidatorX]],
-      Y: [null, [Validators.required, this.ValidatorY]],
-
       X_WGS84: [this.point.X_WGS84, [Validators.required, this.ValidatorXWGS84]],
       Y_WGS84: [this.point.Y_WGS84, [Validators.required, this.ValidatorYWGS84]],
 
@@ -69,20 +69,6 @@ export class PointEditComponent implements OnInit, OnDestroy {
     this.mapService.setOldIcon(this.point);
   }
 
-  ValidatorY(control: AbstractControl): ValidationErrors {
-    const y = control.value;
-    if (y < -180 || (y > 180 && y < 5438667.1168) || (y > 5606974.4722 && y < 6390979.5111) || (y > 6609020.4889 && y < 7390450.4069) || (y > 7609549.5931 && y < 8390318.4332) || y > 8511699.5509) {
-      return {unproper: true};
-    }
-  }
-
-  ValidatorX(control: AbstractControl): ValidationErrors {
-    const x = control.value;
-    if (x < -90 || (x > 90 && x < 5432557.9291) || (x > 6078869.0066)) {
-      return {unproper: true};
-    }
-  }
-
   ValidatorYWGS84(control: AbstractControl): ValidationErrors {
     const y = control.value;
     if (y < -180 || y > 180) {
@@ -97,16 +83,16 @@ export class PointEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  ValidatorY2000(control: AbstractControl): ValidationErrors {
-    const y = control.value;
-    if ((y < 5438667.1168 || (y > 5606974.4722 && y < 6390979.5111) || (y > 6609020.4889 && y < 7390450.4069) || (y > 7609549.5931 && y < 8390318.4332) || y > 8511699.5509) && y != null && y != "") {
+  ValidatorX2000(control: AbstractControl): ValidationErrors {
+    const x = control.value;
+    if ((x < 5438667.1168 || (x > 5606974.4722 && x < 6390979.5111) || (x > 6609020.4889 && x < 7390450.4069) || (x > 7609549.5931 && x < 8390318.4332) || x > 8511699.5509) && x != null && x != "") {
       return {unproper: true};
     }
   }
 
-  ValidatorX2000(control: AbstractControl): ValidationErrors {
-    const x = control.value;
-    if ((x < 5432557.9291 || x > 6078869.0066) && x != null && x != "") {
+  ValidatorY2000(control: AbstractControl): ValidationErrors {
+    const y = control.value;
+    if ((y < 5432557.9291 || y > 6078869.0066) && y != null && y != "") {
       return {unproper: true};
     }
   }
@@ -117,6 +103,27 @@ export class PointEditComponent implements OnInit, OnDestroy {
 
   grtPhotos(files){
     this.files = files;
+  }
+
+  onSubmit() {
+    console.log('zapisz', this.pointForm);
+
+    if (this.pointForm.valid) {
+      console.log('pointForm valid');
+      Object.keys(this.pointForm.value).forEach(key => {
+        this.point[key] = this.pointForm.value[key] === '' ? null : this.pointForm.value[key];
+      });
+
+      this.httpService.editPoint(this.point, this.files.fileToUpload).subscribe(
+        point => {
+          this.mapService.setDeleteEditPoint(this.point.id);
+          this.router.navigate(['/home/detail/' + point.id]);
+
+        },
+        error => {
+          console.log(error.statusText);
+        });
+    }
   }
 
 }

@@ -77,6 +77,10 @@ export class MapComponent {
       }
     });
 
+    this.mapService.getDeleteEditPoint().subscribe((pointId)=>{
+      this.pointMarkers = this.pointMarkers.filter(marker => marker.id!=pointId);
+    });
+
     this.mapService.getNewPoint().subscribe(()=>{
        this.layers[2]= new LayerGroup();
     });

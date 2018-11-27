@@ -80,10 +80,12 @@ export class ChooseCoordinatesComponent implements OnInit {
       this.pickMode = false;
       this.changePickMode.emit(this.pickMode);
       this.location = true;
-      this.pointForm.get('X').clearValidators();
-      this.pointForm.get('Y').clearValidators();
-      this.pointForm.get('X').updateValueAndValidity();
-      this.pointForm.get('Y').updateValueAndValidity();
+      if(this.addPoint) {
+        this.pointForm.get('X').clearValidators();
+        this.pointForm.get('Y').clearValidators();
+        this.pointForm.get('X').updateValueAndValidity();
+        this.pointForm.get('Y').updateValueAndValidity();
+      }
     });
 
   }
@@ -135,7 +137,7 @@ export class ChooseCoordinatesComponent implements OnInit {
                 if (Y >= this.startLatitude5WGS84 && Y <= this.endLatitude5WGS84) {
                   this.validX = '1';
                   this.validY = '1';
-                  const coordinate2000 = proj4('EPSG:2176', [X, Y]);
+                  const coordinate2000 = proj4('EPSG:2176', [Number(X), Number(Y)]);
                   this.setCoordinates(coordinate2000[0], coordinate2000[1], X, Y);
                 } else {
                   if (Y > this.northernLimitLatitude) {
@@ -154,7 +156,7 @@ export class ChooseCoordinatesComponent implements OnInit {
                 if (Y >= this.startLatitude6WGS84 && Y <= this.endLatitude6WGS84) {
                   this.validY = '1';
                   this.validX = '1';
-                  const coordinate2000 = proj4('EPSG:2177', [X, Y]);
+                  const coordinate2000 = proj4('EPSG:2177', [Number(X), Number(Y)]);
                   this.setCoordinates(coordinate2000[0], coordinate2000[1], X, Y);
                 } else {
                   if (Y > this.northernLimitLatitude) {
@@ -173,7 +175,7 @@ export class ChooseCoordinatesComponent implements OnInit {
                 if (Y >= this.startLatitude7WGS84 && Y <= this.endLatitude7WGS84) {
                   this.validY = '1';
                   this.validX = '1';
-                  const coordinate2000 = proj4('EPSG:2178', [X, Y]);
+                  const coordinate2000 = proj4('EPSG:2178', [Number(X), Number(Y)]);
                   this.setCoordinates(coordinate2000[0], coordinate2000[1], X, Y);
                 } else {
                   if (Y > this.northernLimitLatitude) {
@@ -193,7 +195,7 @@ export class ChooseCoordinatesComponent implements OnInit {
                 if (Y >= this.startLatitude8WGS84 && Y <= this.endLatitude8WGS84) {
                   this.validY = '1';
                   this.validX = '1';
-                  const coordinate2000 = proj4('EPSG:2179', [X, Y]);
+                  const coordinate2000 = proj4('EPSG:2179', [Number(X), Number(Y)]);
                   this.setCoordinates(coordinate2000[0], coordinate2000[1], X, Y);
                 } else {
                   if (Y > this.northernLimitLatitude) {
@@ -213,7 +215,7 @@ export class ChooseCoordinatesComponent implements OnInit {
                   if (Y >= this.startLatitudeEPSG2176 && Y <= this.endLatitudeEPSG2176) {
                     this.validY = '1';
                     this.validX = '1';
-                    const coordinateWGS84 = proj4('EPSG:2176', 'EPSG:4326', [X, Y]);
+                    const coordinateWGS84 = proj4('EPSG:2176', 'EPSG:4326', [Number(X), Number(Y)]);
                     this.setCoordinates(X, Y, coordinateWGS84[0], coordinateWGS84[1]);
                   } else {
                     this.validX = '0';
@@ -226,7 +228,7 @@ export class ChooseCoordinatesComponent implements OnInit {
                     if (Y >= this.startLatitudeEPSG2177 && Y <= this.endLatitudeEPSG2177) {
                       this.validY = '1';
                       this.validX = '1';
-                      const coordinateWGS84 = proj4('EPSG:2177', 'EPSG:4326', [X, Y]);
+                      const coordinateWGS84 = proj4('EPSG:2177', 'EPSG:4326', [Number(X), Number(Y)]);
                       this.setCoordinates(X, Y, coordinateWGS84[0], coordinateWGS84[1]);
                     } else {
                       this.validX = '0';
@@ -240,7 +242,7 @@ export class ChooseCoordinatesComponent implements OnInit {
                       if (Y >= this.startLatitudeEPSG2178 && Y <= this.endLatitudeEPSG2178) {
                         this.validY = '1';
                         this.validX = '1';
-                        const coordinateWGS84 = proj4('EPSG:2178', 'EPSG:4326', [X, Y]);
+                        const coordinateWGS84 = proj4('EPSG:2178', 'EPSG:4326', [Number(X), Number(Y)]);
                         this.setCoordinates(X, Y, coordinateWGS84[0], coordinateWGS84[1]);
                       } else {
                         this.validX = '0';
@@ -254,7 +256,7 @@ export class ChooseCoordinatesComponent implements OnInit {
                         if (Y >= this.startLatitudeEPSG2179 && Y <= this.endLatitudeEPSG2179) {
                           this.validY = '1';
                           this.validX = '1';
-                          const coordinateWGS84 = proj4('EPSG:2179', 'EPSG:4326', [X, Y]);
+                          const coordinateWGS84 = proj4('EPSG:2179', 'EPSG:4326', [Number(X), Number(Y)]);
                           this.setCoordinates(X, Y, coordinateWGS84[0], coordinateWGS84[1]);
                         } else {
                           this.validX = '0';
@@ -318,7 +320,7 @@ export class ChooseCoordinatesComponent implements OnInit {
 
                   // 2000 zone 5 (długość od 14.14 do 16.5, szerokość od 50.25 do 54.5)
                   if (Y >= this.startLatitude5WGS84 && Y <= this.endLatitude5WGS84) {
-                    const coordinate2000 = proj4('EPSG:2176', [X, Y]);
+                    const coordinate2000 = proj4('EPSG:2176', [Number(X), Number(Y)]);
                     this.setCoordinates(coordinate2000[0], coordinate2000[1], X, Y);
 
                   } else {
@@ -330,7 +332,7 @@ export class ChooseCoordinatesComponent implements OnInit {
 
                   // 2000 zone 6 (długość od 16.5 do 19.5, szerokość od 49.3300 do 54.8300)
                   if (Y >= this.startLatitude6WGS84 && Y <= this.endLatitude6WGS84) {
-                    const coordinate2000 = proj4('EPSG:2177', [X, Y]);
+                    const coordinate2000 = proj4('EPSG:2177', [Number(X), Number(Y)]);
                     this.setCoordinates(coordinate2000[0], coordinate2000[1], X, Y);
                   } else {
                     this.setCoordinates(null, null, X, Y);
@@ -340,7 +342,7 @@ export class ChooseCoordinatesComponent implements OnInit {
 
                   // 2000 zone 7 (długość od 19.5 do 22.5, szerokość od 49.0900 do 54.5000)
                   if (Y >= this.startLatitude7WGS84 && Y <= this.endLatitude7WGS84) {
-                    const coordinate2000 = proj4('EPSG:2178', [X, Y]);
+                    const coordinate2000 = proj4('EPSG:2178', [Number(X), Number(Y)]);
                     this.setCoordinates(coordinate2000[0], coordinate2000[1], X, Y);
                   } else {
                     this.setCoordinates(null, null, X, Y);
@@ -350,7 +352,7 @@ export class ChooseCoordinatesComponent implements OnInit {
 
                   // 2000 zone 8 (długość od 22.5 do 24.16, szerokość od 49.0300 do 54.4500)
                   if (Y >= this.startLatitude8WGS84 && Y <= this.endLatitude8WGS84) {
-                    const coordinate2000 = proj4('EPSG:2179', [X, Y]);
+                    const coordinate2000 = proj4('EPSG:2179', [Number(X), Number(Y)]);
                     this.setCoordinates(coordinate2000[0], coordinate2000[1], X, Y);
                   } else {
                     this.setCoordinates(null, null, X, Y);
@@ -383,7 +385,7 @@ export class ChooseCoordinatesComponent implements OnInit {
 
               // 2000 zone 5 (długość od 5438667.1168 do 5606974.4722, szerokość od 5568580.0317 do 6042141.2701)
               if (Y >= this.startLatitudeEPSG2176 && Y <= this.endLatitudeEPSG2176) {
-                const coordinateWGS84 = proj4('EPSG:2176', 'EPSG:4326', [X, Y]);
+                const coordinateWGS84 = proj4('EPSG:2176', 'EPSG:4326', [Number(X), Number(Y)]);
                 this.setCoordinates(X, Y, coordinateWGS84[0], coordinateWGS84[1]);
               } else {
                 this.setWGS84AndDisplayPoint(null, null);
@@ -394,7 +396,7 @@ export class ChooseCoordinatesComponent implements OnInit {
 
                 // 2000 zone 6 (długość od 6390979.5111 do 6609020.4889, szerokość od 5466989.5093 do 6078869.0066)
                 if (Y >= this.startLatitudeEPSG2177 && Y <= this.endLatitudeEPSG2177) {
-                  const coordinateWGS84 = proj4('EPSG:2177', 'EPSG:4326', [X, Y]);
+                  const coordinateWGS84 = proj4('EPSG:2177', 'EPSG:4326', [Number(X), Number(Y)]);
                   this.setCoordinates(X, Y, coordinateWGS84[0], coordinateWGS84[1]);
                 } else {
                   this.setWGS84AndDisplayPoint(null, null);
@@ -406,7 +408,7 @@ export class ChooseCoordinatesComponent implements OnInit {
 
                   // 2000 zone 7 (długość od 7390450.4069 do 7609549.5931, szerokość od 5440301.5811 do 6042141.2701)
                   if (Y >= this.startLatitudeEPSG2178 && Y <= this.endLatitudeEPSG2178) {
-                    const coordinateWGS84 = proj4('EPSG:2178', 'EPSG:4326', [X, Y]);
+                    const coordinateWGS84 = proj4('EPSG:2178', 'EPSG:4326', [Number(X), Number(Y)]);
                     this.setCoordinates(X, Y, coordinateWGS84[0], coordinateWGS84[1]);
                   } else {
                     this.setWGS84AndDisplayPoint(null, null);
@@ -418,7 +420,7 @@ export class ChooseCoordinatesComponent implements OnInit {
 
                     // 2000 zone 8 (długość od 8390318.4332 do 8511699.5509, szerokość od 5432557.9291 do 6036576.6253)
                     if (Y >= this.startLatitudeEPSG2179 && Y <= this.endLatitudeEPSG2179) {
-                      const coordinateWGS84 = proj4('EPSG:2179', 'EPSG:4326', [X, Y]);
+                      const coordinateWGS84 = proj4('EPSG:2179', 'EPSG:4326', [Number(X), Number(Y)]);
                       this.setCoordinates(X, Y, coordinateWGS84[0], coordinateWGS84[1]);
                     } else {
                       this.setWGS84AndDisplayPoint(null, null);

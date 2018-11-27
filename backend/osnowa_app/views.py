@@ -84,12 +84,12 @@ def points(request):
 
 @api_view(['get'])
 def point_get(request):
-    # wyciąga z bazy danych info o punktach.
+    # wyciąga z bazy danych info o jednym punkcie.
 
-    point = Point.objects.get(id=request.GET['param'])
+    point = Point.objects.get(id=request.GET['id'])
 
     serializer1 = PointSerializer(point)
-    pictures = Image.objects.all().filter(point_id=request.GET['param'])
+    pictures = Image.objects.all().filter(point_id=request.GET['id'])
     serializer2 = ImageSerializer(pictures, many=True)
 
     Serializer_list = [serializer1.data, serializer2.data]
@@ -122,10 +122,30 @@ def point_new(request):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # point.created_date = timezone.now()
-    # zapisanie punktu w bazie danych
-    # point.save()
-    # return redirect('point_detail', pk=point.pk)
+
+@api_view(['put'])
+def point_edit(request):
+    if request.method == "PUT":
+
+        point = Point.objects.get(id=request.data.get('id'))
+        serializer = PointSerializer(point, data=request.data)
+        if serializer.is_valid():
+            # save() zapisuje punkt w bazie danych
+
+            editedPoint = serializer.save()
+
+            for image in request.data.getlist('images'):
+                newImage = Image(image=image, point=editedPoint)
+                newImage.save()
+
+            return Response(serializer.data)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# point.created_date = timezone.now()
+# zapisanie punktu w bazie danych
+# point.save()
+# return redirect('point_detail', pk=point.pk)
 # else:
 #     form = PointForm()
 # return render(request, 'osnowa_app/point_edit.html', {'form': form})
