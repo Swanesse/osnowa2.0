@@ -18,6 +18,7 @@ export class PointEditComponent implements OnInit, OnDestroy {
   files = {imageUrls: [] = [], fileToUpload: [] = []};
   images: Array<string>;
   header: string = 'Edytuj punkt';
+  checked = false;
 
   constructor(private route: ActivatedRoute,
               private mapService: MapService,
@@ -123,6 +124,16 @@ export class PointEditComponent implements OnInit, OnDestroy {
         error => {
           console.log(error.statusText);
         });
+    }
+  }
+
+  changeChecked(){
+    if(this.checked == true){
+      this.pointForm.value.found = this.pointForm.value.found - 1;
+      this.checked = false;
+    } else {
+      this.pointForm.value.found = this.pointForm.value.found + 1;
+      this.checked = true;
     }
   }
 

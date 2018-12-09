@@ -1,0 +1,50 @@
+<div [hidden]="pickMode">
+
+  <!--NAGŁÓWEK POLA BOCZNEGO-->
+  <app-side-panel-header [header]="header"></app-side-panel-header>
+  <div class="detail-side-container">
+    <ng-container *ngIf="dataSource.length > 0; else noPoints">
+      <!--<table mat-table *ngFor="let point of points" [points] = "points">-->
+      <table mat-table  [dataSource]="dataSource">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef > ID </th>
+          <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="X_WGS84">
+          <th mat-header-cell *matHeaderCellDef > Długość (WGS84) </th>
+          <td mat-cell *matCellDef="let element"> {{element.X_WGS84 | number: '.4'}} </td>
+        </ng-container>
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="Y_WGS84">
+          <th mat-header-cell *matHeaderCellDef > Szerokość (WGS84) </th>
+          <td mat-cell *matCellDef="let element"> {{element.Y_WGS84 | number: '.4'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="details">
+          <th mat-header-cell *matHeaderCellDef>Szczegóły</th>
+          <td mat-cell *matCellDef="let element">
+            <a routerLink="/home/detail/{{element.id}}">
+              <mat-icon class="eyeIcon" title="Zobacz szczegóły">remove_red_eye</mat-icon>
+            </a>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      </table>
+    </ng-container>
+    <ng-template #noPoints >
+      <div class="sadIcon">
+        <mat-icon >sentiment_dissatisfied</mat-icon>
+      </div>
+      <p class="noPointsNotification">Brak punktów o podanych kryteriach</p>
+      <p class="noPointsNotification">Jeśli chcesz dodać punkt przejdź do zakładki <a routerLink = "/home/points/">Dodaj punkt</a></p>
+      <button (click)="zmien()">klik</button>
+    </ng-template>
+
+  </div>
+</div>

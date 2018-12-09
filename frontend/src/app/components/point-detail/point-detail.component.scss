@@ -123,3 +123,17 @@ mat-radio-button {
   }
 }
 
+.circle{
+  background-color: $second-color;
+  font-size: 12px;
+  border-radius:50%;
+  height: 16px;
+  width: 16px;
+  text-align: center;
+  line-height: 16px;
+  float:left;
+  vertical-align: top;
+  position: relative;
+  top:-3px;
+  margin-left:3px;
+}

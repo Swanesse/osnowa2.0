@@ -17,7 +17,7 @@ python -m venv [nazwa_dla_twojego_wirtualnego_środowiska]
 
 np.
 
-python -m osnowa_venv
+python -m venv osnowa_venv
 
 4. Poczekaj, bo będzie wyglądać, jakby się zacięło. W końcu się zrobi i pokaże ponownie prompta.
 
@@ -39,7 +39,7 @@ osnowa_venv\Scripts\activate.bat
 
 Linux:
 
-source tutorial-env/bin/activate
+source osnowa_venv/bin/activate
 
 7. Zobaczysz (osnowa_venv) na początku prompta. Dopóki tam jest, pakiety instalowane poprzez `pip` zapisują się w Twoim wirtualnym środowisku. Jeśli nie będzie aktywne, to nie zadziałają też skrypty typu: python manage.py {coś}
 

@@ -9,6 +9,8 @@ import {faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 })
 export class ChooseHeightComponent implements OnInit {
   faInfo = faInfoCircle;
+  public mask = [/[- 0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[.0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/, /[0-9]/];
+
   @Input() pointForm: FormGroup;
   constructor() { }
 

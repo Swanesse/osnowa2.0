@@ -100,8 +100,9 @@
 
 
   <p>Stabilizacja: {{ point.stabilization }}</p>
-  <p>Punkt odnaleziono w terenie: {{ point.found }}</p>
+  <p class="left">Ilość odnalezień w terenie:</p><p class="circle">{{ point.found }}</p>
 
-  <app-photos-display [imagess]="images" (scrollBarView)="openPreview($event)" *ngIf="images.length > 0"></app-photos-display>
+  <app-photos-display [imagess]="images" (scrollBarView)="openPreview($event)"
+                      *ngIf="images.length > 0"></app-photos-display>
 
 </div>

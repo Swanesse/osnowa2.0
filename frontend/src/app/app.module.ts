@@ -20,7 +20,10 @@ import {
   MatBadgeModule,
   MatTooltipModule,
   MatMenuModule,
-  MatExpansionModule
+  MatExpansionModule,
+  MatDividerModule,
+  MatTableModule,
+  MatSortModule,
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -33,7 +36,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {PointDetailComponent} from "./components/point-detail/point-detail.component";
 import {PointResolveService} from "./services/point-resolve.service";
-import { NgxGalleryModule } from 'ngx-gallery';
+import {NgxGalleryModule} from 'ngx-gallery';
 import {PhotosAddComponent} from "./components/photos-add/photos-add.component";
 import {PointEditComponent} from "./components/point-edit/point-edit.component";
 import {SidePanelHeaderComponent} from "./components/side-panel-header/side-panel-header.component";
@@ -46,7 +49,10 @@ import {ChooseLocationComponent} from "./components/choose-location/choose-locat
 import {ChooseHeightComponent} from "./components/choose-height/choose-height.component";
 import {ChooseStabilizationComponent} from "./components/choose-stabilization/choose-stabilization.component";
 import {ToDotPipe} from "./pipes/to-dot.pipe";
-import { SimpleNotificationsModule } from 'angular2-notifications';
+import {SimpleNotificationsModule} from 'angular2-notifications';
+import {ResultsSearchComponent} from "./components/results-search/results-search.component";
+import {LeafletMarkerClusterModule} from "@asymmetrik/ngx-leaflet-markercluster";
+import {SearchComponent} from "./components/search/search.component";
 
 @NgModule({
   declarations: [
@@ -68,6 +74,8 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
     ChooseLocationComponent,
     ChooseStabilizationComponent,
     ToDotPipe,
+    ResultsSearchComponent,
+    SearchComponent,
   ],
   imports: [
     BrowserModule,
@@ -79,6 +87,9 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
     MatIconModule,
     MatBadgeModule,
     MatTooltipModule,
+    MatDividerModule,
+    MatTableModule,
+    MatSortModule,
     BrowserAnimationsModule,
     MatFormFieldModule,
     MatAutocompleteModule,
@@ -95,10 +106,11 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
     FontAwesomeModule,
     NgxGalleryModule,
     SimpleNotificationsModule.forRoot(),
+    LeafletMarkerClusterModule.forRoot(),
   ],
   providers: [MapService, PointResolveService],
   bootstrap: [AppComponent],
-  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {
 }

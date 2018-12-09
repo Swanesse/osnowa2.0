@@ -1,13 +1,6 @@
-# encoding: utf-8
-
 from django.db import models
-from django.template.defaultfilters import slugify
-from django.utils import timezone
-from django.contrib.auth.models import User
-
 
 class Point(models.Model):
-    # autor = models.ForeignKey('auth.User')
     X_WGS84 = models.FloatField()
     Y_WGS84 = models.FloatField()
     X_local = models.FloatField(blank=True, null=True)
@@ -29,15 +22,7 @@ class Point(models.Model):
     road = models.CharField(max_length=200, blank=True, null=True)
     house_number = models.CharField(max_length=200, blank=True, null=True)
     stabilization = models.CharField(max_length=200, blank=True, null=True)
-    found = models.BooleanField(default=False)
-
-    # def publish(self):
-    #     self.find_date = timezone.now()
-    #     self.save()
-    #
-    # def __str__(self):
-    #     return self.catalog_number
-
+    found = models.FloatField(blank=True, null=True, default = 0)
 
 class Image(models.Model):
     point = models.ForeignKey(Point, on_delete=models.CASCADE, )

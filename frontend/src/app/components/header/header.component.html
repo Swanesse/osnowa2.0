@@ -8,181 +8,29 @@
       </a>
     </div>
 
-    <div class="container-search">
-
-      <mat-form-field appearance="fill" class="search_field" (confirm)="searchPoint()">
-        <i matPrefix class="material-icons icon_search" title="Wyszukiwarka">search</i>
-        <input matInput type=search [disabled]=disabled [(ngModel)]="value" (keydown)="keyDownFunction($event)">
-        <mat-label>Szukaj punktu</mat-label>
-
-        <!--Wyczyść wyszukiwanie-->
-        <button mat-button *ngIf="value" matSuffix mat-icon-button (click)="value=''" class="close_button"
-                title="Wyczyść wyszukiwanie">
-          <i class='material-icons icon_close'>close</i>
-        </button>
-      </mat-form-field>
-
-      <!--Opcje wyszukiwania-->
-      <button mat-button [matMenuTriggerFor]="search" matSuffix (click)="disableInput()" class="search_details"
-              title="Opcje wyszukiwania"
-              [ngStyle]="{'background-color': getBackgroundColor()}">
-        <i class="material-icons">keyboard_arrow_down</i>
-      </button>
-      <mat-menu #search="matMenu" [overlapTrigger]="false" xPosition="before" (closed)="undisableInput()"
-                class="search_panel">
-        <form [formGroup]="searchForm" (ngSubmit)="onSubmit()" (click)="$event.stopPropagation();">
-
-          <mat-accordion [multi]="true">
-
-
-            <mat-expansion-panel [expanded]="allExpandState">
-              <mat-expansion-panel-header [collapsedHeight]="customCollapsedHeight"
-                                          [expandedHeight]="customExpandedHeight">
-                <mat-panel-title>
-                  Numer katalogowy
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <mat-form-field>
-                <mat-label>Numer katalogowy</mat-label>
-                <input matInput type=text formControlName="catalogNumber" placeholder="np. 15200">
-              </mat-form-field>
-            </mat-expansion-panel>
-
-
-            <mat-expansion-panel [expanded]="allExpandState">
-              <mat-expansion-panel-header [collapsedHeight]="customCollapsedHeight"
-                                          [expandedHeight]="customExpandedHeight">
-                <mat-panel-title>
-                  Typ osnowy
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <mat-checkbox formControlName="controlType1">Pozioma</mat-checkbox>
-              <mat-checkbox formControlName="controlType2">Wysokościowa</mat-checkbox>
-              <mat-checkbox formControlName="controlType3">Dwufunkcyjna</mat-checkbox>
-            </mat-expansion-panel>
-
-
-            <mat-expansion-panel [expanded]="allExpandState">
-              <mat-expansion-panel-header [collapsedHeight]="customCollapsedHeight"
-                                          [expandedHeight]="customExpandedHeight">
-                <mat-panel-title>
-                  Klasa
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <mat-checkbox formControlName="controlClass1">1 (podstawowa fundamentalna)</mat-checkbox>
-              <mat-checkbox formControlName="controlClass2">2 (podstawowa bazowa)</mat-checkbox>
-              <mat-checkbox formControlName="controlClass3">3 (szczegółowa)</mat-checkbox>
-            </mat-expansion-panel>
-
-
-            <mat-expansion-panel [expanded]="allExpandState">
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  Lokalizacja
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <mat-form-field class="small_input">
-                <mat-label>Kraj</mat-label>
-                <input type="text" placeholder="" matInput formControlName="country">
-              </mat-form-field>
-
-              <mat-form-field class="small_input">
-                <mat-label>Województwo</mat-label>
-                <input type="text" placeholder="" matInput formControlName="state">
-              </mat-form-field>
-
-              <mat-form-field class="small_input">
-                <mat-label>Powiat</mat-label>
-                <input type="text" placeholder="" matInput formControlName="district">
-              </mat-form-field>
-
-              <mat-form-field class="small_input">
-                <mat-label>Gmina</mat-label>
-                <input type="text" placeholder="" matInput formControlName="county">
-              </mat-form-field>
-
-
-              <mat-form-field class="small_input">
-                <mat-label>Miejscowość</mat-label>
-                <input type="text" placeholder="" matInput formControlName="locality">
-              </mat-form-field>
-
-              <mat-form-field class="small_input">
-                <mat-label>Dzielnica</mat-label>
-                <input type="text" placeholder="" matInput formControlName="city_district">
-              </mat-form-field>
-
-
-              <mat-form-field class="small_input">
-                <mat-label>Ulica</mat-label>
-                <input type="text" placeholder="" matInput formControlName="road">
-              </mat-form-field>
-
-              <mat-form-field class="small_input">
-                <mat-label>Numer domu</mat-label>
-                <input type="text" placeholder="" matInput formControlName="house_number">
-              </mat-form-field>
-
-            </mat-expansion-panel>
-
-
-            <mat-expansion-panel>
-              <mat-expansion-panel-header [collapsedHeight]="customCollapsedHeight"
-                                          [expandedHeight]="customExpandedHeight">
-                <mat-panel-title>
-                  Stabilizacja
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <mat-checkbox *ngFor="let way of stabilizationWays">{{ way }}</mat-checkbox>
-            </mat-expansion-panel>
-
-            <mat-expansion-panel>
-              <mat-expansion-panel-header [collapsedHeight]="customCollapsedHeight"
-                                          [expandedHeight]="customExpandedHeight">
-                <mat-panel-title>
-                  Aktualny widok mapy
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <mat-checkbox formControlName="controlType1">Punkty w aktualnym widoku mapy</mat-checkbox>
-            </mat-expansion-panel>
-
-          </mat-accordion>
-
-          <button mat-raised-button class="main-button search" href=""> Szukaj</button>
-        </form>
-
-      </mat-menu>
-    </div>
-
-
-    <button mat-button class="menu_button" [matMenuTriggerFor]="menu" *ngIf="innerWidth <= 680" title="Menu">
-      <i class="material-icons icon_menu">menu</i></button>
+    <button mat-button class="menu_button" [matMenuTriggerFor]="menu" *ngIf="innerWidth <= 630" title="Menu">
+      <i class="material-icons icon_menu">menu</i>
+    </button>
     <mat-menu #menu="matMenu" [overlapTrigger]="false" class="menu_panel">
 
       <div class="container-button">
-        <button mat-raised-button class="main-button" href="" routerLink="./points">Dodaj punkt</button>
+        <button mat-raised-button class="main-button" href="" routerLink="./points" title="Dodaj punkt">Dodaj punkt</button>
       </div>
 
-      <div class="container-info-contact">
-        <ul>
-          <li>
-            <button mat-button class="href-info-contact" href="" title="Informacje" (click)="$event.stopPropagation();">
-              Informacje
-            </button>
-          </li>
-          <li>
-            <button mat-button class="href-info-contact" href="" title="Kontakt">Kontakt</button>
-          </li>
-        </ul>
-      </div>
+      <app-search [searchForm]="searchForm"></app-search>
 
     </mat-menu>
 
-    <ng-container *ngIf="innerWidth >= 680">
+    <ng-container *ngIf="innerWidth >= 630">
+      <div (click)="$event.stopPropagation();">
+        <app-search [searchForm]="searchForm" (click)="$event.stopPropagation();"></app-search>
+      </div>
+
       <!--Button add point-->
       <div class="container-button">
-        <button mat-raised-button class="main-button" href="" routerLink="./points">Dodaj punkt</button>
+        <button mat-raised-button class="main-button" href="" routerLink="./points" title="Dodaj punkt">Dodaj punkt</button>
       </div>
+
     </ng-container>
   </nav>
 </header>

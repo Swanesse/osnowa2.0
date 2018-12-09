@@ -1,106 +1,9 @@
-from django.shortcuts import render
-from django.shortcuts import redirect
-from django.utils import timezone
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import PointSerializer, ImageSerializer
 from .models import Point, Image
-from django.shortcuts import render, get_object_or_404
-from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect
-from django.contrib.auth import views
-from django.http import HttpResponse
-from django.template.loader import get_template
-from django.template import RequestContext
-from pprint import pprint
-
-
-# Metoda ta zwraca metodę render, która składa w całość (renderuje) szablon - łączy HTMLe w całość, bo wcześniej je rozbiłam żeby nie przepisywać. Może też przesyłać do szablonu .html zmienne
-# def point_list(request):
-#     # Do zmiennej points przypisywana zostaje lista z obiektami klasy Point - wyciągana jest z bazy danych
-#     points = Point.objects.all()
-#
-#     return render(request, 'osnowa_app/point_list.html', {'points': points})
-#
-#
-# def informacje(request):
-#     return render(request, 'osnowa_app/informacje.html')
-#
-#
-# def kontakt(request):
-#     return render(request, 'osnowa_app/kontakt.html')
-#
-#
-# def search(request):
-#     # Do zmiennej points przypisywana zostaje lista z obiektami klasy Point - wyciągana jest z bazy danych
-#     points = Point.objects.all()
-#     # porównać, który punkt z bazy danych ma taką nazwę jaka została wpisana i zwrócić pk tego obiektu
-#     primary_key = -1
-#     for point in points:
-#         if request.GET["q"] == point.numer_katalogowy:
-#             primary_key = point.pk
-#
-#     return HttpResponseRedirect("/point/" + str(primary_key) + "/")
-#
-#
-# def point_detail(request, pk):
-#     point = get_object_or_404(Point, pk=pk)
-#
-#     # print ("Tutaj znajduje sie" + str(request.POST["uszkodzony"]) + "A tu jest koniec")
-#
-#     print(str(request.POST))
-#
-#     if request.method == "POST" and 'odnaleziony' in request.POST:
-#         print(str(request.POST))
-#         point.odnaleziony += 1
-#         point.save()
-#         return redirect('point_detail', pk=point.pk)
-#
-#     if request.method == "POST" and 'uszkodzony' in request.POST:
-#         print(str(request.POST))
-#         point.uszkodzony += 1
-#         point.save()
-#         return redirect('point_detail', pk=point.pk)
-#
-#         # przesłanie zmiennej do szablonu 'nazwa zmiennej' :
-#     return render(request, 'osnowa_app/point_detail.html', {'point': point})
-#
-
-@api_view(['get'])
-def points(request):
-    # wyciąga z bazy danych info o punktach.
-
-    # gte - grater than or equal
-    points = Point.objects.all().filter(Y_WGS84__lte=request.GET['north'], Y_WGS84__gte=request.GET['south'],
-                                        X_WGS84__lte=request.GET['east'], X_WGS84__gte=request.GET['west'])
-
-    # tak serializuję wiele modeli
-    pointSerializer = PointSerializer(points,
-                                      many=True)  # serializer zamienia obiekt Pythonowy na jakiś format, np. JSON
-
-    return Response(pointSerializer.data)
-
-
-@api_view(['get'])
-def point_get(request):
-    # wyciąga z bazy danych info o jednym punkcie.
-
-    point = Point.objects.get(id=request.GET['id'])
-
-    serializer1 = PointSerializer(point)
-    pictures = Image.objects.all().filter(point_id=request.GET['id'])
-    serializer2 = ImageSerializer(pictures, many=True)
-
-    Serializer_list = [serializer1.data, serializer2.data]
-
-    content = {
-        'status': 1,
-        'responseCode': status.HTTP_200_OK,
-        'data': Serializer_list,
-    }
-    return Response(content)
-
+from django.db.models import Q
 
 @api_view(['post'])
 def point_new(request):
@@ -142,91 +45,90 @@ def point_edit(request):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# point.created_date = timezone.now()
-# zapisanie punktu w bazie danych
-# point.save()
-# return redirect('point_detail', pk=point.pk)
-# else:
-#     form = PointForm()
-# return render(request, 'osnowa_app/point_edit.html', {'form': form})
-# return Response(point)
+@api_view(['get'])
+def point_get(request):
+    # wyciąga z bazy danych info o jednym punkcie.
+
+    point = Point.objects.get(id=request.GET['id'])
+
+    serializer1 = PointSerializer(point)
+    pictures = Image.objects.all().filter(point_id=request.GET['id'])
+    serializer2 = ImageSerializer(pictures, many=True)
+
+    Serializer_list = [serializer1.data, serializer2.data]
+
+    content = {
+        'status': 1,
+        'responseCode': status.HTTP_200_OK,
+        'data': Serializer_list,
+    }
+    return Response(content)
+
+@api_view(['get'])
+def points(request):
+    # wyciąga z bazy danych info o wszystkich punktach w aktualnym widoku mapy.
+
+    # gte - grater than or equal
+    # lte - less than or equal
+    points = Point.objects.all().filter(Y_WGS84__lte=request.GET['north'], Y_WGS84__gte=request.GET['south'], X_WGS84__lte=request.GET['east'], X_WGS84__gte=request.GET['west'])
+
+    # tak serializuję wiele modeli
+    pointSerializer = PointSerializer(points, many=True)  # serializer zamienia obiekt Pythonowy na jakiś format, np. JSON
+
+    return Response(pointSerializer.data)
 
 
-# def point_edit(request, pk):
-#     point = get_object_or_404(Point, pk=pk)
-#     if request.method == "POST":
-#         # to jest wywołanie konstruktora klasy PointForm
-#         form = PointForm(request.POST, request.FILES, instance=point)
-#         if form.is_valid():
-#             # save zwraca egzemplarz modelu związanego z klasą PointForm
-#             point = form.save(commit=False)
-#             point.author = request.user
-#             point.created_date = timezone.now()
-#             point.save()
-#             return redirect('point_detail', pk=point.pk)
-#     else:
-#         form = PointForm(instance=point)
-#     return render(request, 'osnowa_app/point_edit.html', {'form': form})
-#
-#
-# def login_user(request):
-#     """
-#     django.contrib.auth.views.login login view
-#     """
-#     # jeśli użytkownik nie jest zalogowany (uwierzytelniony)
-#     if not request.user.is_authenticated():
-#         return views.login(request, template_name='osnowa_app/login.html')
-#     else:
-#         return HttpResponseRedirect("/user/")
-#
-#
-# def user(request):
-#     """
-#     django.contrib.auth.views.login login view
-#     """
-#     # jeśli użytkownik nie jest zalogowany (uwierzytelniony)
-#     if not request.user.is_authenticated():
-#         return views.login(request, template_name='osnowa_app/login.html')
-#     else:
-#         return render(request, 'osnowa_app/user.html')
-#
-#
-# def register(request):
-#     """
-#     rejestracja użytkownika
-#     """
-#
-#     if request.method == 'POST':
-#         form = FormularzRejestracji(request.POST)
-#         if form.is_valid():
-#             user = User.objects.create_user(
-#                 username=form.cleaned_data['username'],
-#                 password=form.cleaned_data['password1'],
-#                 email=form.cleaned_data['email']
-#             )
-#             user.last_name = form.cleaned_data['phone']
-#             user.save()
-#             if form.cleaned_data['log_on']:
-#                 user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password1'])
-#                 login(request, user)
-#                 template = get_template("osnowa_app/point_list.html")
-#                 variables = RequestContext(request, {'user': user})
-#                 output = template.render(variables)
-#                 return HttpResponseRedirect("/")
-#             else:
-#                 template = get_template("osnowa_app/register_success.html")
-#                 variables = RequestContext(request, {'username': form.cleaned_data['username']})
-#                 output = template.render(variables)
-#                 return HttpResponse(output)
-#
-#     else:
-#         template = get_template("osnowa_app/register.html")
-#         form = FormularzRejestracji()
-#         variables = {'form': form}
-#         output = template.render(variables, request)
-#         return HttpResponse(output)
-#
-#
-# def logout_user(request):
-#     logout(request)
-#     return HttpResponseRedirect("/")
+@api_view(['get'])
+def point_search(request):
+    # wyciąga z bazy danych info o wszystkich punktach spełniajacych warunek wyszukiwania.
+    # fields = Point.__meta.get_all_field_names()
+
+    points1 = Point.objects.all().filter(Q(state=request.GET['searchCondition']) | Q(district=request.GET['searchCondition']) | Q(country=request.GET['searchCondition']))
+    # points = Point.objects.all().filter(X_local=float(request.GET['searchCondition']))
+    # points = Point.objects.all().filter()
+
+    try:
+        float(request.GET['searchCondition'])
+        print('True')
+        points2 = (Point.objects.all().filter(Q(X_WGS84=float(request.GET['searchCondition'])) | Q(Y_WGS84=float(request.GET['searchCondition'])) | Q(X_local=float(request.GET['searchCondition'])) | Q(Y_local=float(request.GET['searchCondition'])) | Q(hAmsterdam=float(request.GET['searchCondition'])) | Q(hKronsztadt=float(request.GET['searchCondition']))))
+        points = points1 | points2
+    except:
+        print('False')
+        points = points1
+
+    # tak serializuję wiele modeli
+    pointSerializer = PointSerializer(points, many=True)  # serializer zamienia obiekt Pythonowy na jakiś format, np. JSON
+
+    return Response(pointSerializer.data)
+
+
+@api_view(['get'])
+def points_search(request):
+    # wyciąga z bazy danych info o wszystkich punktach spełniajacych wszystkie warunki wyszukiwania.
+    # fields = Point.__meta.get_all_field_names()
+    print('--------------------------------------------------------')
+    print(request.GET['catalogNumber'])
+    print('--------------------------------------------------------')
+    controlType1 = 'null'
+    controlType2 = 'null'
+    controlType3 = 'null'
+    if request.GET['controlType1'] == 'true':
+        controlType1 = 'pozioma'
+
+    if request.GET['controlType2'] == 'true':
+        controlType2 = 'wysokosciowa'
+
+    if request.GET['controlType3'] == 'true':
+        controlType3 = 'dwufunkcyjna'
+
+    points = Point.objects.all().filter(Q(catalog_number=request.GET['catalogNumber']) & (Q(controlType=controlType1) | Q(controlType=controlType2) | Q(controlType=controlType3) | Q(controlType='null')))
+    # points = Point.objects.all().filter(X_local=float(request.GET['searchCondition']))
+    # points = Point.objects.all().filter()
+
+    # tak serializuję wiele modeli
+    pointSerializer = PointSerializer(points, many=True)  # serializer zamienia obiekt Pythonowy na jakiś format, np. JSON
+
+    return Response(pointSerializer.data)
+
+
+

@@ -9,7 +9,7 @@ import {InMemoryDbService} from 'angular-in-memory-web-api';
 @Injectable({
   providedIn: 'root'
 })
-export class HttpService implements InMemoryDbService {
+export class HttpService{
 
   constructor(private http: HttpClient) {
   }
@@ -44,7 +44,6 @@ export class HttpService implements InMemoryDbService {
     return this.http.put<Point>('http://localhost:8000/point/edit', formData);
   }
 
-
   getPoint(id) {
     const param = new HttpParams().set('id', id + '');
     return this.http.get('http://localhost:8000/point/get', {params: {id: id}});
@@ -69,15 +68,54 @@ export class HttpService implements InMemoryDbService {
     });
   }
 
-  createDb() {
-    let users = [
-      {id: 1, name: 'Tomasz'},
-      {id: 2, name: 'Marcin'},
-      {id: 3, name: 'Robert'},
-      {id: 4, name: 'Joanna'},
-      {id: 5, name: 'Anna'}
-    ];
-    return {users};
+  searchPoint(searchCondition): Observable<Array<Point>>{
+    return this.http.get<Array<Point>>('http://localhost:8000/point/search', {
+      params: {
+        searchCondition: searchCondition
+      }
+    });
+  }
+
+  searchPoints(catalogNumber,
+  controlType1,
+  controlType2,
+  controlType3,
+  controlClass1,
+  controlClass2,
+  controlClass3,
+  currentView,
+  country,
+  state,
+  district,
+  county,
+  locality,
+  city_district,
+  road,
+  house_number,
+  stabilization,
+  found): Observable<Array<Point>>{
+    return this.http.get<Array<Point>>('http://localhost:8000/points/search', {
+      params: {
+        catalogNumber:catalogNumber,
+        controlType1:controlType1,
+        controlType2:controlType2,
+        controlType3:controlType3,
+        controlClass1:controlClass1,
+        controlClass2:controlClass2,
+        controlClass3:controlClass3,
+        currentView:currentView,
+        country:country,
+        state:state,
+        district:district,
+        county:county,
+        locality:locality,
+        city_district:city_district,
+        road:road,
+        house_number:house_number,
+        stabilization:stabilization,
+        found:found
+      }
+    });
   }
 }
 

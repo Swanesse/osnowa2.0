@@ -1,26 +1,31 @@
-import {Component, HostListener, ViewEncapsulation, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup} from "@angular/forms";
+import {HttpService} from "../../services/http.service";
+import {Router} from "@angular/router";
+import {MapService} from "../../services/map.service";
+import {MatMenuTrigger} from "@angular/material";
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  encapsulation: ViewEncapsulation.None
 })
 export class HeaderComponent implements OnInit{
-  value = '';
-  disabled = 'false';
+  @ViewChild(MatMenuTrigger) menuTrigger: MatMenuTrigger;
+
   innerWidth = window.innerWidth;
-  stabilizationWays: Array<String> = ['bolec', 'pal drewniany', 'kamień naturalny', 'pręt', 'rurka', 'słupek betonowy', 'szczegół terenowy', 'inny'];
   searchForm: FormGroup;
-  panelOpenState = false;
-  step = 0;
-  customCollapsedHeight: string = '40px';
-  customExpandedHeight: string = '40px';
-  allExpandState = false;
 
 
-  constructor() {
+  constructor(private httpService: HttpService,
+              private router: Router,
+              private mapService: MapService,) {
+    this.mapService.setCloseMenu().subscribe( icon => {
+      if(this.menuTrigger){
+        this.menuTrigger.closeMenu();
+      }
+
+    });
   }
 
   ngOnInit() {
@@ -58,42 +63,10 @@ export class HeaderComponent implements OnInit{
     this.innerWidth = window.innerWidth;
   }
 
-  disableInput() {
-    console.log('działa');
-    this.disabled = 'true';
-    this.value = '';
-  }
 
 
-  undisableInput(){
-    console.log('undisabled');
-    this.disabled = 'false';
-  }
-
-  keyDownFunction(event){
-
-    if(event.keyCode == 13) {
-      console.log('Wciśnięto ENTER - wykonaj zapytanie do BD!!!');
-      this.value ='';
-      event.target.blur();
-    }
-    console.log('Wpisany tekst: ', event.target.value);
-  }
-
-  getBackgroundColor() {
-    return this.disabled === 'true' ? '#eeeeee' : 'white';
-  }
 
 
-  setStep(index: number) {
-    this.step = index;
-  }
 
-  nextStep() {
-    this.step++;
-  }
 
-  prevStep() {
-    this.step--;
-  }
 }

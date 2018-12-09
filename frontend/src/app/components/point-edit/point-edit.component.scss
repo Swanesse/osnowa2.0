@@ -19,3 +19,58 @@
     padding-top: 10px;
   }
 }
+
+.full-width {
+  width: 100%;
+}
+
+.main-button {
+  color: #4d4d4d;
+  border-radius: 0;
+  width: 340px;
+  background-color: $primary-color;
+  margin-top: 40px;
+
+  &:hover {
+    background-color: $primary-color-darker;
+  }
+
+  @media only screen and (max-width: 500px) {
+    width: 243px;
+  }
+}
+
+
+
+.checkboxPoint {
+  display: block;
+  margin-top: 20px;
+}
+
+
+.more {
+  position: relative;
+  left: 165px;
+}
+
+.form_element {
+  margin-bottom: 5px;
+
+  label {
+    display: inherit;
+    margin-bottom: 5px;
+    font-size: 15px;
+
+    @media only screen and (max-width: 500px) {
+      margin-top: 10px;
+    }
+  }
+}
+
+
+
+
+mat-radio-button {
+  padding: 8px;
+  display: block;
+}

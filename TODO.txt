@@ -1,9 +1,7 @@
 TODO dodać możliwość wybierania też innych systemów niż WGS84 i 2000, żeby ludzie z innych krajów też mogli korzystać
-TODO uprościć funkcje transformujące (z 3 funkcji zrobić jedną)
 TODO poprawić walidację - Walidacja pola Y powinna zależeć od x (w której strefie teraz jestem)
-TODO poprawić diagram - bo Y>90 a nie >180
-TODO zrobić diagramy do dwóch pozostałych algorytmów
 TODO get, w którego promisie będzie przekierowanie do ściżki /home (jeśli się uda zapytanie do serwera. Jeśli nie - wyświetl błąd)
 TODO Walidacja na backendzie jest, ale trzeba dodać notyfikacje informujące użytkownika, że coś jest nie tak. Trzeba też jak przyjdzie błąd z backendu podświetlić pole, którego ten błąd dotyczy. Na przykład nie chcemy żeby powtarzał się numer katalogowy
 TODO sprawdzić końcówkę pliku tak, żeby nie można było wysłać innego pliku niż zdjęcie. Teraz jeśli wrzuci się np. plik .pdf frontend wariuje, nie mówiąc o backendzie
 TODO Teraz jak wejdę na link edit to ściągają się dane o punkcie z bazy danych. Trzeba zrobić tak, żeby po wejściu na link się ściągały, ale po wejściu na edit klikając długopisik dane się nie ściągały, ale przekazywały z detail
+TODO ngx-leaflet-markercluster - grupowanie zbyt dużej ilości punktów

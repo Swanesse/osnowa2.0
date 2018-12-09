@@ -22,7 +22,7 @@
 
       <app-photos-add (filesEmitter)="grtPhotos($event)"></app-photos-add>
 
-      <mat-checkbox class="checkboxPoint" formControlName="found">Punkt odnaleziono w terenie</mat-checkbox>
+      <mat-checkbox class="checkboxPoint" (click)="changeChecked()">Odnalazłem punkt w terenie</mat-checkbox>
 
       <button type="submit" mat-raised-button class="main-button">Zapisz</button>
     </form>

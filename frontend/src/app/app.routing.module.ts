@@ -5,6 +5,7 @@ import {HomeComponent} from './components/home/home.component';
 import {PointDetailComponent} from "./components/point-detail/point-detail.component";
 import {PointResolveService} from "./services/point-resolve.service";
 import {PointEditComponent} from "./components/point-edit/point-edit.component";
+import {ResultsSearchComponent} from "./components/results-search/results-search.component";
 
 const appRoutes: Routes = [
   {
@@ -29,6 +30,10 @@ const appRoutes: Routes = [
         path: 'edit/:id',
         resolve: {point : PointResolveService},
         component: PointEditComponent,
+      },
+      {
+        path: 'search',
+        component: ResultsSearchComponent,
       },
     ]
   }

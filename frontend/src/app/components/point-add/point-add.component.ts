@@ -57,7 +57,7 @@ export class PointAddComponent implements OnDestroy{
     house_number: [null],
 
     stabilization: [null],
-    found: [false]
+    found: [0]
   });
 
   constructor(private httpService: HttpService,
@@ -114,6 +114,10 @@ export class PointAddComponent implements OnDestroy{
   }
 
   onSubmit() {
+    console.log('formularz: ', this.pointForm);
+    // if (){
+    //   this.pointForm.value.found = 1;
+    // }
     if (this.pointForm.valid) {
       Object.keys(this.pointForm.value).forEach(key => {
         this.point[key] = this.pointForm.value[key] === '' ? null : this.pointForm.value[key];
@@ -134,5 +138,13 @@ export class PointAddComponent implements OnDestroy{
 
   changePickMode(pickMode) {
     this.pickMode = pickMode;
+  }
+
+  changeChecked(){
+    if(this.pointForm.value.found == 0){
+      this.pointForm.value.found =1
+    } else {
+      this.pointForm.value.found = 0;
+    }
   }
 }

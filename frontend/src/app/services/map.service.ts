@@ -12,6 +12,8 @@ export class MapService {
   private centerView = new Subject<Array<number>>();
   private removePoint = new Subject<Array<number>>();
   private restorePoint = new Subject();
+  private pointList = new Subject();
+  private doCloseMenu = new Subject();
   private pointIdToDelete = new Subject();
   private deletePoint = new Subject();
   private turningOnPickMode = new Subject<any>();
@@ -112,6 +114,15 @@ export class MapService {
     this.centerView.next(point);
   }
 
+  //^^^^^^^^^^^^^^^^^^Przesłanie wyników wyszukiwania do komponentu WYNIKI WYSZUKIWANIA----------------------------
+  getSearchPoints(){
+    return this.pointList.asObservable();
+  }
+
+  setSearchPoints(points){
+    this.pointList.next(points);
+  }
+
   //^^^^^^^^^^^^^^^^^^Kliknięcie na PANELU PUNKTU - przejście w tryb klikania na MAPIE----------------------------
   // Do przesyłania informacji, że panel dodawania znika a my mamy wybrać punkt z mapy
   // daj nam dostęp do skrzynki otrzymującej informacje o zmianach stanu turningOnPickMode
@@ -132,5 +143,13 @@ export class MapService {
   changeIcon(ico) {
     this.pointIcon = ico.toString();
     this.icon.next(this.pointIcon);
+  }
+
+  setCloseMenu(){
+    return this.doCloseMenu.asObservable();
+  }
+
+  closeMenu(){
+    this.doCloseMenu.next();
   }
 }

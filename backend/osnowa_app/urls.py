@@ -14,13 +14,20 @@ urlpatterns = [
     # link do tworzenia nowego punktu
     url(r'^point/new$', views.point_new, name='point_new'),
 
-# link do edytowania punktu
+    # link do edytowania punktu
     url(r'^point/edit$', views.point_edit, name='point_edit'),
 
+    # link do pobierania własności 1 punktu
     url(r'^point/get$', views.point_get, name='point_get'),
 
     # Wyświetlenie wszystkich punktów z bazy na mapie
     url(r'^point/get-all$', views.points, name='points'),
+
+    # link do wyszukiwania punktów
+    url(r'^point/search$', views.point_search, name='point_search'),
+
+    # link do wyszukiwania punktów z kryteriami
+    url(r'^points/search$', views.points_search, name='points_search'),
 
     #
     # # edycja formularza

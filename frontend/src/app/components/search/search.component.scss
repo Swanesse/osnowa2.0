@@ -105,6 +105,11 @@ button.menu_button {
 
 .search_field {
   width: 300px;
+  @media only screen and (max-width: 630px) {
+    width: 233px;
+    margin-left: 10px;
+
+  }
 }
 
 .mat-form-field-appearance-fill {
@@ -136,14 +141,17 @@ button.menu_button {
 
 .mat-form-field-appearance-fill .mat-form-field-suffix {
   height: 100%;
+
   .material-icons {
     vertical-align: top;
   }
+
   .mat-icon-button.close_button {
     height: 100% !important;
     width: 24px !important;
     line-height: 30px !important;
   }
+
   .mat-button-wrapper {
     height: 100%;
     display: block;
@@ -157,6 +165,7 @@ button.menu_button {
   padding: 0;
   margin-top: 0;
   height: 100%;
+
   input {
     margin: 0;
   }
@@ -214,12 +223,13 @@ input[type="search"]::-webkit-search-results-decoration {
   min-width: 20px !important;
   padding: 3px 0 !important;
   line-height: 30px;
-  top: 2px;
+  top: -1px;
 
   .mat-button-wrapper {
     display: block;
     height: 24px;
     vertical-align: top;
+
     .material-icons {
       vertical-align: top;
       font-size: 15px;
@@ -230,24 +240,39 @@ input[type="search"]::-webkit-search-results-decoration {
 
 .mat-menu-panel.search_panel {
   border-radius: 0;
-
+  width: 320px;
+  max-width: 320px;
   font-size: 13px;
   padding: 10px;
+  @media only screen and (max-width: 630px) {
+    width: 250px;
+  }
+
   .mat-menu-content {
     padding: 0;
+
     label {
       display: block;
     }
   }
+
+
 }
 
 form {
   .mat-form-field {
     width: 220px;
+    @media only screen and (max-width: 630px) {
+      width: 195px;
+    }
   }
+
   .small_input {
     width: 110px;
     padding-right: 5px;
+    @media only screen and (max-width: 630px) {
+      width: 193px;
+    }
   }
 }
 
@@ -262,6 +287,15 @@ div.mat-expansion-panel-content:not(.mat-expanded) {
 
 .mat-expansion-panel-header {
   height: 48px;
+  @media only screen and (max-width: 630px) {
+    padding: 10px !important;
+  }
+}
+
+.mat-expansion-panel-body{
+  @media only screen and (max-width: 630px) {
+    padding: 0 10px 10px 10px !important;
+  }
 }
 
 button.main-button.search {
