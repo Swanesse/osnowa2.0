@@ -16,7 +16,7 @@ export class SearchComponent implements OnInit {
   customCollapsedHeight: string = '40px';
   customExpandedHeight: string = '40px';
   allExpandState = false;
-  stabilizationWays: Array<String> = ['bolec', 'pal drewniany', 'kamień naturalny', 'pręt', 'rurka', 'słupek betonowy', 'szczegół terenowy', 'inny'];
+  stabilizationWays: Array<String> = ['słup betonowy', 'słup granitowy lub bazaltowy', 'odlew żeliwny w kształcie ostrosłupa', 'skrzynka z odlewu żeliwnego', 'pal drewniany', 'rura kanalizacyjna wypełniona cementem z gwoździem osadzonym w górnej części znaku', 'słup obserwacyjny', 'reper', 'stacja referencyjna', 'bolec', 'kamień naturalny', 'pręt', 'rurka', 'szczegół terenowy', 'inny'];
   panelOpenState = false;
   disabled = 'false';
   points;
