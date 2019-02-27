@@ -12,7 +12,8 @@ import {
   ActivatedRoute
 } from "@angular/router";
 import {PointMarker} from "../../models/PointMarker";
-import {Observable} from "rxjs/Rx";
+import { interval } from 'rxjs';
+import "rxjs/Rx";
 
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
@@ -260,7 +261,7 @@ export class MapComponent {
   }
 
   onMapReady(map: Map) {
-    Observable.interval(1000).takeWhile(() => true).subscribe(() => this.getCoordinates());
+    interval(1000).takeWhile(() => true).subscribe(() => this.getCoordinates());
     this.map = map;
     if (this.editCoordinates !== undefined) {
       this.map.setView(latLng(this.editCoordinates), 19);
