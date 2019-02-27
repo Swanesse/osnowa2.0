@@ -83,17 +83,14 @@ def point_search(request):
     # wyciąga z bazy danych info o wszystkich punktach spełniajacych warunek wyszukiwania.
     # fields = Point.__meta.get_all_field_names()
 
-    points1 = Point.objects.all().filter(Q(state=request.GET['searchCondition']) | Q(district=request.GET['searchCondition']) | Q(country=request.GET['searchCondition']))
+    points1 = Point.objects.all().filter(Q(state__icontains=request.GET['searchCondition']) | Q(district__icontains=request.GET['searchCondition']) | Q(country__icontains=request.GET['searchCondition']) | Q(catalog_number__icontains=request.GET['searchCondition']) )
     # points = Point.objects.all().filter(X_local=float(request.GET['searchCondition']))
     # points = Point.objects.all().filter()
 
     try:
-        float(request.GET['searchCondition'])
-        print('True')
-        points2 = (Point.objects.all().filter(Q(X_WGS84=float(request.GET['searchCondition'])) | Q(Y_WGS84=float(request.GET['searchCondition'])) | Q(X_local=float(request.GET['searchCondition'])) | Q(Y_local=float(request.GET['searchCondition'])) | Q(hAmsterdam=float(request.GET['searchCondition'])) | Q(hKronsztadt=float(request.GET['searchCondition']))))
+        points2 = (Point.objects.all().filter(Q(X_WGS84__icontains=float(request.GET['searchCondition'])) | Q(Y_WGS84__icontains=float(request.GET['searchCondition'])) | Q(X_local__icontains=float(request.GET['searchCondition'])) | Q(Y_local__icontains=float(request.GET['searchCondition'])) | Q(hAmsterdam__icontains=float(request.GET['searchCondition'])) | Q(hKronsztadt__icontains=float(request.GET['searchCondition'])) ))
         points = points1 | points2
     except:
-        print('False')
         points = points1
 
     # tak serializuję wiele modeli
@@ -109,19 +106,25 @@ def points_search(request):
     print('--------------------------------------------------------')
     print(request.GET['catalogNumber'])
     print('--------------------------------------------------------')
+    catalogNumber = None
+    points = Point.objects.all()
     controlType1 = 'null'
     controlType2 = 'null'
     controlType3 = 'null'
-    if request.GET['controlType1'] == 'true':
-        controlType1 = 'pozioma'
 
+
+    if request.GET['catalogNumber'] != 'null':
+        catalogNumber = request.GET['catalogNumber']
+        points = points.filter(Q(catalog_number__icontains=catalogNumber))
+    if request.GET['controlType1'] == 'true' and request.GET['controlType2'] == 'true':
+        points = points.filter((Q(controlType='pozioma') | Q(controlType='wysokosciowa')))
     if request.GET['controlType2'] == 'true':
-        controlType2 = 'wysokosciowa'
+        points = points.filter((Q(controlType=controlType2)))
 
     if request.GET['controlType3'] == 'true':
         controlType3 = 'dwufunkcyjna'
 
-    points = Point.objects.all().filter(Q(catalog_number=request.GET['catalogNumber']) & (Q(controlType=controlType1) | Q(controlType=controlType2) | Q(controlType=controlType3) | Q(controlType='null')))
+
     # points = Point.objects.all().filter(X_local=float(request.GET['searchCondition']))
     # points = Point.objects.all().filter()
 
@@ -129,6 +132,7 @@ def points_search(request):
     pointSerializer = PointSerializer(points, many=True)  # serializer zamienia obiekt Pythonowy na jakiś format, np. JSON
 
     return Response(pointSerializer.data)
+
 
 
 

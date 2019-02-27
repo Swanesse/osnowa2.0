@@ -19,6 +19,7 @@ export class SearchComponent implements OnInit {
   stabilizationWays: Array<String> = ['bolec', 'pal drewniany', 'kamień naturalny', 'pręt', 'rurka', 'słupek betonowy', 'szczegół terenowy', 'inny'];
   panelOpenState = false;
   disabled = 'false';
+  points;
   step = 0;
   @Input() searchForm: FormGroup;
   value = '';
@@ -71,7 +72,7 @@ export class SearchComponent implements OnInit {
       this.searchForm.get('stabilization').value,
       this.searchForm.get('found').value).subscribe(
       points => {
-        this.mapService.setSearchPoints(points);
+        // this.mapService.setSearchPoints(points);
         this.router.navigate(['/home/search/']);
         this.menuTrigger.closeMenu();
         this.mapService.closeMenu();
@@ -103,13 +104,17 @@ export class SearchComponent implements OnInit {
       event.target.blur();
       this.httpService.searchPoint(event.target.value).subscribe(
         points => {
-          this.mapService.setSearchPoints(points);
-          this.router.navigate(['/home/search/']);
-          this.mapService.closeMenu();
+          this.points = points;
+          this.mapService.setSearchPoints(this.points);
+
         },
         error => {
           console.log(error.statusText);
         });
+      console.log('-------------');
+
+      this.router.navigate(['/home/search/']);
+      this.mapService.closeMenu();
     }
     console.log('Wpisany tekst: ', event.target.value);
   }

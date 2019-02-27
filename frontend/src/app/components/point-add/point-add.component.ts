@@ -9,7 +9,7 @@ import {MapService} from "../../services/map.service";
 
 
 @Component({
-  selector: 'app-point-details',
+  selector: 'app-point-add',
   templateUrl: './point-add.component.html',
   styleUrls: ['./point-add.component.scss']
 })

@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {Observable} from "rxjs/Rx";
+import {Observable} from "rxjs";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Point} from "../models/Point";
-import 'rxjs/add/operator/map'
+
 
 import {InMemoryDbService} from 'angular-in-memory-web-api';
 

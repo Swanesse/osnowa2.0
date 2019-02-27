@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
+import {Observable, Subject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {Point} from "../models/Point";
 
@@ -116,6 +115,7 @@ export class MapService {
 
   //^^^^^^^^^^^^^^^^^^Przesłanie wyników wyszukiwania do komponentu WYNIKI WYSZUKIWANIA----------------------------
   getSearchPoints(){
+    console.log('To sie robi wiele razy?');
     return this.pointList.asObservable();
   }
 
