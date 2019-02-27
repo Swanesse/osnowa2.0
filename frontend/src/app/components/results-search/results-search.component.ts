@@ -19,13 +19,11 @@ export class ResultsSearchComponent implements OnInit, AfterViewInit{
   constructor(private mapService: MapService,
               private zone: NgZone,) {
     this.mapService.getSearchPoints().subscribe((points) => {
-      console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', points);
+      console.log('1:" ', points);
       this.zone.run(() => {
         this.points = points;
-      })
-
-      console.log('===================', this.points);
-      this.dataSource = points;
+        this.dataSource = points;
+      });
       // this.dataSource.sort = this.sort;
       this.open = true;
     });

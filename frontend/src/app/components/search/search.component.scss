@@ -280,11 +280,6 @@ mat-accordion {
   font-size: 13px;
 }
 
-div.mat-expansion-panel-content:not(.mat-expanded) {
-  height: 0 !important;
-  visibility: hidden !important;
-}
-
 .mat-expansion-panel-header {
   height: 48px;
   @media only screen and (max-width: 630px) {
