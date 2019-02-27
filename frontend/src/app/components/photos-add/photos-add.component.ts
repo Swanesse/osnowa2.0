@@ -15,6 +15,7 @@ export class PhotosAddComponent {
   constructor(private _notificationsService: NotificationsService,) {
 
   }
+
   public options = {
     timeOut: 0,
     lastOnBottom: true,
@@ -59,35 +60,50 @@ export class PhotosAddComponent {
 
   handleFileInput(file: FileList) {
     if (file.length > 0) {
+      let unproperFiles = false;
 
       for (let i = 0; i < file.length; i++) {
-        const reader = new FileReader();
-
-        // Gdy zostanie wczytany plik, on ten plik przechwytuje. Jeden reader może przechwycić tylko jeden plik.
-        reader.onload = (event: any) => {
-
-          let theSame = false;
-          for (let image of this.files.imageUrls) {
-            if (image === event.target.result) {
-              theSame = true;
-              break;
-            }
-          }
-          if (theSame === false) {
-            this.files.imageUrls.push(event.target.result);
-            this.files.fileToUpload.push(file[i]);
-
-          }
-        };
-
-        reader.onerror = function (event) {
-          console.error("File could not be read! Code");
-        };
-
-        // Zamienia plik na DataURL, dzięki czemu możemy go wyświetlić w przeglądarce
-        reader.readAsDataURL(file[i]);
+        if (!file[i].name.toLowerCase().endsWith('.jpg')
+          && !file[i].name.toLowerCase().endsWith('.jpeg')
+          && !file[i].name.toLowerCase().endsWith('.png')) {
+          this._notificationsService.warn('Uwaga', 'Zdjęcie tylko w formacie: JPG, JPEG, PNG');
+          unproperFiles = true;
+          return;
+        }
       }
-      this.filesEmitter.emit(this.files);
+
+      for (let i = 0; i < file.length; i++) {
+        if (unproperFiles === false) {
+          const reader = new FileReader();
+
+          // Gdy zostanie wczytany plik, on ten plik przechwytuje. Jeden reader może przechwycić tylko jeden plik.
+          reader.onload = (event: any) => {
+
+            let theSame = false;
+            for (let image of this.files.imageUrls) {
+              if (image === event.target.result) {
+                theSame = true;
+                break;
+              }
+            }
+            if (theSame === false) {
+              this.files.imageUrls.push(event.target.result);
+              this.files.fileToUpload.push(file[i]);
+
+            }
+          };
+
+          reader.onerror = function (event) {
+            console.error("File could not be read! Code");
+          };
+
+          // Zamienia plik na DataURL, dzięki czemu możemy go wyświetlić w przeglądarce
+          reader.readAsDataURL(file[i]);
+        }
+      }
+      if (unproperFiles === false) {
+        this.filesEmitter.emit(this.files);
+      }
     }
   }
 }
