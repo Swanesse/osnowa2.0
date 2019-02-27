@@ -14,6 +14,9 @@ import {
 import {PointMarker} from "../../models/PointMarker";
 import {Observable} from "rxjs/Rx";
 
+import * as L from 'leaflet';
+import 'leaflet.markercluster';
+
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -48,6 +51,9 @@ export class MapComponent {
     // Ustawia punkt widoczny na początku - po wejściu na mapę
     center: latLng([50.0537961783603, 19.93534952402115])
   };
+
+  markerClusterData: any[] = [];
+  markerClusterOptions: L.MarkerClusterGroupOptions;
 
   constructor(private zone: NgZone,
               private mapService: MapService,
@@ -238,7 +244,8 @@ export class MapComponent {
           pointsFromDB.addLayer(marker);
         }
 
-        this.layers[0] = pointsFromDB;
+        // this.layers[0] = pointsFromDB;
+        this.markerClusterData = markersInBounds;
       });
   }
 

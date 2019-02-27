@@ -2,7 +2,10 @@
      leaflet
      [leafletLayers]="layers"
      (leafletMapReady)="onMapReady($event)"
-     [leafletOptions]="options">
+     [leafletOptions]="options"
+
+     [leafletMarkerCluster]="markerClusterData"
+     [leafletMarkerClusterOptions]="markerClusterOptions">
 </div>
 
 <button (click)="showMyLocalization()" title="Lokalizacja">

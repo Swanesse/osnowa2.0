@@ -24,7 +24,7 @@
     "@angular/platform-browser-dynamic": "6.0.7",
     "@angular/router": "6.0.7",
     "@asymmetrik/ngx-leaflet": "^3.0.2",
-    "@asymmetrik/ngx-leaflet-markercluster": "^1.0.0",
+    "@asymmetrik/ngx-leaflet-markercluster": "^2.0.0",
     "@fortawesome/angular-fontawesome": "^0.1.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.0",
     "@fortawesome/free-solid-svg-icons": "^5.1.0",
