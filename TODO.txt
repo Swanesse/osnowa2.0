@@ -1,7 +1,20 @@
 TODO dodać możliwość wybierania też innych systemów niż WGS84 i 2000, żeby ludzie z innych krajów też mogli korzystać
+TODO dodać angielską wersję językową
+
+TODO zmienić ikony na nieprzezroczyste
+TODO zmiana ikony punktu: Czarne - punkty istniejąca nieodnalezione, czarne przekreślone - znalezione o niepoprawnych współrzędnych, Zielone - odnalezione, zielone przekreslone, Żółte - dodane przez danego użytkownika
+
+TODO zweryfikować dane o punkcie - dodać typy sonowy, punkty nawiązania
+TODO dodać komentarze pod opisem punktu - bez wchodzenia w edycję
+TODO zrobić tak, żeby dało się oznaczyć, że się znalazło punkt/punkt jest uszkodzony bez wchodzenia w edycję
+
 TODO poprawić walidację - Walidacja pola Y powinna zależeć od x (w której strefie teraz jestem)
+TODO wyświetlić informację o wymaganych polach jeśli użytkownik chce dodać pusty nowy punkt
 TODO get, w którego promisie będzie przekierowanie do ściżki /home (jeśli się uda zapytanie do serwera. Jeśli nie - wyświetl błąd)
 TODO Walidacja na backendzie jest, ale trzeba dodać notyfikacje informujące użytkownika, że coś jest nie tak. Trzeba też jak przyjdzie błąd z backendu podświetlić pole, którego ten błąd dotyczy. Na przykład nie chcemy żeby powtarzał się numer katalogowy
-TODO sprawdzić końcówkę pliku tak, żeby nie można było wysłać innego pliku niż zdjęcie. Teraz jeśli wrzuci się np. plik .pdf frontend wariuje, nie mówiąc o backendzie
+
+TODO walidacja typu wrzucanego pliku .jpg na backendzie
+
 TODO Teraz jak wejdę na link edit to ściągają się dane o punkcie z bazy danych. Trzeba zrobić tak, żeby po wejściu na link się ściągały, ale po wejściu na edit klikając długopisik dane się nie ściągały, ale przekazywały z detail
-TODO ngx-leaflet-markercluster - grupowanie zbyt dużej ilości punktów
+
+TODO eksport plików do formatu .txt
