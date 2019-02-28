@@ -1,12 +1,18 @@
 TODO dodać możliwość wybierania też innych systemów niż WGS84 i 2000, żeby ludzie z innych krajów też mogli korzystać
 TODO dodać angielską wersję językową
 
+TODO dodać informację o współrzędnych po kliknięciu w mapę
+
 TODO zmienić ikony na nieprzezroczyste
 TODO zmiana ikony punktu: Czarne - punkty istniejąca nieodnalezione, czarne przekreślone - znalezione o niepoprawnych współrzędnych, Zielone - odnalezione, zielone przekreslone, Żółte - dodane przez danego użytkownika
 
-TODO zweryfikować dane o punkcie - dodać typy sonowy, punkty nawiązania
+TODO zweryfikować dane o punkcie - dodać typy osnowy, punkty nawiązania
+TODO dodać typ sieci, do której należy punkt.
 TODO dodać komentarze pod opisem punktu - bez wchodzenia w edycję
+TODO w polu stabilizacja dodać opcję dowolnego wpisania jakiejkolwiek stabilizacji (taki opis, jakby punkt nie był standardowy)
 TODO zrobić tak, żeby dało się oznaczyć, że się znalazło punkt/punkt jest uszkodzony bez wchodzenia w edycję
+
+TODO ERROR po usunięciu zdjęcia w panelu dodawania punktu nie da się ponownie wrzucić zdjęcia o takiej samej nazwie
 
 TODO poprawić walidację - Walidacja pola Y powinna zależeć od x (w której strefie teraz jestem)
 TODO wyświetlić informację o wymaganych polach jeśli użytkownik chce dodać pusty nowy punkt
@@ -18,3 +24,7 @@ TODO walidacja typu wrzucanego pliku .jpg na backendzie
 TODO Teraz jak wejdę na link edit to ściągają się dane o punkcie z bazy danych. Trzeba zrobić tak, żeby po wejściu na link się ściągały, ale po wejściu na edit klikając długopisik dane się nie ściągały, ale przekazywały z detail
 
 TODO eksport plików do formatu .txt
+
+TODO zrobić podstronę z opisem wszystkich rodzajów stabilizacji punktów wraz z opisem i zdjęciami
+
+TODO zrobić tak, żeby po wyszukaniu punktów pojawiły się na mapie tylko te, które wyszukaliśmy. Jeśli nie wyszukaliśmy żadnych - pokaż pustą mapę.
