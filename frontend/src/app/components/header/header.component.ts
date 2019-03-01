@@ -1,5 +1,5 @@
 import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
-import {FormControl, FormGroup} from "@angular/forms";
+import {FormArray, FormControl, FormGroup} from "@angular/forms";
 import {HttpService} from "../../services/http.service";
 import {Router} from "@angular/router";
 import {MapService} from "../../services/map.service";
@@ -53,8 +53,22 @@ export class HeaderComponent implements OnInit{
       road: new FormControl(null),
       house_number: new FormControl(null),
 
-      stabilization: new FormControl(null),
-      found: new FormControl(false),
+      stabilization: new FormArray([]),
+
+      stabilization1: new FormControl(false),
+      stabilization2: new FormControl(false),
+      stabilization3: new FormControl(false),
+      stabilization4: new FormControl(false),
+      stabilization5: new FormControl(false),
+      stabilization6: new FormControl(false),
+      stabilization7: new FormControl(false),
+      stabilization8: new FormControl(false),
+      stabilization9: new FormControl(false),
+      stabilization10: new FormControl(false),
+      stabilization11: new FormControl(false),
+      stabilization12: new FormControl(false),
+      stabilization13: new FormControl(false),
+      stabilization14: new FormControl(false),
     });
   }
 

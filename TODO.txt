@@ -28,3 +28,5 @@ TODO eksport plików do formatu .txt
 TODO zrobić podstronę z opisem wszystkich rodzajów stabilizacji punktów wraz z opisem i zdjęciami
 
 TODO zrobić tak, żeby po wyszukaniu punktów pojawiły się na mapie tylko te, które wyszukaliśmy. Jeśli nie wyszukaliśmy żadnych - pokaż pustą mapę.
+
+TODO ERROR Kursor przy 'Wybór z mapy' czasami jest za tekstem na mapie, np opisem ulic - zweryfikować

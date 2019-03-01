@@ -92,8 +92,22 @@ export class HttpService{
   city_district,
   road,
   house_number,
-  stabilization,
-  found): Observable<Array<Point>>{
+  stabilization1,
+  stabilization2,
+  stabilization3,
+  stabilization4,
+  stabilization5,
+  stabilization6,
+  stabilization7,
+  stabilization8,
+  stabilization9,
+  stabilization10,
+  stabilization11,
+  stabilization12,
+  stabilization13,
+  stabilization14,
+
+  ): Observable<Array<Point>>{
     return this.http.get<Array<Point>>('http://localhost:8000/points/search', {
       params: {
         catalogNumber:catalogNumber,
@@ -112,8 +126,21 @@ export class HttpService{
         city_district:city_district,
         road:road,
         house_number:house_number,
-        stabilization:stabilization,
-        found:found
+        stabilization1:stabilization1,
+        stabilization2:stabilization2,
+        stabilization3:stabilization3,
+        stabilization4:stabilization4,
+        stabilization5:stabilization5,
+        stabilization6:stabilization6,
+        stabilization7:stabilization7,
+        stabilization8:stabilization8,
+        stabilization9:stabilization9,
+        stabilization10:stabilization10,
+        stabilization11:stabilization11,
+        stabilization12:stabilization12,
+        stabilization13:stabilization13,
+        stabilization14:stabilization14,
+
       }
     });
   }

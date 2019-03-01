@@ -123,7 +123,7 @@
               Stabilizacja
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <mat-checkbox *ngFor="let way of stabilizationWays">{{ way }}</mat-checkbox>
+          <mat-checkbox *ngFor="let way of stabilization; let i = index" formControlName={{way.stabilizationID}}> {{ way.name }} </mat-checkbox>
         </mat-expansion-panel>
 
         <mat-expansion-panel>
