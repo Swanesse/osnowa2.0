@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, NgZone, OnInit, ViewChild} from '@angular/core';
+import {Component, NgZone, ViewChild} from '@angular/core';
 import {MapService} from "../../services/map.service";
 import {MatSort} from "@angular/material";
 
@@ -7,7 +7,7 @@ import {MatSort} from "@angular/material";
   templateUrl: './results-search.component.html',
   styleUrls: ['./results-search.component.scss']
 })
-export class ResultsSearchComponent implements OnInit, AfterViewInit{
+export class ResultsSearchComponent {
   header: string = 'Wyniki wyszukiwania';
   id;
   X_WGS84;
@@ -16,6 +16,9 @@ export class ResultsSearchComponent implements OnInit, AfterViewInit{
   displayedColumns: string[] = ['id', 'X_WGS84', 'Y_WGS84', 'details'];
   dataSource = {};
   open = false;
+  @ViewChild(MatSort) sort: MatSort;
+
+
   constructor(private mapService: MapService,
               private zone: NgZone,) {
     this.mapService.getSearchPoints().subscribe((points) => {
@@ -27,38 +30,5 @@ export class ResultsSearchComponent implements OnInit, AfterViewInit{
       // this.dataSource.sort = this.sort;
       this.open = true;
     });
-    console.log('===========77777========', this.points);
-  }
-
-  @ViewChild(MatSort) sort: MatSort;
-
-  ngOnInit(){
-
-    console.log('===========77777========', this.points);
-  }
-
-  ngAfterViewInit(){
-    // if(this.open != true){
-    //   this.dataSource = this.points;
-    //   this.mapService.getSearchPoints().subscribe((points) => {
-    //     this.points = points;
-    //     this.dataSource = this.points;
-    //     // this.dataSource.sort = this.sort;
-    //     this.open = true;
-    //   });
-    // }
-  }
-  zmien(){
-    this.dataSource = this.points;
-    // this.mapService.getSearchPoints().subscribe((points) => {
-    //   this.points = points;
-    //   this.dataSource = this.points;
-    //   // this.dataSource.sort = this.sort;
-    //   this.open = true;
-    //
-    // });
-    console.log('========888===========', this.points);
-    this.dataSource = this.points;
-    console.log(this.dataSource);
   }
 }
