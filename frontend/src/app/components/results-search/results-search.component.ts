@@ -21,8 +21,8 @@ export class ResultsSearchComponent {
 
   constructor(private mapService: MapService,
               private zone: NgZone,) {
-    this.mapService.getSearchPoints().subscribe((points) => {
-      console.log('1:" ', points);
+    this.mapService.getSearchPoints().subscribe((points:any[]) => {
+      console.log('points', points);
       this.zone.run(() => {
         this.points = points;
         this.dataSource = points;
