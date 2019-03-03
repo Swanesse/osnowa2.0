@@ -26,7 +26,7 @@ export class HttpService {
       formData.append('images', file, file.name);
     }
 
-    return this.http.post<Point>('http://localhost:8000/point/new', formData);
+    return this.http.post<Point>('/point/new', formData);
   }
 
   editPoint(point: Point, fileToUpload: File[]): Observable<Point> {
@@ -41,12 +41,12 @@ export class HttpService {
       formData.append('images', file, file.name);
     }
 
-    return this.http.put<Point>('http://localhost:8000/point/edit', formData);
+    return this.http.put<Point>('/point/edit', formData);
   }
 
   getPoint(id) {
     const param = new HttpParams().set('id', id + '');
-    return this.http.get('http://localhost:8000/point/get', {params: {id: id}});
+    return this.http.get('/point/get', {params: {id: id}});
     // .toPromise()
     // .then(response => response.json().data as Point)
     // .catch(this.handleError);
@@ -58,7 +58,7 @@ export class HttpService {
   // }
 
   viewPoints(north, south, east, west): Observable<Array<Point>> {
-    return this.http.get<Array<Point>>('http://localhost:8000/point/get-all', {
+    return this.http.get<Array<Point>>('/point/get-all', {
       params: {
         north: north,
         south: south,
@@ -69,7 +69,7 @@ export class HttpService {
   }
 
   searchPoint(searchCondition): Observable<Array<Point>> {
-    return this.http.get<Array<Point>>('http://localhost:8000/point/search', {
+    return this.http.get<Array<Point>>('/point/search', {
       params: {
         searchCondition: searchCondition
       }
@@ -113,7 +113,7 @@ export class HttpService {
                east,
                west,
   ): Observable<Array<Point>> {
-    return this.http.get<Array<Point>>('http://localhost:8000/points/search', {
+    return this.http.get<Array<Point>>('/points/search', {
       params: {
         catalogNumber: catalogNumber,
         controlType1: controlType1,
