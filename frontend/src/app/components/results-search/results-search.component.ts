@@ -14,7 +14,7 @@ export class ResultsSearchComponent {
   Y_WGS84;
   public points;
   displayedColumns: string[] = ['id', 'X_WGS84', 'Y_WGS84', 'details'];
-  dataSource = [];
+  dataSource: any[] = [];
   open = false;
   @ViewChild(MatSort) sort: MatSort;
 
