@@ -133,7 +133,7 @@
               Aktualny widok mapy
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <mat-checkbox formControlName="controlType1">Punkty w aktualnym<br>widoku mapy</mat-checkbox>
+          <mat-checkbox (change)="getBounds($event)" >Punkty w aktualnym<br>widoku mapy</mat-checkbox>
         </mat-expansion-panel>
 
       </mat-accordion>

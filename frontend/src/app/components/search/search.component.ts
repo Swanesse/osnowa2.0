@@ -1,9 +1,10 @@
-import {Component, Input, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, Input, ViewChild, ViewEncapsulation} from '@angular/core';
 import {HttpService} from "../../services/http.service";
 import {Router} from "@angular/router";
 import {MapService} from "../../services/map.service";
 import {FormGroup} from "@angular/forms";
 import {MatMenuTrigger} from "@angular/material";
+import {Map} from "leaflet";
 
 @Component({
   selector: 'app-search',
@@ -11,27 +12,28 @@ import {MatMenuTrigger} from "@angular/material";
   styleUrls: ['./search.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent {
 
   customCollapsedHeight: string = '40px';
   customExpandedHeight: string = '40px';
   allExpandState = false;
+  map;
 
   stabilization = [
-    { stabilizationID: 'stabilization1', name: 'słup betonowy'},
-    { stabilizationID: 'stabilization2', name: 'słup granitowy lub bazaltowy'},
-    { stabilizationID: 'stabilization3', name: 'odlew żeliwny w kształcie ostrosłupa'},
-    { stabilizationID: 'stabilization4', name: 'skrzynka z odlewu żeliwnego'},
-    { stabilizationID: 'stabilization5', name: 'pal drewniany'},
-    { stabilizationID: 'stabilization6', name: 'rura kan. wypełniona cementem'},
-    { stabilizationID: 'stabilization7', name: 'słup obserwacyjny'},
-    { stabilizationID: 'stabilization8', name: 'reper'},
-    { stabilizationID: 'stabilization9', name: 'stacja referencyjna'},
-    { stabilizationID: 'stabilization10', name: 'bolec'},
-    { stabilizationID: 'stabilization11', name: 'kamień naturalny'},
-    { stabilizationID: 'stabilization12', name: 'pręt'},
-    { stabilizationID: 'stabilization13', name: 'rurka'},
-    { stabilizationID: 'stabilization14', name: 'szczegół terenowy'}
+    {stabilizationID: 'stabilization1', name: 'słup betonowy'},
+    {stabilizationID: 'stabilization2', name: 'słup granitowy lub bazaltowy'},
+    {stabilizationID: 'stabilization3', name: 'odlew żeliwny w kształcie ostrosłupa'},
+    {stabilizationID: 'stabilization4', name: 'skrzynka z odlewu żeliwnego'},
+    {stabilizationID: 'stabilization5', name: 'pal drewniany'},
+    {stabilizationID: 'stabilization6', name: 'rura kan. wypełniona cementem'},
+    {stabilizationID: 'stabilization7', name: 'słup obserwacyjny'},
+    {stabilizationID: 'stabilization8', name: 'reper'},
+    {stabilizationID: 'stabilization9', name: 'stacja referencyjna'},
+    {stabilizationID: 'stabilization10', name: 'bolec'},
+    {stabilizationID: 'stabilization11', name: 'kamień naturalny'},
+    {stabilizationID: 'stabilization12', name: 'pręt'},
+    {stabilizationID: 'stabilization13', name: 'rurka'},
+    {stabilizationID: 'stabilization14', name: 'szczegół terenowy'}
   ];
 
   stabilizationWays: Array<String> = ['słup betonowy', 'słup granitowy lub bazaltowy', 'odlew żeliwny w kształcie ostrosłupa', 'skrzynka z odlewu żeliwnego', 'pal drewniany', 'rura kan. wypełniona cementem', 'słup obserwacyjny', 'reper', 'stacja referencyjna', 'bolec', 'kamień naturalny', 'pręt', 'rurka', 'szczegół terenowy'];
@@ -45,14 +47,42 @@ export class SearchComponent implements OnInit {
 
   constructor(private httpService: HttpService,
               private router: Router,
-              private mapService: MapService,) { }
-
-  ngOnInit() {
-    console.log(this.searchForm, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+              private mapService: MapService,) {
+    this.mapService.getSetBounds().subscribe((map) => {
+      this.map = map;
+    });
   }
+
+
 
   getBackgroundColor() {
     return this.disabled === 'true' ? '#eeeeee' : 'white';
+  }
+
+  getBounds(event) {
+    let north = null;
+    let south = null;
+    let east = null;
+    let west = null;
+
+    if (event.checked) {
+      console.log('weszlo');
+        north = this.map.getBounds().getNorth();
+        south = this.map.getBounds().getSouth();
+        east = this.map.getBounds().getEast();
+        west = this.map.getBounds().getWest();
+
+        this.searchForm.controls.north.setValue(north);
+        this.searchForm.controls.south.setValue(south);
+        this.searchForm.controls.east.setValue(east);
+        this.searchForm.controls.west.setValue(west);
+    }
+    else {
+      this.searchForm.controls.north.setValue(north);
+      this.searchForm.controls.south.setValue(south);
+      this.searchForm.controls.east.setValue(east);
+      this.searchForm.controls.west.setValue(west);
+    }
   }
 
 
@@ -68,15 +98,17 @@ export class SearchComponent implements OnInit {
     this.step--;
   }
 
-  onSubmit(){
+  onSubmit() {
     this.httpService.searchPoints(
       this.searchForm.get('catalogNumber').value,
       this.searchForm.get('controlType1').value,
       this.searchForm.get('controlType2').value,
       this.searchForm.get('controlType3').value,
+      this.searchForm.get('controlType4').value,
       this.searchForm.get('controlClass1').value,
       this.searchForm.get('controlClass2').value,
       this.searchForm.get('controlClass3').value,
+      this.searchForm.get('controlClass4').value,
       this.searchForm.get('currentView').value,
       this.searchForm.get('country').value,
       this.searchForm.get('state').value,
@@ -100,8 +132,13 @@ export class SearchComponent implements OnInit {
       this.searchForm.get('stabilization11').value,
       this.searchForm.get('stabilization12').value,
       this.searchForm.get('stabilization13').value,
-      this.searchForm.get('stabilization14').value
-      ).subscribe(
+      this.searchForm.get('stabilization14').value,
+
+      this.searchForm.get('north').value,
+      this.searchForm.get('south').value,
+      this.searchForm.get('east').value,
+      this.searchForm.get('west').value
+    ).subscribe(
       points => {
         this.mapService.setSearchPoints(points);
 
@@ -110,8 +147,8 @@ export class SearchComponent implements OnInit {
         console.log(error.statusText);
       });
     this.router.navigate(['/home/search/']);
-        this.menuTrigger.closeMenu();
-        this.mapService.closeMenu();
+    this.menuTrigger.closeMenu();
+    this.mapService.closeMenu();
 
   }
 
@@ -121,16 +158,16 @@ export class SearchComponent implements OnInit {
   }
 
 
-  undisableInput(){
+  undisableInput() {
     this.disabled = 'false';
   }
 
-  keyDownFunction(event){
+  keyDownFunction(event) {
 
-    if(event.keyCode == 13) {
+    if (event.keyCode == 13) {
       console.log('Wciśnięto ENTER - wykonaj zapytanie do BD!!!');
 
-      this.value ='';
+      this.value = '';
       event.target.blur();
       this.httpService.searchPoint(event.target.value).subscribe(
         points => {

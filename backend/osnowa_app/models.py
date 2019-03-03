@@ -9,6 +9,8 @@ class Point(models.Model):
     controlType = models.CharField(max_length=200, blank=True, null=True)
     controlClass = models.CharField(max_length=200, blank=True, null=True)
     catalog_number = models.CharField(max_length=200, blank=True, null=True)
+    old_catalog_number = models.CharField(max_length=200, blank=True, null=True)
+    name = models.CharField(max_length=200, blank=True, null=True)
 
     hAmsterdam = models.FloatField(blank=True, null=True)
     hKronsztadt = models.FloatField(blank=True, null=True)
@@ -23,6 +25,7 @@ class Point(models.Model):
     house_number = models.CharField(max_length=200, blank=True, null=True)
     stabilization = models.CharField(max_length=200, blank=True, null=True)
     found = models.FloatField(blank=True, null=True, default = 0)
+    status = models.FloatField(blank=True, null=True)
 
 class Image(models.Model):
     point = models.ForeignKey(Point, on_delete=models.CASCADE, )

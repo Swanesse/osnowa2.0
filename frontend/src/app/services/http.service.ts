@@ -9,7 +9,7 @@ import {InMemoryDbService} from 'angular-in-memory-web-api';
 @Injectable({
   providedIn: 'root'
 })
-export class HttpService{
+export class HttpService {
 
   constructor(private http: HttpClient) {
   }
@@ -68,7 +68,7 @@ export class HttpService{
     });
   }
 
-  searchPoint(searchCondition): Observable<Array<Point>>{
+  searchPoint(searchCondition): Observable<Array<Point>> {
     return this.http.get<Array<Point>>('http://localhost:8000/point/search', {
       params: {
         searchCondition: searchCondition
@@ -77,72 +77,81 @@ export class HttpService{
   }
 
   searchPoints(catalogNumber,
-  controlType1,
-  controlType2,
-  controlType3,
-  controlClass1,
-  controlClass2,
-  controlClass3,
-  currentView,
-  country,
-  state,
-  district,
-  county,
-  locality,
-  city_district,
-  road,
-  house_number,
-  stabilization1,
-  stabilization2,
-  stabilization3,
-  stabilization4,
-  stabilization5,
-  stabilization6,
-  stabilization7,
-  stabilization8,
-  stabilization9,
-  stabilization10,
-  stabilization11,
-  stabilization12,
-  stabilization13,
-  stabilization14,
-
-  ): Observable<Array<Point>>{
+               controlType1,
+               controlType2,
+               controlType3,
+               controlType4,
+               controlClass1,
+               controlClass2,
+               controlClass3,
+               controlClass4,
+               currentView,
+               country,
+               state,
+               district,
+               county,
+               locality,
+               city_district,
+               road,
+               house_number,
+               stabilization1,
+               stabilization2,
+               stabilization3,
+               stabilization4,
+               stabilization5,
+               stabilization6,
+               stabilization7,
+               stabilization8,
+               stabilization9,
+               stabilization10,
+               stabilization11,
+               stabilization12,
+               stabilization13,
+               stabilization14,
+               north,
+               south,
+               east,
+               west,
+  ): Observable<Array<Point>> {
     return this.http.get<Array<Point>>('http://localhost:8000/points/search', {
       params: {
-        catalogNumber:catalogNumber,
-        controlType1:controlType1,
-        controlType2:controlType2,
-        controlType3:controlType3,
-        controlClass1:controlClass1,
-        controlClass2:controlClass2,
-        controlClass3:controlClass3,
-        currentView:currentView,
-        country:country,
-        state:state,
-        district:district,
-        county:county,
-        locality:locality,
-        city_district:city_district,
-        road:road,
-        house_number:house_number,
-        stabilization1:stabilization1,
-        stabilization2:stabilization2,
-        stabilization3:stabilization3,
-        stabilization4:stabilization4,
-        stabilization5:stabilization5,
-        stabilization6:stabilization6,
-        stabilization7:stabilization7,
-        stabilization8:stabilization8,
-        stabilization9:stabilization9,
-        stabilization10:stabilization10,
-        stabilization11:stabilization11,
-        stabilization12:stabilization12,
-        stabilization13:stabilization13,
-        stabilization14:stabilization14,
-
+        catalogNumber: catalogNumber,
+        controlType1: controlType1,
+        controlType2: controlType2,
+        controlType3: controlType3,
+        controlType4: controlType4,
+        controlClass1: controlClass1,
+        controlClass2: controlClass2,
+        controlClass3: controlClass3,
+        controlClass4: controlClass4,
+        currentView: currentView,
+        country: country,
+        state: state,
+        district: district,
+        county: county,
+        locality: locality,
+        city_district: city_district,
+        road: road,
+        house_number: house_number,
+        stabilization1: stabilization1,
+        stabilization2: stabilization2,
+        stabilization3: stabilization3,
+        stabilization4: stabilization4,
+        stabilization5: stabilization5,
+        stabilization6: stabilization6,
+        stabilization7: stabilization7,
+        stabilization8: stabilization8,
+        stabilization9: stabilization9,
+        stabilization10: stabilization10,
+        stabilization11: stabilization11,
+        stabilization12: stabilization12,
+        stabilization13: stabilization13,
+        stabilization14: stabilization14,
+        north: north,
+        south: south,
+        east: east,
+        west: west,
       }
     });
   }
 }
-

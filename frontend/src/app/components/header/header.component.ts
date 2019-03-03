@@ -36,10 +36,12 @@ export class HeaderComponent implements OnInit{
       controlType1: new FormControl(false),
       controlType2: new FormControl(false),
       controlType3: new FormControl(false),
+      controlType4: new FormControl(false),
 
       controlClass1: new FormControl(false),
       controlClass2: new FormControl(false),
       controlClass3: new FormControl(false),
+      controlClass4: new FormControl(false),
 
       currentView: new FormControl(false),
 
@@ -69,6 +71,10 @@ export class HeaderComponent implements OnInit{
       stabilization12: new FormControl(false),
       stabilization13: new FormControl(false),
       stabilization14: new FormControl(false),
+      north: new FormControl(null),
+      south: new FormControl(null),
+      east: new FormControl(null),
+      west: new FormControl(null),
     });
   }
 

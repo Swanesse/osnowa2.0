@@ -6,6 +6,7 @@ import {Point} from "../models/Point";
 @Injectable()
 export class MapService {
   private pickedCords = new Subject<Array<number>>();
+  private setBounds = new Subject();
   private clickedPoint = new Subject<Point>();
   private changeCords = new Subject<Array<number>>();
   private centerView = new Subject<Array<number>>();
@@ -39,6 +40,18 @@ export class MapService {
   pickCords(cords) {
     this.pickedCords.next(cords);
   }
+
+  //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  getSetBounds() {
+    return this.setBounds.asObservable();
+  }
+
+  bounds(map){
+    this.setBounds.next(map);
+  }
+
+  //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   getDeleteEditPoint() {
     return this.pointIdToDelete.asObservable();

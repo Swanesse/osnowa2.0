@@ -12,7 +12,7 @@ import {
   ActivatedRoute
 } from "@angular/router";
 import {PointMarker} from "../../models/PointMarker";
-import { interval } from 'rxjs';
+import {interval} from 'rxjs';
 import "rxjs/Rx";
 
 import * as L from 'leaflet';
@@ -84,12 +84,12 @@ export class MapComponent {
       }
     });
 
-    this.mapService.getDeleteEditPoint().subscribe((pointId)=>{
-      this.pointMarkers = this.pointMarkers.filter(marker => marker.id!=pointId);
+    this.mapService.getDeleteEditPoint().subscribe((pointId) => {
+      this.pointMarkers = this.pointMarkers.filter(marker => marker.id != pointId);
     });
 
-    this.mapService.getNewPoint().subscribe(()=>{
-       this.layers[2]= new LayerGroup();
+    this.mapService.getNewPoint().subscribe(() => {
+      this.layers[2] = new LayerGroup();
     });
 
     this.mapService.getOldIcon().subscribe((point: any) => {
@@ -100,11 +100,11 @@ export class MapComponent {
 
           if (point.controlType === 'pozioma' && (point.controlClass === '1' || point.controlClass === '2')) {
             console.log('point, point, point: ', point);
-              pointMarker.marker.options.icon.options.iconUrl = 'assets/podstawowa_pozioma.png';
+            pointMarker.marker.options.icon.options.iconUrl = 'assets/podstawowa_pozioma.png';
 
           } else if (point.controlType === 'wysokosciowa' && (point.controlClass === '1' || point.controlClass === '2')) {
 
-              pointMarker.marker.options.icon.options.iconUrl = 'assets/podstawowa_wysokosciowa.png';
+            pointMarker.marker.options.icon.options.iconUrl = 'assets/podstawowa_wysokosciowa.png';
           } else if (point.controlType === 'dwufunkcyjna' && (point.controlClass === '1' || point.controlClass === '2')) {
             this.route.params.subscribe(params => {
 
@@ -126,7 +126,7 @@ export class MapComponent {
         }
       }
       this.displayPoints();
-      this.layers[2]= new LayerGroup();
+      this.layers[2] = new LayerGroup();
     });
 
 
@@ -225,29 +225,27 @@ export class MapComponent {
         }
       }
     }
-
-    // odfiltrowuje się wszystkie znaczniki, które nie znajdują się w bieżących granicach widoku mapy
-    // następnie ustawia wynikową kolekcję znaczników jako nowy zestaw warstw mapy.
-    //zone.run potrzebne, żeby Angular zaktualizował widok
-
   }
 
-  displayPoints(){
+  // odfiltrowuje się wszystkie znaczniki, które nie znajdują się w bieżących granicach widoku mapy
+  // następnie ustawia wynikową kolekcję znaczników jako nowy zestaw warstw mapy.
+  //zone.run potrzebne, żeby Angular zaktualizował widok
+  displayPoints() {
     this.zone.run(() => {
-        let markers: Marker[] = [];
-        for (let pointMarker of this.pointMarkers) {
-          markers.push(pointMarker.marker);
-        }
-        let pointsFromDB: LayerGroup = new LayerGroup();
+      let markers: Marker[] = [];
+      for (let pointMarker of this.pointMarkers) {
+        markers.push(pointMarker.marker);
+      }
+      let pointsFromDB: LayerGroup = new LayerGroup();
 
-        const markersInBounds: Marker[] = markers.filter((m: Marker) => this.map.getBounds().contains(m.getLatLng()));
-        for (let marker of markersInBounds) {
-          pointsFromDB.addLayer(marker);
-        }
+      const markersInBounds: Marker[] = markers.filter((m: Marker) => this.map.getBounds().contains(m.getLatLng()));
+      for (let marker of markersInBounds) {
+        pointsFromDB.addLayer(marker);
+      }
 
-        // this.layers[0] = pointsFromDB;
-        this.markerClusterData = markersInBounds;
-      });
+      // this.layers[0] = pointsFromDB;
+      this.markerClusterData = markersInBounds;
+    });
   }
 
   // Ustawianie wyglądu kursora podczas przesuwania po mapie.
@@ -261,6 +259,8 @@ export class MapComponent {
   }
 
   onMapReady(map: Map) {
+
+    this.mapService.bounds(map);
     interval(1000).takeWhile(() => true).subscribe(() => this.getCoordinates());
     this.map = map;
     if (this.editCoordinates !== undefined) {

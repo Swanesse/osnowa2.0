@@ -122,15 +122,13 @@ def point_search(request):
 def points_search(request):
     # wyciąga z bazy danych info o wszystkich punktach spełniajacych wszystkie warunki wyszukiwania.
     # fields = Point.__meta.get_all_field_names()
-    print('--------------------------------------------------------')
-    print(request.GET['catalogNumber'])
-    print('--------------------------------------------------------')
     catalogNumber = None
     points = Point.objects.all()
     pointsLocality = Point.objects.all()
     controlType1 = 'null'
     controlType2 = 'null'
     controlType3 = 'null'
+    controlType4 = 'null'
     controlTypes = []
     controlClasses = []
     stabilizationWays = []
@@ -144,6 +142,9 @@ def points_search(request):
     if request.GET['controlType3'] == 'true':
         controlTypes.append('dwufunkcyjna')
 
+    if request.GET['controlType4'] == 'true':
+        controlTypes.append('sytuacyjno-wysokosciowa')
+
     if request.GET['controlClass1'] == 'true':
         controlClasses.append('1')
 
@@ -152,6 +153,9 @@ def points_search(request):
 
     if request.GET['controlClass3'] == 'true':
         controlClasses.append('3')
+
+    if request.GET['controlClass4'] == 'true':
+        controlClasses.append('pomiarowa')
 
     if request.GET['stabilization1'] == 'true':
         stabilizationWays.append('słup betonowy')
@@ -188,8 +192,6 @@ def points_search(request):
 
     if request.GET['stabilization12'] == 'true':
         stabilizationWays.append('pręt')
-        print('...................................................')
-        print(stabilizationWays)
 
     if request.GET['stabilization13'] == 'true':
         stabilizationWays.append('rurka')
@@ -202,10 +204,10 @@ def points_search(request):
         catalogNumber = request.GET['catalogNumber']
         points = points.filter(Q(catalog_number__icontains=catalogNumber))
 
-    if request.GET['controlType1'] == 'true' or request.GET['controlType2'] == 'true' or request.GET['controlType3'] == 'true':
+    if request.GET['controlType1'] == 'true' or request.GET['controlType2'] == 'true' or request.GET['controlType3'] == 'true' or request.GET['controlType4'] == 'true':
         points = points.filter(Q(controlType__in = controlTypes))
 
-    if request.GET['controlClass1'] == 'true' or request.GET['controlClass2'] == 'true' or request.GET['controlClass3'] == 'true':
+    if request.GET['controlClass1'] == 'true' or request.GET['controlClass2'] == 'true' or request.GET['controlClass3'] == 'true' or request.GET['controlClass4'] == 'true':
         points = points.filter(Q(controlClass__in = controlClasses))
 
     if request.GET['country'] != 'null':
@@ -251,6 +253,9 @@ def points_search(request):
     if request.GET['stabilization1'] == 'true' or request.GET['stabilization2'] == 'true' or request.GET['stabilization3'] == 'true' or request.GET['stabilization4'] == 'true' or request.GET['stabilization5'] == 'true' or request.GET['stabilization6'] == 'true' or request.GET['stabilization7'] == 'true' or request.GET['stabilization8'] == 'true' or request.GET['stabilization9'] == 'true' or request.GET['stabilization10'] == 'true' or request.GET['stabilization11'] == 'true' or request.GET['stabilization12'] == 'true' or request.GET['stabilization13'] == 'true' or request.GET['stabilization14'] == 'true':
         points = points.filter(Q(stabilization__in = stabilizationWays))
 
+    if request.GET['north'] != 'null' or request.GET['south'] != 'null' or request.GET['east'] != 'null' or request.GET['west'] != 'null':
+        points = points.filter(Y_WGS84__lte=request.GET['north'], Y_WGS84__gte=request.GET['south'],
+                                        X_WGS84__lte=request.GET['east'], X_WGS84__gte=request.GET['west'])
 
 
     points = points & pointsLocality

@@ -30,3 +30,5 @@ TODO zrobić podstronę z opisem wszystkich rodzajów stabilizacji punktów wraz
 TODO zrobić tak, żeby po wyszukaniu punktów pojawiły się na mapie tylko te, które wyszukaliśmy. Jeśli nie wyszukaliśmy żadnych - pokaż pustą mapę.
 
 TODO ERROR Kursor przy 'Wybór z mapy' czasami jest za tekstem na mapie, np opisem ulic - zweryfikować
+
+TODO automatycznie wpisywać adres tylko wtedy, jeśli wszystkie pola adresowe są puste
