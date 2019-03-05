@@ -49,9 +49,9 @@ export class PhotosDisplayComponent implements OnInit {
 
   createGallery() {
     this.galleryImages = [];
-
     Object.keys(this.imagess).forEach(key => {
-      let image = this.imagess[key].image === '' ? null : '/' + this.imagess[key].image;
+      let image = this.imagess[key].image === '' ? null : this.imagess[key].image;
+
       this.galleryImages.push({
         small: image,
         medium: image,
